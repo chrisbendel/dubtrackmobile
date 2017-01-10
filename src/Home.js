@@ -20,6 +20,8 @@ import {
   CardAction
 } from 'react-native-card-view';
 
+import Room from './Room';
+
 export default class Home extends Component {
   constructor(props) {
     super(props);
@@ -28,7 +30,6 @@ export default class Home extends Component {
     this.state = {
       dataSource: ds.cloneWithRows([])
     }
-    console.log(GLOBAL.BASE_URL);
     this.loadData();
   }
 
@@ -76,11 +77,28 @@ export default class Home extends Component {
     );
   }
 
+  //TODO: animate transitions
   //TODO: handle click to navigate to room
   pressRow(rowData) {
-    console.log(rowData);
-    navigator.push()
-    //TODO: navigate to selected room with rowData.roomurl
+    fetch(GLOBAL.BASE_URL + 'room/' + rowData.roomUrl)
+    .then((res) => res.json())
+    .then((json) => {
+      this.props.navigator.push({
+        name: 'Room',
+        passProps: {
+          data: json
+        }
+      });
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+    // this.props.navigator.push({
+    //   name: 'Room',
+    //   passProps: {
+    //     url: rowData.roomUrl
+    //   }
+    // });
   }
 }
 
