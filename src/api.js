@@ -1,23 +1,42 @@
+GLOBAL = require('../src/Globals');
+
+//TODO: import models here
+import room from './models/room';
+import self from './models/self';
+import user from './models/user';
+
 import React, {Component} from 'react';
 import webSocket from './webSocket';
 
 export default class api extends Component {
-  function api(auth, callback) {
-    if (typeof auth !== 'object') throw new TypeError('auth must be an object');
-    if (typeof auth.username !== 'string') throw new TypeError('auth.username must be a string');
-    if (typeof auth.password !== 'string') throw new TypeError('auth.password must be a string');
-    if (typeof callback !== 'function') throw new TypeError('callback must be a function');
+  constructor(props) {
+    super(props);
+    this.startApi();
+  }
 
+  startApi(auth, callback) {
+    console.log(auth);
     this.connected = false;
     this.socket = new webSocket();
-
-    this._.slug = undefined;
-    this._.self = undefined;
-    this._.room = undefined;
+    this.socket.doLogin();
+    this.slug = undefined;
+    this.self = undefined;
+    this.room = undefined;
 
     this.mutedTriggerEvents = false;
     this.maxChatMessageSplits = 1;
-
-    
   }
+
+  joinRoom(slug) {
+    console.log('this inside joinroom');
+    console.log(this);
+    this.slug = slug;
+    fetch(GLOBAL.BASE_URL + 'room/' + slug)
+      .then((res) => res.json())
+      .then((json) => {
+        console.log('res from connecttoroom');
+        console.log(json.data);
+      });
+  }
+
 }

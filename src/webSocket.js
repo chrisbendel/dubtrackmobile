@@ -3,8 +3,8 @@ import React, {Component} from 'react';
 export default class webSocket extends Component {
   constructor(props) {
     super(props);
-    this.doLogin();
-    this.webSocket();
+    // this.doLogin();
+    // this.webSocket();
   }
 
   doLogin() {
@@ -15,15 +15,16 @@ export default class webSocket extends Component {
     fetch('https://api.dubtrack.fm/auth/session')
       .then((res) => res.json())
       .then((json) => {
-        console.log('auth sessions');
-        console.log(json);
+        this.connect();
+        // console.log('auth sessions');
+        // console.log(json);
       })
       .catch((e) => {
         console.log(e);
       });
   }
 
-  webSocket() {
+  connect() {
     fetch('https://api.dubtrack.fm/auth/token')
       .then((res) => res.json())
       .then((json) => {
@@ -40,8 +41,8 @@ export default class webSocket extends Component {
          console.log('connected');
        });
        this.socket.on('message', function(data){
+         console.log('from socket on message');
          console.log(data);
-        //  alert('message');
        });
        this.socket.on('close', function(){
          console.log('closed');

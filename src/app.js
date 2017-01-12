@@ -6,14 +6,21 @@ import { Text, Platform, Navigator, TouchableHighlight } from 'react-native';
 
 import Home from './Home';
 import Room from './Room';
-import webSocket from './webSocket';
+import api from './api';
 
 export default class app extends Component {
   constructor(props) {
     super(props);
-    var socket = new webSocket();
-    // let socket = new webSocket;
+    this.api = new api();
 
+    this.api.startApi({username: 'dubtrackmobile', password: 'insecure'}, function(err, api) {
+      if (err) console.error(err);
+
+      console.log(api);
+
+    });
+
+    this.api.joinRoom('daftlabs');
   }
 
   render() {
@@ -25,7 +32,7 @@ export default class app extends Component {
     );
   }
   renderScene(route, navigator) {
-    //TODO: make this a switch statement
+    //TODO: make this a switch statement for all routes
     if(route.name == 'Home') {
       return (
         <Home
