@@ -1,26 +1,20 @@
 GLOBAL = require('../src/Globals');
 
-import React, { Component } from 'react';
-// import React from 'react-native';
-import { Text, Platform, Navigator, TouchableHighlight } from 'react-native';
+import React, {Component} from 'react';
+import {Text, Platform, Navigator, TouchableHighlight} from 'react-native';
 
 import Home from './Home';
 import Room from './Room';
-import api from './api';
+import DubAPI from './DubAPI/';
 
 export default class app extends Component {
   constructor(props) {
     super(props);
-    this.api = new api();
-
-    this.api.startApi({username: 'dubtrackmobile', password: 'insecure'}, function(err, api) {
-      if (err) console.error(err);
-
+    var api = new DubAPI({username: 'dubtrackmobile', password: 'insecure'}, function (err, user) {
+      console.log(user);
       console.log(api);
-
+      console.log(err);
     });
-
-    this.api.joinRoom('daftlabs');
   }
 
   render() {
@@ -31,12 +25,13 @@ export default class app extends Component {
       />
     );
   }
+
   renderScene(route, navigator) {
-    //TODO: make this a switch statement for all routes
-    if(route.name == 'Home') {
+    //TODO: make this a switch statement
+    if (route.name == 'Home') {
       return (
         <Home
-          navigator = {navigator}
+          navigator={navigator}
           {...route.passProps}
         />
       );
@@ -44,7 +39,7 @@ export default class app extends Component {
     if (route.name == 'Room') {
       return (
         <Room
-          navigator = {navigator}
+          navigator={navigator}
           {...route.passProps}
         />
       );
