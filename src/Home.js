@@ -26,7 +26,7 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-
+    // console.log(props);
     this.state = {
       dataSource: ds.cloneWithRows([])
     }
@@ -60,13 +60,21 @@ export default class Home extends Component {
 
   renderRow(rowData) {
     var {height, width} = Dimensions.get('window');
+    var uri;
+    // console.log('rowdata');
+    // console.log(rowData);
+    if (rowData.background) {
+      uri = rowData.background.secure_url;
+    } else {
+      uri = '';
+    }
     return (
       <Card>
         <CardImage>
           <TouchableHighlight onPress={ () => this.pressRow(rowData)}>
               <Image
                 style={{width: width, height: 150}}
-                source={{uri: rowData.background.secure_url}}
+                source={{uri: uri}}
               />
           </TouchableHighlight>
         </CardImage>
@@ -83,6 +91,7 @@ export default class Home extends Component {
     fetch(GLOBAL.BASE_URL + 'room/' + rowData.roomUrl)
     .then((res) => res.json())
     .then((json) => {
+      // socket.send(JSON.stringify({action: 10, channel: 'daftlabs'}));
       this.props.navigator.push({
         name: 'Room',
         passProps: {

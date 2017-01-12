@@ -1,14 +1,21 @@
 GLOBAL = require('../src/Globals');
 
 import React, { Component } from 'react';
+// import React from 'react-native';
 import { Text, Platform, Navigator, TouchableHighlight } from 'react-native';
 
 import Home from './Home';
 import Room from './Room';
+import webSocket from './webSocket';
+
 export default class app extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props);
+    var socket = new webSocket();
+    // let socket = new webSocket;
+
   }
+
   render() {
     return (
       <Navigator
