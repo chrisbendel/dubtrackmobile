@@ -19,7 +19,6 @@ export default class Room extends Component {
     this.state = {
       dataSource: ds.cloneWithRows(this.props)
     }
-    // console.log(props);
   }
 
   render() {
@@ -39,7 +38,7 @@ export default class Room extends Component {
   renderRow(rowData) {
     // console.log('rowdata from renderrow');
     // console.log(rowData);
-    return(
+    return (
       <TouchableHighlight onPress={ () => alert(rowData.name)}>
         <Text> Hello </Text>
       </TouchableHighlight>
