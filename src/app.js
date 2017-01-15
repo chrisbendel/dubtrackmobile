@@ -4,17 +4,18 @@ import React, {Component} from 'react';
 import {Text, Platform, Menu, Navigator, TouchableHighlight} from 'react-native';
 import TabNavigator from 'react-native-tab-navigator';
 const SideMenu = require('react-native-side-menu');
-var ScrollableTabView = require('react-native-scrollable-tab-view');
+import ScrollableTabView, {ScrollableTabBar,} from 'react-native-scrollable-tab-view';
 
 import Home from './Home';
 import Room from './Room';
+import Settings from './Settings';
 import DubAPI from './DubAPI/index';
+
+
 var api = new DubAPI({username: 'dubtrackmobile', password: 'insecure'}, function (err, bot) {
   if (err) {
     console.error("Error", bot, err);
   }
-  console.log('bot');
-  console.log(bot);
 
   function connect(slug) {
     console.log(slug);
@@ -52,33 +53,48 @@ export default class app extends Component {
 
   render() {
     return (
-      <Navigator
-        initialRoute={{ name: GLOBAL.ROUTES.HOME.TITLE, index: GLOBAL.ROUTES.HOME.INDEX }}
-        renderScene={this.renderScene}
-      />
+      <ScrollableTabView
+        style={{marginTop: 20}}
+        tabBarPosition={"bottom"}
+        renderTabBar={() => <ScrollableTabBar/>}>
+        <Home tabLabel="Home"/>
+        <Room tabLabel="Room"/>
+        <Settings tabLabel="Settings"/>
+
+      </ScrollableTabView>
     );
   }
 
   renderScene(route, navigator) {
     //TODO: make this a switch statement
-    const menu = <Menu navigator={navigator}/>;
-
-    if (route.name == 'Home') {
-      return (
-        <Home
+    switch (route.name) {
+      case 'Home':
+        return <Home
           navigator={navigator}
           {...route.passProps}
         />
-
-      );
-    }
-    if (route.name == 'Room') {
-      return (
-        <Room
+      case 'Room':
+        return <Room
           navigator={navigator}
           {...route.passProps}
         />
-      );
     }
+    // if (route.name == 'Home') {
+    //   return (
+    //     <Home
+    //       navigator={navigator}
+    //       {...route.passProps}
+    //     />
+    //
+    //   );
+    // }
+    // if (route.name == 'Room') {
+    //   return (
+    //     <Room
+    //       navigator={navigator}
+    //       {...route.passProps}
+    //     />
+    //   );
+    // }
   }
 }
