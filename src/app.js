@@ -1,21 +1,26 @@
 GLOBAL = require('../src/Globals');
 
 import React, {Component} from 'react';
-import {Text, Platform, Navigator, TouchableHighlight} from 'react-native';
+import {Text, Platform, Menu, Navigator, TouchableHighlight} from 'react-native';
+import TabNavigator from 'react-native-tab-navigator';
+const SideMenu = require('react-native-side-menu');
+var ScrollableTabView = require('react-native-scrollable-tab-view');
 
 import Home from './Home';
 import Room from './Room';
 import DubAPI from './DubAPI/index';
-
 var api = new DubAPI({username: 'dubtrackmobile', password: 'insecure'}, function (err, bot) {
-  if (err)
-    return console.error("Error", bot, err);
+  if (err) {
+    console.error("Error", bot, err);
+  }
+  console.log('bot');
+  console.log(bot);
 
-  function connect() {
-    bot.connect('thephish');
+  function connect(slug) {
+    console.log(slug);
+    bot.connect(slug);
   }
 
-  alert(bot);
   bot.on('connected', function (name) {
     console.log('connected to name: ' + name);
   });
@@ -27,6 +32,7 @@ var api = new DubAPI({username: 'dubtrackmobile', password: 'insecure'}, functio
   });
 
   bot.on('error', function (err) {
+    console.log('error');
     console.error(err);
   });
 
@@ -34,14 +40,13 @@ var api = new DubAPI({username: 'dubtrackmobile', password: 'insecure'}, functio
     console.log(data.user.username + ': ' + data.message);
   });
 
-  connect();
+  connect('thephish');
 });
 
 export default class app extends Component {
   constructor(props) {
+
     super(props);
-    api.connect('thephish');
-    console.log(api);
   }
 
 
@@ -56,12 +61,15 @@ export default class app extends Component {
 
   renderScene(route, navigator) {
     //TODO: make this a switch statement
+    const menu = <Menu navigator={navigator}/>;
+
     if (route.name == 'Home') {
       return (
         <Home
           navigator={navigator}
           {...route.passProps}
         />
+
       );
     }
     if (route.name == 'Room') {
