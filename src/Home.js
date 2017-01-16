@@ -19,6 +19,7 @@ import {
   CardContent,
   CardAction
 } from 'react-native-card-view';
+import ScrollableTabView, {ScrollableTabBar,} from 'react-native-scrollable-tab-view';
 
 import Room from './Room';
 
@@ -35,7 +36,7 @@ export default class Home extends Component {
 
   loadData() {
     var rooms = [];
-      return fetch('https://api.dubtrack.fm/room')
+    return fetch('https://api.dubtrack.fm/room')
       .then((res) => res.json())
       .then((json) => {
         this.setState({
@@ -59,10 +60,11 @@ export default class Home extends Component {
   }
 
   renderRow(rowData) {
+    // console.log('rwdt');
+    // console.log(rowData);
     var {height, width} = Dimensions.get('window');
     var uri;
-    // console.log('rowdata');
-    // console.log(rowData);
+
     if (rowData.background) {
       uri = rowData.background.secure_url;
     } else {
@@ -72,10 +74,10 @@ export default class Home extends Component {
       <Card>
         <CardImage>
           <TouchableHighlight onPress={ () => this.pressRow(rowData)}>
-              <Image
-                style={{width: width, height: 150}}
-                source={{uri: uri}}
-              />
+            <Image
+              style={{width: width, height: 150}}
+              source={{uri: uri}}
+            />
           </TouchableHighlight>
         </CardImage>
         <CardTitle>
@@ -89,25 +91,18 @@ export default class Home extends Component {
   //TODO: handle click to navigate to room
   pressRow(rowData) {
     fetch(GLOBAL.BASE_URL + 'room/' + rowData.roomUrl)
-    .then((res) => res.json())
-    .then((json) => {
-      // socket.send(JSON.stringify({action: 10, channel: 'daftlabs'}));
-      this.props.navigator.push({
-        name: 'Room',
-        passProps: {
-          data: json
-        }
+      .then((res) => res.json())
+      .then((json) => {
+        this.props.navigator.push({
+          name: 'Room',
+          passProps: {
+            data: json
+          }
+        });
+      })
+      .catch((error) => {
+        console.error(error);
       });
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-    // this.props.navigator.push({
-    //   name: 'Room',
-    //   passProps: {
-    //     url: rowData.roomUrl
-    //   }
-    // });
   }
 }
 

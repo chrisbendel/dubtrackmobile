@@ -13,8 +13,7 @@ import {
 export default class Room extends Component {
   constructor(props) {
     super(props);
-    console.log('this props');
-    console.log(this.props);
+    
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       dataSource: ds.cloneWithRows(this.props)
@@ -26,7 +25,7 @@ export default class Room extends Component {
     // console.log(this.props);
     return (
       <View style={styles.container}>
-        <Text> {this.props.data.data.name} </Text>
+        <Text> Room name </Text>
         <ListView
           dataSource={this.state.dataSource}
           renderRow={this.renderRow.bind(this)}
@@ -36,8 +35,6 @@ export default class Room extends Component {
   }
 
   renderRow(rowData) {
-    // console.log('rowdata from renderrow');
-    // console.log(rowData);
     return (
       <TouchableHighlight onPress={ () => alert(rowData.name)}>
         <Text> Hello </Text>
