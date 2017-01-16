@@ -10,44 +10,40 @@ import Home from './Home';
 import Room from './Room';
 import Settings from './Settings';
 import DubAPI from './DubAPI/index';
-
-
-var api = new DubAPI({username: 'dubtrackmobile', password: 'insecure'}, function (err, bot) {
-  if (err) {
-    console.error("Error", bot, err);
-  }
-
-  function connect(slug) {
-    console.log(slug);
-    bot.connect(slug);
-  }
-
-  bot.on('connected', function (name) {
-    console.log('connected to name: ' + name);
-  });
-
-  bot.on('disconnected', function (name) {
-    console.log('Disconnected from ' + name);
-
-    setTimeout(connect, 15000);
-  });
-
-  bot.on('error', function (err) {
-    console.log('error');
-    console.error(err);
-  });
-
-  bot.on(bot.events.chatMessage, function (data) {
-    console.log(data.user.username + ': ' + data.message);
-  });
-
-  connect('thephish');
-});
+var api;
 
 export default class app extends Component {
   constructor(props) {
-
     super(props);
+    api = new DubAPI({username: 'dubtrackmobile', password: 'insecure'}, function (err, bot) {
+      if (err) {
+        console.error("Error", bot, err);
+      }
+
+      function connect(slug) {
+        bot.connect(slug);
+      }
+
+      bot.on('connected', function (name) {
+        console.log('connected to name: ' + name);
+      });
+
+      bot.on('disconnected', function (name) {
+        console.log('Disconnected from ' + name);
+
+        setTimeout(connect, 15000);
+      });
+
+      bot.on('error', function (err) {
+        console.log('error');
+        console.error(err);
+      });
+
+      bot.on(bot.events.chatMessage, function (data) {
+        console.log(data.user.username + ': ' + data.message);
+      });
+    });
+    api.connect('thephish');
   }
 
 

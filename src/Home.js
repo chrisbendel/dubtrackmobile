@@ -60,6 +60,8 @@ export default class Home extends Component {
   }
 
   renderRow(rowData) {
+    // console.log('rwdt');
+    // console.log(rowData);
     var {height, width} = Dimensions.get('window');
     var uri;
 
