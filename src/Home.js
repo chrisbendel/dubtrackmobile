@@ -87,8 +87,6 @@ export default class Home extends Component {
   }
 
   pressRow(rowData) {
-    this.props.api.connect(rowData._id);
-    let room = this.props.api._.room;
     this.props.navigator.push({
       title: 'Room',
       passProps: {

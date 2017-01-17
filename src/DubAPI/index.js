@@ -80,10 +80,10 @@ DubAPI.prototype.connect = function (slug) {
   var that = this;
 
   return fetch('https://api.dubtrack.fm/room/' + slug)
-    .then((res) => {
+    .then(res => {
       return res.json();
     })
-    .then((json) => {
+    .then(json => {
       if (json.code != 200) {
         console.log('200 error');
         that.emit('error', new DubAPIRequestError(json.code, that._.reqHandler.endpoint(endpoints.room)));
@@ -91,38 +91,33 @@ DubAPI.prototype.connect = function (slug) {
       }
       that._.room = new RoomModel(json.data);
       that._.sokHandler.attachChannel('room:' + that._.room.id, utils.bind(EventHandler, that));
-      fetch('https://api.dubtrack.fm/room/' + that._.room.id + '/users', {
+      return fetch('https://api.dubtrack.fm/room/' + that._.room.id + '/users', {
         method: 'POST'
-      })
-        .then((res) => res.json())
-        .then((json) => {
-          if (json.code === 401) {
-            that.emit('error', new DubAPIError(that._.self.username + ' is banned from ' + that._.room.name));
-            return that.disconnect();
-          }
-          fetch('https://api.dubtrack.fm/room/' + that._.room.id + '/users')
-            .then((res) => res.json())
-            .then((json) => {
-              json.data.map(function (data) {
-                return new UserModel(data);
-              }).forEach(function (userModel) {
-                that._.room.users.add(userModel);
-              });
-              that._.actHandler.updatePlay();
-              that._.actHandler.updateQueue();
-              that._.connected = true;
-              that.emit('connected', that._.room.name);
-            })
-            .catch((e) => {
-              console.log(e);
-            });
-        })
-        .catch((e) => {
-          console.log(e);
-        })
+      });
+    })
+    .then(res => res.json())
+    .then(json => {
+      if (json.code === 401) {
+        that.emit('error', new DubAPIError(that._.self.username + ' is banned from ' + that._.room.name));
+        return that.disconnect();
+      }
+      return fetch('https://api.dubtrack.fm/room/' + that._.room.id + '/users');
+    })
+    .then(res => res.json())
+    .then(json => {
+      json.data.map(function (data) {
+        return new UserModel(data);
+      }).forEach(function (userModel) {
+        that._.room.users.add(userModel);
+      });
+      that._.actHandler.updatePlay();
+      that._.actHandler.updateQueue();
+      that._.connected = true;
+      that.emit('connected', that._.room.name);
+      return that._.room;
     })
     .catch(function (e) {
-      console.log('room connect error inside index.connect(): ' + e);
+      return Promise.reject(e);
     });
 };
 
