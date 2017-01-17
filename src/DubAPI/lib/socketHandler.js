@@ -15,72 +15,34 @@ function SocketHandler(dubAPI) {
   this._.channels = {};
   this._.reconnect = true;
 
-  //testing connect here
-  this.connect = function () {
-    fetch('https://api.dubtrack.fm/auth/token')
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.code !== 200) {
-          this._.dubAPI.emit('error', new DubAPIRequestError(code, that._.dubAPI._.reqHandler.endpoint(endpoints.authToken)));
-          setTimeout(that.connectBind, 5000);
-          return;
-        }
-        // this._.socket = 'test';
-        var ws = new WebSocket('wss://ws.dubtrack.fm/ws?access_token = ' + json.data.token);
-        console.log('ws');
-        console.log(ws);
-        this._.socket = ws;
-        // this._.socket = new EngineIOClient({
-        //   hostname: 'ws.dubtrack.fm',
-        //   secure: true,
-        //   path: '/ws',
-        //   query: {access_token: json.data.token},
-        //   transports: ['websocket']
-        // });
-      })
-      .catch((e) => {
-        console.log('error' + e);
-      });
-  };
-
-  this.connect();
+  this.connectBind = utils.bind(this.connect, this);
   this.onOpenBind = utils.bind(this.onOpen, this);
   this.onMessageBind = utils.bind(this.onMessage, this);
   this.onErrorBind = utils.bind(this.onError, this);
   this.onCloseBind = utils.bind(this.onClose, this);
 }
-// SocketHandler.prototype.connect = async function () {
-//   // if (this._.socket) return;
-//   this._.reconnect = true;
-//
-//   var that = this;
+SocketHandler.prototype.connect = async function () {
+  fetch('https://api.dubtrack.fm/auth/token')
+    .then((res) => res.json())
+    .then((json) => {
+      if (json.code !== 200) {
+        this._.dubAPI.emit('error', new DubAPIRequestError(code, that._.dubAPI._.reqHandler.endpoint(endpoints.authToken)));
+        setTimeout(that.connectBind, 5000);
+        return;
+      }
 
-// async function getSocket() {
-// SocketHandler.prototype.connect = async function () {
-//
-//   const res = await fetch('https://api.dubtrack.fm/auth/token');
-//   const json = await res.json();
-//
-//   if (json.code !== 200) {
-//     that._.dubAPI.emit('error', new DubAPIRequestError(code, that._.dubAPI._.reqHandler.endpoint(endpoints.authToken)));
-//     setTimeout(that.connectBind, 5000);
-//     return;
-//   }
-//   let token = await json.data.token;
-//   this._.socket = 'asdf';
-//   this._.socket = new EngineIOClient({
-//     hostname: 'ws.dubtrack.fm',
-//     secure: true,
-//     path: '/ws',
-//     query: {access_token: token},
-//     transports: ['websocket']
-//   });
-// };
-// that._.socket.on('open', that.onOpenBind);
-// that._.socket.on('message', that.onMessageBind);
-// that._.socket.on('error', that.onErrorBind);
-// that._.socket.on('close', that.onCloseBind);
-// };
+      this._.socket = new EngineIOClient({
+        hostname: 'ws.dubtrack.fm',
+        secure: true,
+        path: '/ws',
+        query: {access_token: json.data.token},
+        transports: ['websocket']
+      });
+    })
+    .catch((e) => {
+      console.log('error' + e);
+    });
+};
 
 SocketHandler.prototype.onOpen = function () {
   var channels = Object.keys(this._.channels);

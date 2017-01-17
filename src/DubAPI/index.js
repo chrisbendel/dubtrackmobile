@@ -51,15 +51,13 @@ function DubAPI(auth, callback) {
 
   this._.actHandler.doLogin()
     .then((res) => {
-      var code = res.code;
+      let code = res.code;
       if (code !== 200) return callback(new DubAPIRequestError(code, that._.reqHandler.endpoint(endpoints.authSession)));
       that._.self = new SelfModel(res.data);
-      console.log(that._.sokHandler);
       that._.sokHandler.connect();
-      console.log(that._);
     })
     .catch(function (err) {
-      console.error('auth err' + err);
+      console.log('auth err' + err);
     });
 }
 
@@ -81,64 +79,51 @@ DubAPI.prototype.connect = function (slug) {
 
   var that = this;
 
-  fetch('https://api.dubtrack.fm/room/' + slug)
+  return fetch('https://api.dubtrack.fm/room/' + slug)
     .then((res) => {
       return res.json();
     })
     .then((json) => {
       if (json.code != 200) {
         console.log('200 error');
-        that.emit('error', new DubAPIRequestError(code, that._.reqHandler.endpoint(endpoints.room)));
+        that.emit('error', new DubAPIRequestError(json.code, that._.reqHandler.endpoint(endpoints.room)));
         that.disconnect();
       }
       that._.room = new RoomModel(json.data);
       that._.sokHandler.attachChannel('room:' + that._.room.id, utils.bind(EventHandler, that));
-      that._.reqHandler.queue({method: 'POST', url: baseurl + endpoints.room});
-
-      return json;
+      fetch('https://api.dubtrack.fm/room/' + that._.room.id + '/users', {
+        method: 'POST'
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          if (json.code === 401) {
+            that.emit('error', new DubAPIError(that._.self.username + ' is banned from ' + that._.room.name));
+            return that.disconnect();
+          }
+          fetch('https://api.dubtrack.fm/room/' + that._.room.id + '/users')
+            .then((res) => res.json())
+            .then((json) => {
+              json.data.map(function (data) {
+                return new UserModel(data);
+              }).forEach(function (userModel) {
+                that._.room.users.add(userModel);
+              });
+              that._.actHandler.updatePlay();
+              that._.actHandler.updateQueue();
+              that._.connected = true;
+              that.emit('connected', that._.room.name);
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        })
+        .catch((e) => {
+          console.log(e);
+        })
     })
     .catch(function (e) {
-      console.log('room connect error' + e);
+      console.log('room connect error inside index.connect(): ' + e);
     });
-
-  // that._.reqHandler.queue({method: 'GET', url: endpoints.room}, function (code, body) {
-  //   if (code !== 200) {
-  //     that.emit('error', new DubAPIRequestError(code, that._.reqHandler.endpoint(endpoints.room)));
-  //     return that.disconnect();
-  //   }
-  //
-  //   that._.room = new RoomModel(body.data);
-  //   that._.sokHandler.attachChannel('room:' + that._.room.id, utils.bind(EventHandler, that));
-  //
-  //
-  //   that._.reqHandler.queue({method: 'POST', url: endpoints.roomUsers}, function (code, body) {
-  //     if ([200, 401].indexOf(code) === -1) {
-  //       that.emit('error', new DubAPIRequestError(code, that._.reqHandler.endpoint(endpoints.roomUsers)));
-  //       return that.disconnect();
-  //     } else if (code === 401) {
-  //       that.emit('error', new DubAPIError(that._.self.username + ' is banned from ' + that._.room.name));
-  //       return that.disconnect();
-  //     }
-  //
-  //     that._.reqHandler.queue({method: 'GET', url: endpoints.roomUsers}, function (code, body) {
-  //       if (code !== 200) {
-  //         that.emit('error', new DubAPIRequestError(code, that._.reqHandler.endpoint(endpoints.roomUsers)));
-  //         return that.disconnect();
-  //       }
-  //
-  //       body.data.map(function (data) {
-  //         return new UserModel(data);
-  //       }).forEach(function (userModel) {
-  //         that._.room.users.add(userModel);
-  //       });
-  //
-  //       that._.actHandler.updatePlay();
-  //       that._.actHandler.updateQueue();
-  //
-  //       that._.connected = true;
-  //       that.emit('connected', that._.room.name);
-  //     });
-  //   });
 };
 
 DubAPI.prototype.disconnect = function () {

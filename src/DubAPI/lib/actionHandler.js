@@ -31,6 +31,7 @@ function doLogin(auth, callback) {
       'password': auth.password
     })
   };
+
   fetch('https://api.dubtrack.fm/auth/dubtrack', obj)
     .then(function (res) {
       var code = res.status;
@@ -38,9 +39,10 @@ function doLogin(auth, callback) {
       } else if (code === 400) {
         return callback(new DubAPIError('Authentication Failed: ' + body.data.details.message));
       }
-    }).catch(function (err) {
-    console.log('err' + err);
-  });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 
   return fetch('https://api.dubtrack.fm/auth/session')
     .then((res) => {
@@ -55,7 +57,7 @@ function doLogin(auth, callback) {
       return json;
     })
     .catch(function (err) {
-      console.error(err);
+      console.log(err);
     });
 }
 

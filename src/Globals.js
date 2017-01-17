@@ -9,6 +9,5 @@ module.exports = {
       TITLE: 'Room',
       INDEX: 1,
     },
-
   }
-}
+};

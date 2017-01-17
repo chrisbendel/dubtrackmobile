@@ -10,87 +10,74 @@ import Home from './Home';
 import Room from './Room';
 import Settings from './Settings';
 import DubAPI from './DubAPI/index';
-var api;
 
 export default class app extends Component {
-  constructor(props) {
-    super(props);
-    api = new DubAPI({username: 'dubtrackmobile', password: 'insecure'}, function (err, bot) {
-      if (err) {
-        console.error("Error", bot, err);
-      }
-
-      function connect(slug) {
-        bot.connect(slug);
-      }
-
-      bot.on('connected', function (name) {
-        console.log('connected to name: ' + name);
-      });
-
-      bot.on('disconnected', function (name) {
-        console.log('Disconnected from ' + name);
-
-        setTimeout(connect, 15000);
-      });
-
-      bot.on('error', function (err) {
-        console.log('error');
-        console.error(err);
-      });
-
-      bot.on(bot.events.chatMessage, function (data) {
-        console.log(data.user.username + ': ' + data.message);
-      });
+  static api = new DubAPI({username: 'dubtrackmobile', password: 'insecure'}, function (err, bot) {
+    console.log('hi from api construct');
+    bot.on('connected', function (name) {
+      console.log('Connected to ' + name);
     });
-    api.connect('thephish');
+  });
+
+  componentDidMount() {
+    // app.api.connect('thephish');
   }
 
-
-  render() {
-    return (
-      <ScrollableTabView
-        style={{marginTop: 20}}
-        tabBarPosition={"bottom"}
-        renderTabBar={() => <ScrollableTabBar/>}>
-        <Home tabLabel="Home"/>
-        <Room tabLabel="Room"/>
-        <Settings tabLabel="Settings"/>
-
-      </ScrollableTabView>
-    );
+  constructor(props) {
+    super(props);
   }
 
   renderScene(route, navigator) {
-    //TODO: make this a switch statement
-    switch (route.name) {
+    let component;
+    switch (route.title) {
       case 'Home':
-        return <Home
+        component = <Home
           navigator={navigator}
           {...route.passProps}
-        />
+          api={app.api}/>;
+        break;
       case 'Room':
-        return <Room
+        component = <Room
           navigator={navigator}
           {...route.passProps}
-        />
+          api={app.api}/>;
+        break;
+      case 'Settings':
+        break;
+      default:
+        component = null;
     }
-    // if (route.name == 'Home') {
-    //   return (
-    //     <Home
-    //       navigator={navigator}
-    //       {...route.passProps}
-    //     />
-    //
-    //   );
-    // }
-    // if (route.name == 'Room') {
-    //   return (
-    //     <Room
-    //       navigator={navigator}
-    //       {...route.passProps}
-    //     />
-    //   );
-    // }
+    return component;
+  };
+
+  render() {
+    const routes = [
+      {title: 'Home', index: 0},
+      {title: 'Room', index: 1},
+      {title: 'Settings', index: 2}
+    ];
+    return (
+      <Navigator
+        initialRoute={routes[0]}
+        renderScene={this.renderScene}>
+        /*
+         <ScrollableTabView
+         style={{marginTop: 20}}
+         tabBarPosition={"bottom"}
+         renderTabBar={() => <ScrollableTabBar/>}>
+         <Home
+         tabLabel='Home'
+         data={app.api._}
+         api={app.api}/>
+         <Room
+         tabLabel='Room'
+         api={app.api}/>
+         <Settings
+         tabLabel="Settings"
+         api={app.api}/>
+         </ScrollableTabView >
+         */
+      </Navigator>
+    );
   }
 }

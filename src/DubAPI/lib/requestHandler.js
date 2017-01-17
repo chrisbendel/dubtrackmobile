@@ -1,25 +1,6 @@
 'use strict';
 
 var pkg = require('../package.json');
-// var http = require('http');
-// var request = require('react-native-http');
-
-// var request = () => {
-//   fetch('https://api.dubtrack.fm', {
-//     method: 'GET'
-//   })
-//     .then((res) => res.json())
-//     .then((json) => {
-//       console.log(json);
-//       this.setState({
-//         data: json
-//       })
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// };
-
 
 var DubAPIError = require('./errors/error.js'),
   DubAPIRequestError = require('./errors/requestError.js');
@@ -52,8 +33,8 @@ RequestHandler.prototype.queue = function (options, callback) {
 
   options.url = this.endpoint(options.url);
   this._.queue.push({options: options, callback: callback, isChat: isChat});
+  // console.log(this._.queue);
   if (!this._.ticking) this._tick();
-
   return true;
 };
 
@@ -104,63 +85,38 @@ RequestHandler.prototype._tick = function () {
 
 RequestHandler.prototype._sendRequest = function (queueItem) {
   queueItem.options.jar = this._.cookieJar;
-  //Give request a noop function so it emits the 'complete' event with parsed body
 
-  // var that = this;
-  // console.log('login fetch');
-  // fetch('https://api.dubtrack.fm/auth/login')
-  //   .then((res) => res.json())
-  //   .then((data) => {
-  //     console.log(queueItem);
-  //     if (!queueItem.isRetry && data.statusCode === 302 && data.headers.location === '/auth/login') {
-  //       that._.dubAPI._.actHandler.doLogin(function (err) {
-  //         if (err) that._.dubAPI.emit('error', err);
-  //         queueItem.isRetry = true;
-  //         that._.queue.unshift(queueItem);
-  //         if (!that._.ticking || queueItem.isChat) that._tick();
-  //         return;
-  //       });
-  //     }
-  //     if (queueItem.isChat) that._tick();
-  //     if (typeof queueItem.callback === 'function') queueItem.callback(res.statusCode, body);
-  //     else if (data.statusCode !== 200) that._.dubAPI.emit('error', new DubAPIRequestError(res.statusCode, queueItem.options.url));
-  //
-  //
-  //   });
-  //
-  // req.on('complete', function (res, body) {
-  //   if (!queueItem.isRetry && res.statusCode === 302 && res.headers.location === '/auth/login') {
-  //     that._.dubAPI._.actHandler.doLogin(function (err) {
-  //       if (err) that._.dubAPI.emit('error', err);
-  //
-  //       queueItem.isRetry = true;
-  //       that._.queue.unshift(queueItem);
-  //       if (!that._.ticking || queueItem.isChat) that._tick();
-  //     });
-  //     return;
-  //   }
-  //
-  //   if (queueItem.isChat) that._tick();
-  //
-  //   if (typeof queueItem.callback === 'function') queueItem.callback(res.statusCode, body);
-  //   else if (res.statusCode !== 200) that._.dubAPI.emit('error', new DubAPIRequestError(res.statusCode, queueItem.options.url));
-  // });
-  //
-  // req.on('error', function (err) {
-  //   if (queueItem.isChat && err.code === 'ETIMEDOUT') err = new DubAPIError('Chat request timed out');
-  //
-  //   that._.dubAPI.emit('error', err);
-  //
-  //   //Will not work for chat request timeouts
-  //   if (!queueItem.isRetry && ['ETIMEDOUT', 'ECONNRESET', 'ESOCKETTIMEDOUT'].indexOf(err.code) !== -1) {
-  //     queueItem.isRetry = true;
-  //     that._.queue.unshift(queueItem);
-  //     if (!that._.ticking || queueItem.isChat) that._tick();
-  //     return;
-  //   }
-  //
-  //   if (queueItem.isChat) that._tick();
-  // });
+  let that = this;
+
+  fetch(queueItem.options.url, {
+    method: queueItem.options.method
+  })
+    .then((res) => {
+      return res.json();
+    })
+    .then((json) => {
+      console.log('json from reqhandler sendreq');
+      console.log(json);
+    })
+    .catch(function (e) {
+      if (queueItem.isChat && e.code === 'ETIMEDOUT') err = new DubAPIError('Chat request timed out');
+      that._.dubAPI.emit('error', e);
+
+      if (!queueItem.isRetry && ['ETIMEDOUT', 'ECONNRESET', 'ESOCKETTIMEDOUT'].indexOf(err.code) !== -1) {
+        queueItem.isRetry = true;
+        that._.queue.unshift(queueItem);
+        if (!that._.ticking || queueItem.isChat) that._tick();
+        return;
+      }
+
+      if (queueItem.isChat) that._tick();
+      if (typeof queueItem.callback === 'function') queueItem.callback(res.statusCode, body);
+      else if (res.statusCode !== 200) that._.dubAPI.emit('error', new DubAPIRequestError(res.statusCode, queueItem.options.url));
+
+      console.log('sendreq error ' + e);
+    });
+
+
 };
 
 RequestHandler.prototype._decrementSent = function () {
@@ -175,7 +131,6 @@ RequestHandler.prototype.endpoint = function (endpoint) {
   if (endpoint.indexOf('%RID%') !== -1 && this._.dubAPI._.room) {
     endpoint = endpoint.replace('%RID%', this._.dubAPI._.room.id);
   }
-
   return endpoint;
 };
 

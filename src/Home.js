@@ -19,18 +19,19 @@ import {
   CardContent,
   CardAction
 } from 'react-native-card-view';
-import ScrollableTabView, {ScrollableTabBar,} from 'react-native-scrollable-tab-view';
 
 import Room from './Room';
 
 export default class Home extends Component {
+
   constructor(props) {
     super(props);
+    console.log('home props');
+    console.log(this.props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    // console.log(props);
     this.state = {
       dataSource: ds.cloneWithRows([])
-    }
+    };
     this.loadData();
   }
 
@@ -44,7 +45,7 @@ export default class Home extends Component {
         });
       })
       .catch((error) => {
-        console.error(error);
+        console.log(error);
       });
   }
 
@@ -60,15 +61,13 @@ export default class Home extends Component {
   }
 
   renderRow(rowData) {
-    // console.log('rwdt');
-    // console.log(rowData);
     var {height, width} = Dimensions.get('window');
     var uri;
 
     if (rowData.background) {
       uri = rowData.background.secure_url;
     } else {
-      uri = '';
+      uri = 'https://res.cloudinary.com/hhberclba/image/upload/c_fill,fl_lossy,f_auto,w_320,h_180/default.png';
     }
     return (
       <Card>
@@ -87,22 +86,15 @@ export default class Home extends Component {
     );
   }
 
-  //TODO: animate transitions
-  //TODO: handle click to navigate to room
   pressRow(rowData) {
-    fetch(GLOBAL.BASE_URL + 'room/' + rowData.roomUrl)
-      .then((res) => res.json())
-      .then((json) => {
-        this.props.navigator.push({
-          name: 'Room',
-          passProps: {
-            data: json
-          }
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    this.props.api.connect(rowData._id);
+    let room = this.props.api._.room;
+    this.props.navigator.push({
+      title: 'Room',
+      passProps: {
+        roomId: rowData._id
+      }
+    });
   }
 }
 

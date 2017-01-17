@@ -7,40 +7,41 @@ import {
   View,
   Image,
   ListView,
-  TouchableHighlight
+  TouchableHighlight,
+  AsyncStorage
 } from 'react-native';
 
 export default class Room extends Component {
   constructor(props) {
     super(props);
-    
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
-      dataSource: ds.cloneWithRows(this.props)
+      dataSource: this.props.data,
     }
   }
 
+  componentWillMount() {
+    //get room details
+    this.props.api.connect(this.props.roomId);
+    console.log(this.props.api);
+    // fetch('https://api.dubtrack.fm/room/' + this.props.roomId)
+    //   .then((res) => res.json())
+    //   .then((json) => {
+    //     console.log('room details');
+    //     console.log(json);
+    //   })
+    //   .catch((e) => {
+    //     console.log(e);
+    //   })
+  }
+
   render() {
-    // console.log('this in render');
-    // console.log(this.props);
     return (
       <View style={styles.container}>
         <Text> Room name </Text>
-        <ListView
-          dataSource={this.state.dataSource}
-          renderRow={this.renderRow.bind(this)}
-        />
       </View>
     );
   }
 
-  renderRow(rowData) {
-    return (
-      <TouchableHighlight onPress={ () => alert(rowData.name)}>
-        <Text> Hello </Text>
-      </TouchableHighlight>
-    )
-  }
 }
 
 const styles = StyleSheet.create({
