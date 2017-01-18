@@ -25,7 +25,9 @@ export default class Room extends Component {
 
   loadChat() {
     return this.props.api.getChatHistory();
+    dataSource: ds.cloneWithRows([])
   }
+
 
   componentWillMount() {
     let testchat = ['1', '2', '3', '4'];
@@ -48,6 +50,14 @@ export default class Room extends Component {
   }
 
   renderRow(rowData) {
+    console.log(room);
+    this.setState({room});
+  }
+
+
+//TODO: render each chat message in a row
+  renderRow(rowData) {
+    console.log(rowData);
     return (
       <View>
         <Text>Chat message</Text>
@@ -57,15 +67,16 @@ export default class Room extends Component {
 
 
   render() {
-    console.log(this.state);
     return (
+      //TODO: maybe put in a before and after updub image
       <View style={styles.container}>
         <Text style={styles.roomTitle}> {this.state.room.name} </Text>
         <ListView
           dataSource={this.state.dataSource}
           renderRow={this.renderRow.bind(this)}/>
         <Tabs>
-          <Text name="queue" onPress={(console.log('hi'))}>queue</Text>
+
+          <Text name="queue" onPress={( this.props.api.sendChat('hi this is a test from the mobile app'))}>queue</Text>
           <Text name="heart">heart</Text>
           <Text name="up">up</Text>
           <Text name="down">down</Text>
@@ -79,6 +90,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   roomTitle: {
     textAlign: 'center',

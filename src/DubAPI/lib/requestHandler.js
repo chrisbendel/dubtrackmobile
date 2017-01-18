@@ -2,9 +2,6 @@
 
 var pkg = require('../package.json');
 
-var DubAPIError = require('./errors/error.js'),
-  DubAPIRequestError = require('./errors/requestError.js');
-
 var utils = require('./utils.js');
 
 function RequestHandler(dubAPI) {
@@ -27,13 +24,13 @@ function RequestHandler(dubAPI) {
 RequestHandler.prototype.queue = function (options, callback) {
   if (typeof options !== 'object') throw new TypeError('options must be an object');
   if (typeof options.url !== 'string') throw new TypeError('options.url must be a string');
-
+  console.log()
   var isChat = options.isChat;
   delete options.isChat;
 
   options.url = this.endpoint(options.url);
   this._.queue.push({options: options, callback: callback, isChat: isChat});
-  // console.log(this._.queue);
+
   if (!this._.ticking) this._tick();
   return true;
 };
@@ -115,8 +112,33 @@ RequestHandler.prototype._sendRequest = function (queueItem) {
 
       console.log('sendreq error ' + e);
     });
-
-
+  if (queueItem.isChat) {
+    console.log('is chat');
+    console.log(queueItem);
+  }
+  if (queueItem.options.method == "POST") {
+    fetch('https://api.dubtrack.fm/' + queueItem.options.url, {
+      method: queueItem.options.method,
+      followRedirect: false,
+      headers: {'User-Agent': 'DubAPI/' + pkg.version},
+      json: true,
+      gzip: true
+    })
+      .then((res) => {
+        if (queueItem.isChat) that._tick();
+        console.log(res);
+      });
+  } else if (queueItem.options.method == "GET") {
+    fetch('https://api.dubtrack.fm/' + queueItem.options.url)
+      .then(res => res.json())
+      .then(json => {
+        console.log(json);
+      })
+      .catch(e => {
+        console.log(e);
+        Promise.resolve();
+      })
+  }
 };
 
 RequestHandler.prototype._decrementSent = function () {

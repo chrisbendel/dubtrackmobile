@@ -26,8 +26,6 @@ export default class Home extends Component {
 
   constructor(props) {
     super(props);
-    console.log('home props');
-    console.log(this.props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       dataSource: ds.cloneWithRows([])
