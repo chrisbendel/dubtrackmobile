@@ -1,7 +1,8 @@
 'use strict';
 
-var util = require('util'),
-  eventEmitter = require('events').EventEmitter;
+// var util = require('util');
+var eventEmitter = require('./lib/data/events').EventEmitter;
+import util from 'react-native-util';
 
 var RoomModel = require('./lib/models/roomModel.js'),
   SelfModel = require('./lib/models/selfModel.js'),
@@ -33,7 +34,7 @@ function DubAPI(auth, callback) {
 
   var that = this;
 
-  eventEmitter.call(this);
+  // eventEmitter.call(this);
 
   this._ = {};
 
@@ -61,15 +62,13 @@ function DubAPI(auth, callback) {
     });
 }
 
-util.inherits(DubAPI, eventEmitter);
+// util.inherits(DubAPI, eventEmitter);
 
 DubAPI.prototype.events = events;
 DubAPI.prototype.roles = roles;
 DubAPI.prototype.version = pkg.version;
 
-/*
- * External Functions
- */
+/**External Functions**/
 
 DubAPI.prototype.connect = function (slug) {
 

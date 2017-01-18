@@ -13,7 +13,6 @@ import DubAPI from './DubAPI/index';
 
 export default class app extends Component {
   static api = new DubAPI({username: 'dubtrackmobile', password: 'insecure'}, function (err, bot) {
-    console.log('hi from api construct');
     bot.on('connected', function (name) {
       console.log('Connected to ' + name);
     });
