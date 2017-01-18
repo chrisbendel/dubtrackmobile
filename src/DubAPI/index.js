@@ -1,10 +1,10 @@
 'use strict';
 
-// var util = require('util'),
-var eventEmitter = require('events').EventEmitter;
 import RoomModel from './lib/models/roomModel';
 import SelfModel from './lib/models/selfModel';
-import UserModel from './lib/models/userModel;'
+import UserModel from './lib/models/userModel';
+// var util = require('util');
+// var eventEmitter = require('./lib/data/events').EventEmitter;
 
 // var RoomModel = require('./lib/models/roomModel.js'),
 // var SelfModel = require('./lib/models/selfModel.js'),
@@ -38,7 +38,7 @@ function DubAPI(auth, callback) {
 
   var that = this;
 
-  eventEmitter.call(this);
+  // eventEmitter.call(this);
 
   this._ = {};
 
@@ -66,15 +66,13 @@ function DubAPI(auth, callback) {
     });
 }
 
-util.inherits(DubAPI, eventEmitter);
+// util.inherits(DubAPI, eventEmitter);
 
 DubAPI.prototype.events = events;
 DubAPI.prototype.roles = roles;
 DubAPI.prototype.version = pkg.version;
 
-/*
- * External Functions
- */
+/**External Functions**/
 
 DubAPI.prototype.connect = function (slug) {
 
@@ -91,7 +89,7 @@ DubAPI.prototype.connect = function (slug) {
     .then(json => {
       if (json.code != 200) {
         console.log('200 error');
-        that.emit('error', new DubAPIRequestError(json.code, that._.reqHandler.endpoint(endpoints.room)));
+        // that.emit('error', new DubAPIRequestError(json.code, that._.reqHandler.endpoint(endpoints.room)));
         that.disconnect();
       }
       that._.room = new RoomModel(json.data);
@@ -103,7 +101,7 @@ DubAPI.prototype.connect = function (slug) {
     .then(res => res.json())
     .then(json => {
       if (json.code === 401) {
-        that.emit('error', new DubAPIError(that._.self.username + ' is banned from ' + that._.room.name));
+        // that.emit('error', new DubAPIError(that._.self.username + ' is banned from ' + that._.room.name));
         return that.disconnect();
       }
       return fetch('https://api.dubtrack.fm/room/' + that._.room.id + '/users');
@@ -118,7 +116,7 @@ DubAPI.prototype.connect = function (slug) {
       that._.actHandler.updatePlay();
       that._.actHandler.updateQueue();
       that._.connected = true;
-      that.emit('connected', that._.room.name);
+      // that.emit('connected', that._.room.name);
       return that._.room;
     })
     .catch(function (e) {
@@ -144,7 +142,7 @@ DubAPI.prototype.disconnect = function () {
   this._.room = undefined;
 
   if (this._.connected) {
-    this.emit('disconnected', name);
+    // this.emit('disconnected', name);
     this._.connected = false;
   }
 };
@@ -162,7 +160,6 @@ DubAPI.prototype.sendChat = function (message, callback) {
   if (!this._.connected) return;
 
   if (typeof message !== 'string') throw new TypeError('message must be a string');
-
   message = message.trim();
   console.log(message);
   if (message.length === 0) throw new Error('message cannot be empty');
@@ -170,11 +167,15 @@ DubAPI.prototype.sendChat = function (message, callback) {
   message = utils.encodeHTMLEntities(message);
 
   message = message.match(/(.{1,255})(?:\s|$)|(.{1,255})/g);
-
   var body = {};
 
   body.type = 'chat-message';
   body.realTimeChannel = this._.room.realTimeChannel;
+
+  var testPost = 'https://api.dubtrack.fm/chat/dubtrackmobiletest?message=hello&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRJZCI6IjU4NzZlZjgzODRkNzU0YWUwMDkxZGVkYiIsInNvY2tldElkIjoiNmtyVnc2bkdrTHJ6cjNQU0FDM04iLCJzZXJ2ZXJJZCI6ImQ0NjJlNjc1YTFhNWJiYjg4YTAwM2M2YjQ1ZTk1NGI3IiwiaXNHdWVzdCI6dHJ1ZSwicHJvamVjdCI6eyJpZCI6MiwidXNlcl9pZCI6MiwibmFtZSI6ImR1YnRyYWNrLXByb2QiLCJzZWNyZXQiOiIzNmFlN2E3ZDY5MzBkMTQ2ZjVhNWRiZTJjN2VmYzE1MzgzNTA5Y2QxYzljZmM5YjgifSwiaWF0IjoxNDg0NzU4ODc0fQ.7B4RT0f8nPkxZCQbTlgzlYVEovFyfu4PFuwv_XpAX0E';
+  return fetch(testPost, {
+    method: 'POST',
+  });
 
   for (var i = 0; i < message.length; i++) {
     body.time = Date.now();
@@ -190,7 +191,7 @@ DubAPI.prototype.sendChat = function (message, callback) {
 
 DubAPI.prototype.getChatHistory = function () {
   if (!this._.connected) return [];
-
+  console.log('calling chat history');
   return utils.clone(this._.room.chat, {deep: true});
 };
 

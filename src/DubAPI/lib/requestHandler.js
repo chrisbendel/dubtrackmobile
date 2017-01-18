@@ -84,6 +84,34 @@ RequestHandler.prototype._sendRequest = function (queueItem) {
   queueItem.options.jar = this._.cookieJar;
 
   let that = this;
+  console.log(queueItem);
+  fetch(queueItem.options.url, {
+    method: queueItem.options.method
+  })
+    .then((res) => {
+      return res.json();
+    })
+    .then((json) => {
+      console.log('json from reqhandler sendreq');
+      console.log(json);
+    })
+    .catch(function (e) {
+      // if (queueItem.isChat && e.code === 'ETIMEDOUT') err = new DubAPIError('Chat request timed out');
+      that._.dubAPI.emit('error', e);
+
+      if (!queueItem.isRetry && ['ETIMEDOUT', 'ECONNRESET', 'ESOCKETTIMEDOUT'].indexOf(err.code) !== -1) {
+        queueItem.isRetry = true;
+        that._.queue.unshift(queueItem);
+        if (!that._.ticking || queueItem.isChat) that._tick();
+        return;
+      }
+
+      if (queueItem.isChat) that._tick();
+      if (typeof queueItem.callback === 'function') queueItem.callback(res.statusCode, body);
+      // else if (res.statusCode !== 200) that._.dubAPI.emit('error', new DubAPIRequestError(res.statusCode, queueItem.options.url));
+
+      console.log('sendreq error ' + e);
+    });
   if (queueItem.isChat) {
     console.log('is chat');
     console.log(queueItem);
@@ -111,39 +139,6 @@ RequestHandler.prototype._sendRequest = function (queueItem) {
         Promise.resolve();
       })
   }
-
-  // fetch(queueItem.options.url, {
-  //   method: queueItem.options.method
-  // })
-  //   .then((res) => {
-  //     console.log('res');
-  //     console.log(res);
-  //     return res.json();
-  //   })
-  //   .then((json) => {
-  //     console.log('json from reqhandler sendreq');
-  //     console.log(json);
-  //   })
-  //   .catch(function (e) {
-  //     console.log('sendreq error ' + e);
-  //     Promise.resolve(e);
-  //   });
-
-  // if (queueItem.isChat && err.code === 'ETIMEDOUT') err = new DubAPIError('Chat request timed out');
-  // that._.dubAPI.emit('error', err);
-  //
-  // if (!queueItem.isRetry && ['ETIMEDOUT', 'ECONNRESET', 'ESOCKETTIMEDOUT'].indexOf(err.code) !== -1) {
-  //   queueItem.isRetry = true;
-  //   that._.queue.unshift(queueItem);
-  //   if (!that._.ticking || queueItem.isChat) that._tick();
-  //   return;
-  // }
-  //
-  // if (queueItem.isChat) that._tick();
-  // if (typeof queueItem.callback === 'function') queueItem.callback(res.statusCode, body);
-  // else if (res.statusCode !== 200) that._.dubAPI.emit('error', new DubAPIRequestError(res.statusCode, queueItem.options.url));
-
-
 };
 
 RequestHandler.prototype._decrementSent = function () {

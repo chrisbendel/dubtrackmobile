@@ -18,21 +18,44 @@ export default class Room extends Component {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       room: {},
-      dataSource: ds.cloneWithRows([])
-    }
+      dataSource: ds.cloneWithRows([]),
+    };
+    this.loadChat();
   }
 
+  loadChat() {
+    return this.props.api.getChatHistory();
+    dataSource: ds.cloneWithRows([])
+  }
+
+
   componentWillMount() {
+    let testchat = ['1', '2', '3', '4'];
+    console.log(this.props.api);
     this.props.api.disconnect();
     this.props.api.connect(this.props.roomId)
       .then(room => {
-        console.log(room);
-        this.setState({room});
+        this.props.api.sendChat('hi from mobile');
+
+        // let chat = this.props.api.getChatHistory();
+        this.setState({
+          room: room,
+          dataSource: this.state.dataSource.cloneWithRows(testchat)
+        });
+      })
+      .catch(e => {
+        Promise.reject(e);
       });
-    this.props.api.sendChat('hello from mobile');
+
   }
 
-  //TODO: render each chat message in a row
+  renderRow(rowData) {
+    console.log(room);
+    this.setState({room});
+  }
+
+
+//TODO: render each chat message in a row
   renderRow(rowData) {
     console.log(rowData);
     return (
@@ -42,8 +65,8 @@ export default class Room extends Component {
     );
   }
 
+
   render() {
-    console.log(this.props.api);
     return (
       //TODO: maybe put in a before and after updub image
       <View style={styles.container}>
@@ -52,6 +75,7 @@ export default class Room extends Component {
           dataSource={this.state.dataSource}
           renderRow={this.renderRow.bind(this)}/>
         <Tabs>
+
           <Text name="queue" onPress={( this.props.api.sendChat('hi this is a test from the mobile app'))}>queue</Text>
           <Text name="heart">heart</Text>
           <Text name="up">up</Text>
