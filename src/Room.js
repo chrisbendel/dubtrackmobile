@@ -29,17 +29,19 @@ export default class Room extends Component {
 
   componentWillMount() {
     let testchat = ['1', '2', '3', '4'];
+    console.log(this.props.api);
     this.props.api.disconnect();
     this.props.api.connect(this.props.roomId)
       .then(room => {
-        let chat = this.props.api.getChatHistory();
+        this.props.api.sendChat('hi from mobile');
+
+        // let chat = this.props.api.getChatHistory();
         this.setState({
           room: room,
           dataSource: this.state.dataSource.cloneWithRows(testchat)
         });
       })
       .catch(e => {
-        console.log('err ' + e);
         Promise.reject(e);
       });
 
@@ -63,7 +65,7 @@ export default class Room extends Component {
           dataSource={this.state.dataSource}
           renderRow={this.renderRow.bind(this)}/>
         <Tabs>
-          <Text name="queue" onPress={( this.props.api.sendChat('hi this is a test from the mobile app'))}>queue</Text>
+          <Text name="queue" onPress={(console.log('hi'))}>queue</Text>
           <Text name="heart">heart</Text>
           <Text name="up">up</Text>
           <Text name="down">down</Text>

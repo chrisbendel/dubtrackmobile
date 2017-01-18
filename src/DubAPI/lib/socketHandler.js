@@ -30,6 +30,7 @@ SocketHandler.prototype.connect = async function () {
         setTimeout(that.connectBind, 5000);
         return;
       }
+      console.log(json.data.token);
 
       this._.socket = new EngineIOClient({
         hostname: 'ws.dubtrack.fm',

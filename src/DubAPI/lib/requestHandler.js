@@ -87,7 +87,7 @@ RequestHandler.prototype._sendRequest = function (queueItem) {
   queueItem.options.jar = this._.cookieJar;
 
   let that = this;
-
+  console.log(queueItem);
   fetch(queueItem.options.url, {
     method: queueItem.options.method
   })
@@ -99,7 +99,7 @@ RequestHandler.prototype._sendRequest = function (queueItem) {
       console.log(json);
     })
     .catch(function (e) {
-      if (queueItem.isChat && e.code === 'ETIMEDOUT') err = new DubAPIError('Chat request timed out');
+      // if (queueItem.isChat && e.code === 'ETIMEDOUT') err = new DubAPIError('Chat request timed out');
       that._.dubAPI.emit('error', e);
 
       if (!queueItem.isRetry && ['ETIMEDOUT', 'ECONNRESET', 'ESOCKETTIMEDOUT'].indexOf(err.code) !== -1) {
@@ -111,7 +111,7 @@ RequestHandler.prototype._sendRequest = function (queueItem) {
 
       if (queueItem.isChat) that._tick();
       if (typeof queueItem.callback === 'function') queueItem.callback(res.statusCode, body);
-      else if (res.statusCode !== 200) that._.dubAPI.emit('error', new DubAPIRequestError(res.statusCode, queueItem.options.url));
+      // else if (res.statusCode !== 200) that._.dubAPI.emit('error', new DubAPIRequestError(res.statusCode, queueItem.options.url));
 
       console.log('sendreq error ' + e);
     });
