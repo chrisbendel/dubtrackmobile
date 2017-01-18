@@ -159,7 +159,7 @@ DubAPI.prototype.sendChat = function (message, callback) {
   if (typeof message !== 'string') throw new TypeError('message must be a string');
 
   message = message.trim();
-
+  console.log(message);
   if (message.length === 0) throw new Error('message cannot be empty');
 
   message = utils.encodeHTMLEntities(message);
@@ -174,7 +174,7 @@ DubAPI.prototype.sendChat = function (message, callback) {
   for (var i = 0; i < message.length; i++) {
     body.time = Date.now();
     body.message = message[i];
-
+    console.log(body);
     this._.reqHandler.queue({method: 'POST', url: endpoints.chat, body: utils.clone(body), isChat: true}, callback);
 
     callback = undefined;

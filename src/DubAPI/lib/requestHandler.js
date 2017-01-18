@@ -2,9 +2,6 @@
 
 var pkg = require('../package.json');
 
-var DubAPIError = require('./errors/error.js'),
-  DubAPIRequestError = require('./errors/requestError.js');
-
 var utils = require('./utils.js');
 
 function RequestHandler(dubAPI) {
@@ -27,13 +24,13 @@ function RequestHandler(dubAPI) {
 RequestHandler.prototype.queue = function (options, callback) {
   if (typeof options !== 'object') throw new TypeError('options must be an object');
   if (typeof options.url !== 'string') throw new TypeError('options.url must be a string');
-
+  console.log()
   var isChat = options.isChat;
   delete options.isChat;
 
   options.url = this.endpoint(options.url);
   this._.queue.push({options: options, callback: callback, isChat: isChat});
-  // console.log(this._.queue);
+
   if (!this._.ticking) this._tick();
   return true;
 };
@@ -87,34 +84,64 @@ RequestHandler.prototype._sendRequest = function (queueItem) {
   queueItem.options.jar = this._.cookieJar;
 
   let that = this;
-
-  fetch(queueItem.options.url, {
-    method: queueItem.options.method
-  })
-    .then((res) => {
-      return res.json();
+  if (queueItem.isChat) {
+    console.log('is chat');
+    console.log(queueItem);
+  }
+  if (queueItem.options.method == "POST") {
+    fetch('https://api.dubtrack.fm/' + queueItem.options.url, {
+      method: queueItem.options.method,
+      followRedirect: false,
+      headers: {'User-Agent': 'DubAPI/' + pkg.version},
+      json: true,
+      gzip: true
     })
-    .then((json) => {
-      console.log('json from reqhandler sendreq');
-      console.log(json);
-    })
-    .catch(function (e) {
-      if (queueItem.isChat && e.code === 'ETIMEDOUT') err = new DubAPIError('Chat request timed out');
-      that._.dubAPI.emit('error', e);
+      .then((res) => {
+        if (queueItem.isChat) that._tick();
+        console.log(res);
+      });
+  } else if (queueItem.options.method == "GET") {
+    fetch('https://api.dubtrack.fm/' + queueItem.options.url)
+      .then(res => res.json())
+      .then(json => {
+        console.log(json);
+      })
+      .catch(e => {
+        console.log(e);
+        Promise.resolve();
+      })
+  }
 
-      if (!queueItem.isRetry && ['ETIMEDOUT', 'ECONNRESET', 'ESOCKETTIMEDOUT'].indexOf(err.code) !== -1) {
-        queueItem.isRetry = true;
-        that._.queue.unshift(queueItem);
-        if (!that._.ticking || queueItem.isChat) that._tick();
-        return;
-      }
+  // fetch(queueItem.options.url, {
+  //   method: queueItem.options.method
+  // })
+  //   .then((res) => {
+  //     console.log('res');
+  //     console.log(res);
+  //     return res.json();
+  //   })
+  //   .then((json) => {
+  //     console.log('json from reqhandler sendreq');
+  //     console.log(json);
+  //   })
+  //   .catch(function (e) {
+  //     console.log('sendreq error ' + e);
+  //     Promise.resolve(e);
+  //   });
 
-      if (queueItem.isChat) that._tick();
-      if (typeof queueItem.callback === 'function') queueItem.callback(res.statusCode, body);
-      else if (res.statusCode !== 200) that._.dubAPI.emit('error', new DubAPIRequestError(res.statusCode, queueItem.options.url));
-
-      console.log('sendreq error ' + e);
-    });
+  // if (queueItem.isChat && err.code === 'ETIMEDOUT') err = new DubAPIError('Chat request timed out');
+  // that._.dubAPI.emit('error', err);
+  //
+  // if (!queueItem.isRetry && ['ETIMEDOUT', 'ECONNRESET', 'ESOCKETTIMEDOUT'].indexOf(err.code) !== -1) {
+  //   queueItem.isRetry = true;
+  //   that._.queue.unshift(queueItem);
+  //   if (!that._.ticking || queueItem.isChat) that._tick();
+  //   return;
+  // }
+  //
+  // if (queueItem.isChat) that._tick();
+  // if (typeof queueItem.callback === 'function') queueItem.callback(res.statusCode, body);
+  // else if (res.statusCode !== 200) that._.dubAPI.emit('error', new DubAPIRequestError(res.statusCode, queueItem.options.url));
 
 
 };
