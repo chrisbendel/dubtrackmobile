@@ -20,7 +20,6 @@ export default class app extends Component {
   });
 
   componentDidMount() {
-    // app.api.connect('thephish');
   }
 
   constructor(props) {
@@ -31,18 +30,24 @@ export default class app extends Component {
     let component;
     switch (route.title) {
       case 'Home':
-        component = <Home
-          navigator={navigator}
-          {...route.passProps}
-          api={app.api}/>;
+        component =
+          <Home
+            navigator={navigator}
+            {...route.passProps}
+            api={app.api
+            }/>;
         break;
-      case 'Room':
-        component = <Room
-          navigator={navigator}
-          {...route.passProps}
-          api={app.api}/>;
+      case
+      'Room':
+        component =
+          <Room
+            navigator={navigator}
+            {...route.passProps}
+            api={app.api
+            }/>;
         break;
-      case 'Settings':
+      case
+      'Settings':
         break;
       default:
         component = null;
@@ -59,7 +64,8 @@ export default class app extends Component {
     return (
       <Navigator
         initialRoute={routes[0]}
-        renderScene={this.renderScene}>
+        renderScene={this.renderScene
+        }>
         /*
          <ScrollableTabView
          style={{marginTop: 20}}
