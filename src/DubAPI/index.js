@@ -82,7 +82,6 @@ DubAPI.prototype.connect = function (slug) {
       return res.json();
     })
     .then(json => {
-      console.log(json);
       if (json.code != 200) {
         console.log('200 error');
         // that.emit('error', new DubAPIRequestError(json.code, that._.reqHandler.endpoint(endpoints.room)));
@@ -138,7 +137,7 @@ DubAPI.prototype.disconnect = function () {
   this._.room = undefined;
 
   if (this._.connected) {
-    this.emit('disconnected', name);
+    // this.emit('disconnected', name);
     this._.connected = false;
   }
 };
