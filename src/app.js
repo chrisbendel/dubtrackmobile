@@ -11,9 +11,6 @@ import DubAPI from './DubAPI/index';
 
 export default class app extends Component {
   static api = new DubAPI({username: 'dubtrackmobile', password: 'insecure'}, function (err, bot) {
-    bot.on('connected', function (name) {
-      console.log('Connected to ' + name);
-    });
   });
 
   componentDidMount() {
@@ -31,8 +28,7 @@ export default class app extends Component {
           <Home
             navigator={navigator}
             {...route.passProps}
-            api={app.api
-            }/>;
+            api={app.api}/>;
         break;
       case
       'Room':
@@ -40,11 +36,15 @@ export default class app extends Component {
           <Room
             navigator={navigator}
             {...route.passProps}
-            api={app.api
-            }/>;
+            api={app.api}/>;
         break;
       case
       'Settings':
+        component =
+          <Settings
+            navigator={navigator}
+            {...route.passProps}
+            api={app.api}/>
         break;
       default:
         component = null;

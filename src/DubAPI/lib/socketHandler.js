@@ -26,11 +26,10 @@ SocketHandler.prototype.connect = async function () {
     .then((res) => res.json())
     .then((json) => {
       if (json.code !== 200) {
-        this._.dubAPI.emit('error', new DubAPIRequestError(code, that._.dubAPI._.reqHandler.endpoint(endpoints.authToken)));
+        // this._.dubAPI.emit('error', new DubAPIRequestError(code, that._.dubAPI._.reqHandler.endpoint(endpoints.authToken)));
         setTimeout(that.connectBind, 5000);
         return;
       }
-      console.log(json.data.token);
 
       this._.socket = new EngineIOClient({
         hostname: 'ws.dubtrack.fm',
@@ -40,8 +39,8 @@ SocketHandler.prototype.connect = async function () {
         transports: ['websocket']
       });
     })
-    .catch((e) => {
-      console.log('error' + e);
+    .catch(() => {
+      console.log('error');
     });
 };
 
@@ -52,7 +51,7 @@ SocketHandler.prototype.onOpen = function () {
     this._.socket.send(JSON.stringify({action: 10, channel: channels[i]}));
   }
 
-  this._.dubAPI.emit('socket:open');
+  // this._.dubAPI.emit('socket:open');
 };
 
 SocketHandler.prototype.onMessage = function (data) {
@@ -63,13 +62,13 @@ SocketHandler.prototype.onMessage = function (data) {
     return;
   }
 
-  this._.dubAPI.emit('socket:message', data);
+  // this._.dubAPI.emit('socket:message', data);
 
   if (data.action === 15 && this._.channels[data.channel]) {
     try {
       data.message.data = JSON.parse(data.message.data);
     } catch (err) {
-      this._.dubAPI.emit('error', err);
+      // this._.dubAPI.emit('error', err);
       return;
     }
 

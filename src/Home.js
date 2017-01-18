@@ -9,7 +9,8 @@ import {
   View,
   Image,
   Dimensions,
-  Navigator
+  Navigator,
+  Button
 } from 'react-native';
 
 import {
@@ -42,15 +43,24 @@ export default class Home extends Component {
           dataSource: this.state.dataSource.cloneWithRows(json.data)
         });
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
+        console.log('error');
       });
   }
 
   render() {
     return (
       <View style={styles.container}>
+        <Button
+          onPress={() => {
+            this.props.navigator.push({
+              title: 'Settings',
+            });
+          }}
+          title="Settings"
+        />
         <ListView
+          enableEmptySections={true}
           dataSource={this.state.dataSource}
           renderRow={this.renderRow.bind(this)}
         />

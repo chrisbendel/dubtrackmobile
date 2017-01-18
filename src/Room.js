@@ -20,24 +20,16 @@ export default class Room extends Component {
       room: {},
       dataSource: ds.cloneWithRows([]),
     };
-    this.loadChat();
-  }
+    // this.loadChat();
+    this.props.api.sendChat('test');
 
-  loadChat() {
-    return this.props.api.getChatHistory();
-    dataSource: ds.cloneWithRows([])
   }
-
 
   componentWillMount() {
     let testchat = ['1', '2', '3', '4'];
-    console.log(this.props.api);
     this.props.api.disconnect();
     this.props.api.connect(this.props.roomId)
       .then(room => {
-        this.props.api.sendChat('hi from mobile');
-
-        // let chat = this.props.api.getChatHistory();
         this.setState({
           room: room,
           dataSource: this.state.dataSource.cloneWithRows(testchat)
@@ -50,14 +42,11 @@ export default class Room extends Component {
   }
 
   renderRow(rowData) {
-    console.log(room);
-    this.setState({room});
   }
 
 
 //TODO: render each chat message in a row
   renderRow(rowData) {
-    console.log(rowData);
     return (
       <View>
         <Text>Chat message</Text>
@@ -72,11 +61,11 @@ export default class Room extends Component {
       <View style={styles.container}>
         <Text style={styles.roomTitle}> {this.state.room.name} </Text>
         <ListView
+          enableEmptySections={true}
           dataSource={this.state.dataSource}
           renderRow={this.renderRow.bind(this)}/>
         <Tabs>
-
-          <Text name="queue" onPress={( this.props.api.sendChat('hi this is a test from the mobile app'))}>queue</Text>
+          <Text name="queue">queue</Text>
           <Text name="heart">heart</Text>
           <Text name="up">up</Text>
           <Text name="down">down</Text>

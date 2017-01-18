@@ -20,11 +20,11 @@ function RequestHandler(dubAPI) {
   this._decrementSent = utils.bind(this._decrementSent, this);
 }
 
-//TODO: rewrite queue reqhandler function
 RequestHandler.prototype.queue = function (options, callback) {
   if (typeof options !== 'object') throw new TypeError('options must be an object');
   if (typeof options.url !== 'string') throw new TypeError('options.url must be a string');
-  console.log()
+  console.log('options');
+  console.log(options);
   var isChat = options.isChat;
   delete options.isChat;
 
@@ -84,38 +84,6 @@ RequestHandler.prototype._sendRequest = function (queueItem) {
   queueItem.options.jar = this._.cookieJar;
 
   let that = this;
-  console.log(queueItem);
-  fetch(queueItem.options.url, {
-    method: queueItem.options.method
-  })
-    .then((res) => {
-      return res.json();
-    })
-    .then((json) => {
-      console.log('json from reqhandler sendreq');
-      console.log(json);
-    })
-    .catch(function (e) {
-      // if (queueItem.isChat && e.code === 'ETIMEDOUT') err = new DubAPIError('Chat request timed out');
-      that._.dubAPI.emit('error', e);
-
-      if (!queueItem.isRetry && ['ETIMEDOUT', 'ECONNRESET', 'ESOCKETTIMEDOUT'].indexOf(err.code) !== -1) {
-        queueItem.isRetry = true;
-        that._.queue.unshift(queueItem);
-        if (!that._.ticking || queueItem.isChat) that._tick();
-        return;
-      }
-
-      if (queueItem.isChat) that._tick();
-      if (typeof queueItem.callback === 'function') queueItem.callback(res.statusCode, body);
-      // else if (res.statusCode !== 200) that._.dubAPI.emit('error', new DubAPIRequestError(res.statusCode, queueItem.options.url));
-
-      console.log('sendreq error ' + e);
-    });
-  if (queueItem.isChat) {
-    console.log('is chat');
-    console.log(queueItem);
-  }
   if (queueItem.options.method == "POST") {
     fetch('https://api.dubtrack.fm/' + queueItem.options.url, {
       method: queueItem.options.method,
@@ -124,11 +92,13 @@ RequestHandler.prototype._sendRequest = function (queueItem) {
       json: true,
       gzip: true
     })
-      .then((res) => {
+      .then(res => res.json())
+      .then(json => {
+        console.log(json);
         if (queueItem.isChat) that._tick();
-        console.log(res);
-      });
-  } else if (queueItem.options.method == "GET") {
+      })
+  }
+  if (queueItem.options.method == "GET") {
     fetch('https://api.dubtrack.fm/' + queueItem.options.url)
       .then(res => res.json())
       .then(json => {

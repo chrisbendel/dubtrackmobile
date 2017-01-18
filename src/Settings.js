@@ -5,18 +5,33 @@ import {
   View,
   Image,
   ListView,
-  TouchableHighlight
+  TouchableHighlight,
+  Button,
+  TextInput
 } from 'react-native';
 
 export default class Settings extends Component {
   constructor(props) {
     super(props);
     console.log(this.props);
+    this.state = {
+      username: '',
+      password: ''
+    }
   }
 
   render() {
     return (
       <View style={styles.container}>
+        <TextInput
+
+        />
+        <Button
+          onPress={() => {
+            console.log('pressed');
+          }}
+          title="Login"
+        />
         <Text> Settings </Text>
       </View>
     );

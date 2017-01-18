@@ -161,26 +161,20 @@ DubAPI.prototype.sendChat = function (message, callback) {
 
   if (typeof message !== 'string') throw new TypeError('message must be a string');
   message = message.trim();
-  console.log(message);
   if (message.length === 0) throw new Error('message cannot be empty');
 
   message = utils.encodeHTMLEntities(message);
 
   message = message.match(/(.{1,255})(?:\s|$)|(.{1,255})/g);
   var body = {};
-
+  console.log('message: ' + message);
   body.type = 'chat-message';
   body.realTimeChannel = this._.room.realTimeChannel;
-
-  var testPost = 'https://api.dubtrack.fm/chat/dubtrackmobiletest?message=hello&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRJZCI6IjU4NzZlZjgzODRkNzU0YWUwMDkxZGVkYiIsInNvY2tldElkIjoiNmtyVnc2bkdrTHJ6cjNQU0FDM04iLCJzZXJ2ZXJJZCI6ImQ0NjJlNjc1YTFhNWJiYjg4YTAwM2M2YjQ1ZTk1NGI3IiwiaXNHdWVzdCI6dHJ1ZSwicHJvamVjdCI6eyJpZCI6MiwidXNlcl9pZCI6MiwibmFtZSI6ImR1YnRyYWNrLXByb2QiLCJzZWNyZXQiOiIzNmFlN2E3ZDY5MzBkMTQ2ZjVhNWRiZTJjN2VmYzE1MzgzNTA5Y2QxYzljZmM5YjgifSwiaWF0IjoxNDg0NzU4ODc0fQ.7B4RT0f8nPkxZCQbTlgzlYVEovFyfu4PFuwv_XpAX0E';
-  return fetch(testPost, {
-    method: 'POST',
-  });
 
   for (var i = 0; i < message.length; i++) {
     body.time = Date.now();
     body.message = message[i];
-    console.log(body);
+
     this._.reqHandler.queue({method: 'POST', url: endpoints.chat, body: utils.clone(body), isChat: true}, callback);
 
     callback = undefined;
