@@ -1,8 +1,7 @@
 'use strict';
 
 // var util = require('util');
-var eventEmitter = require('./lib/data/events').EventEmitter;
-import util from 'react-native-util';
+// var eventEmitter = require('./lib/data/events').EventEmitter;
 
 var RoomModel = require('./lib/models/roomModel.js'),
   SelfModel = require('./lib/models/selfModel.js'),
@@ -83,9 +82,10 @@ DubAPI.prototype.connect = function (slug) {
       return res.json();
     })
     .then(json => {
+      console.log(json);
       if (json.code != 200) {
         console.log('200 error');
-        that.emit('error', new DubAPIRequestError(json.code, that._.reqHandler.endpoint(endpoints.room)));
+        // that.emit('error', new DubAPIRequestError(json.code, that._.reqHandler.endpoint(endpoints.room)));
         that.disconnect();
       }
       that._.room = new RoomModel(json.data);
@@ -97,7 +97,7 @@ DubAPI.prototype.connect = function (slug) {
     .then(res => res.json())
     .then(json => {
       if (json.code === 401) {
-        that.emit('error', new DubAPIError(that._.self.username + ' is banned from ' + that._.room.name));
+        // that.emit('error', new DubAPIError(that._.self.username + ' is banned from ' + that._.room.name));
         return that.disconnect();
       }
       return fetch('https://api.dubtrack.fm/room/' + that._.room.id + '/users');
@@ -112,7 +112,7 @@ DubAPI.prototype.connect = function (slug) {
       that._.actHandler.updatePlay();
       that._.actHandler.updateQueue();
       that._.connected = true;
-      that.emit('connected', that._.room.name);
+      // that.emit('connected', that._.room.name);
       return that._.room;
     })
     .catch(function (e) {
@@ -184,7 +184,7 @@ DubAPI.prototype.sendChat = function (message, callback) {
 
 DubAPI.prototype.getChatHistory = function () {
   if (!this._.connected) return [];
-
+  console.log('calling chat history');
   return utils.clone(this._.room.chat, {deep: true});
 };
 

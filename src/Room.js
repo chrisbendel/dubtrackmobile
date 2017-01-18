@@ -19,19 +19,29 @@ export default class Room extends Component {
     this.state = {
       room: {},
       dataSource: ds.cloneWithRows([]),
-    }
+    };
+    this.loadChat();
+  }
+
+  loadChat() {
+    this.props.api.getChatHistory();
   }
 
   componentWillMount() {
     this.props.api.disconnect();
     this.props.api.connect(this.props.roomId)
       .then(room => {
+        console.log(room);
         this.setState({room});
+      })
+      .catch(e => {
+        console.log('err ' + e);
+        Promise.reject(e);
       });
+
   }
 
   renderRow(rowData) {
-    console.log(rowData);
     return (
       <View>
         <Text>Chat message</Text>
@@ -41,6 +51,7 @@ export default class Room extends Component {
 
 
   render() {
+    console.log(this.state.room);
     return (
       <View style={styles.container}>
         <Text style={styles.roomTitle}> {this.state.room.name} </Text>

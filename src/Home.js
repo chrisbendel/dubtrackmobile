@@ -87,7 +87,6 @@ export default class Home extends Component {
   }
 
   pressRow(rowData) {
-    alert('pushed');
     this.props.navigator.push({
       title: 'Room',
       passProps: {

@@ -16,12 +16,9 @@
     "react-native-card-view": "0.0.3",
     "react-native-controllers": "^2.1.4",
     "react-native-engine.io-client": "^1.6.12",
-    "react-native-scrollable-tab-view": "^0.7.0",
     "react-native-side-menu": "^0.20.1",
     "react-native-socketio": "^0.3.0",
-    "react-native-tab-navigator": "^0.3.3",
-    "react-native-tabs": "^1.0.9",
-    "react-native-util": "^1.0.2"
+    "react-native-tabs": "^1.0.9"
   },
   "devDependencies": {
     "babel-jest": "18.0.0",
