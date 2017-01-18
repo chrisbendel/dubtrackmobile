@@ -1,6 +1,7 @@
 package com.dubtrackmobile;
 
 import com.facebook.react.ReactActivity;
+import com.oblador.vectoricons.VectorIconsPackage;
 import com.gcrabtree.rctsocketio.SocketIoPackage;
 import com.reactnativenavigation.RnnPackage;
 

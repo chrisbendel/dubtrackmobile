@@ -5,8 +5,7 @@
   "main": "index.js",
   "author": "anjanms",
   "dependencies": {
-    "engine.io-client": "1.x.x",
-    "request": "2.x.x"
+    "engine.io-client": "1.x.x"
   },
   "devDependencies": {
     "eslint": "2.x.x"

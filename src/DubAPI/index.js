@@ -1,11 +1,14 @@
 'use strict';
 
-var util = require('util'),
-  eventEmitter = require('events').EventEmitter;
+// var util = require('util'),
+var eventEmitter = require('events').EventEmitter;
+import RoomModel from './lib/models/roomModel';
+import SelfModel from './lib/models/selfModel';
+import UserModel from './lib/models/userModel;'
 
-var RoomModel = require('./lib/models/roomModel.js'),
-  SelfModel = require('./lib/models/selfModel.js'),
-  UserModel = require('./lib/models/userModel.js');
+// var RoomModel = require('./lib/models/roomModel.js'),
+// var SelfModel = require('./lib/models/selfModel.js'),
+//   UserModel = require('./lib/models/userModel.js');
 
 var RequestHandler = require('./lib/requestHandler.js'),
   ActionHandler = require('./lib/actionHandler.js'),
@@ -15,9 +18,11 @@ var RequestHandler = require('./lib/requestHandler.js'),
 var DubAPIError = require('./lib/errors/error.js'),
   DubAPIRequestError = require('./lib/errors/requestError.js');
 
+import events from './lib/data/events';
+
 var pkg = require('./package.json'),
   utils = require('./lib/utils.js'),
-  events = require('./lib/data/events.js'),
+  // events = require('./lib/data/events.js'),
   roles = require('./lib/data/roles.js'),
   endpoints = require('./lib/data/endpoints.js');
 

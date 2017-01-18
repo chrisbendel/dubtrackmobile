@@ -2,9 +2,7 @@ GLOBAL = require('../src/Globals');
 
 import React, {Component} from 'react';
 import {Text, Platform, Menu, Navigator, TouchableHighlight} from 'react-native';
-import TabNavigator from 'react-native-tab-navigator';
 const SideMenu = require('react-native-side-menu');
-import ScrollableTabView, {ScrollableTabBar,} from 'react-native-scrollable-tab-view';
 
 import Home from './Home';
 import Room from './Room';
@@ -66,23 +64,6 @@ export default class app extends Component {
         initialRoute={routes[0]}
         renderScene={this.renderScene
         }>
-        /*
-         <ScrollableTabView
-         style={{marginTop: 20}}
-         tabBarPosition={"bottom"}
-         renderTabBar={() => <ScrollableTabBar/>}>
-         <Home
-         tabLabel='Home'
-         data={app.api._}
-         api={app.api}/>
-         <Room
-         tabLabel='Room'
-         api={app.api}/>
-         <Settings
-         tabLabel="Settings"
-         api={app.api}/>
-         </ScrollableTabView >
-         */
       </Navigator>
     );
   }
