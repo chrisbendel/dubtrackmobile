@@ -2,9 +2,9 @@
 
 
 //checkArgs function
-const checkArgs = require('./../utils/typeCheck.js');
+// const checkArgs = require('./../utils/typeCheck.js');
 //check for request errrors
-const errorCheck = require('./../utils/errorcheck.js');
+// const errorCheck = require('./../utils/errorcheck.js');
 
 
 class PMProtocol {

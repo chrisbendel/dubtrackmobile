@@ -1,6 +1,7 @@
 package com.dubtrackmobile;
 
 import com.facebook.react.ReactActivity;
+import com.gcrabtree.rctsocketio.SocketIoPackage;
 
 public class MainActivity extends ReactActivity {
 

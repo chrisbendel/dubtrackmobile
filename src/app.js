@@ -9,7 +9,7 @@ import Room from './Room';
 import Settings from './Settings';
 
 import DubAPI from './DubAPI/index';
-// import DubBot from './DubBot/dub-bot';
+import DubBot from './DubBot/dub-bot';
 
 export default class app extends Component {
   static api = new DubAPI({username: 'dubtrackmobile', password: 'insecure'}, function (err, bot) {
