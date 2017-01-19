@@ -8,6 +8,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "EventEmitter": "^1.0.0",
     "install": "^0.8.4",
     "npm": "^4.0.5",
     "pubnub": "^4.3.3",

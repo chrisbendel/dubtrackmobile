@@ -7,17 +7,26 @@ const SideMenu = require('react-native-side-menu');
 import Home from './Home';
 import Room from './Room';
 import Settings from './Settings';
+
 import DubAPI from './DubAPI/index';
+// import DubBot from './DubBot/dub-bot';
 
 export default class app extends Component {
   static api = new DubAPI({username: 'dubtrackmobile', password: 'insecure'}, function (err, bot) {
   });
 
-  componentDidMount() {
+  componentWillMount() {
+
   }
 
   constructor(props) {
     super(props);
+    var bot = new DubBot('dubtrackmobile', 'insecure');
+    console.log(bot);
+    // console.log(app.bot);
+    // var robot = new DubBot();
+    // console.log(robot);
+
   }
 
   renderScene(route, navigator) {

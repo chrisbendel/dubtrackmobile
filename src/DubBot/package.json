@@ -1,0 +1,20 @@
+{
+  "version": "3.3.2",
+  "description": "An API to make bots for dubtrack.fm",
+  "main": "./dub-bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "dubtrack.fm",
+    "bot",
+    "API",
+    "dubtrack",
+    "bugtrack"
+  ],
+  "author": "Martí \"Copying\" Angelats i Ribera <martiangelats@hotmail.com> (Slightly modified by Chris Bendel - chrissbendel@gmail",
+  "license": "MIT",
+  "dependencies": {
+    "pubnub": "^3.9.2"
+  }
+}
