@@ -3,7 +3,10 @@
 
 // const checkArgs = require('./../utils/typeCheck.js');
 // const errorCheck = require('./../utils/errorcheck.js');
+import errorCheck from './../utils/errorcheck';
+import checkArgs from './../utils/typecheck';
 
+const base = 'https://api.dubtrack.fm/';
 
 class UserProtocol {
   constructor(request) {
@@ -13,6 +16,15 @@ class UserProtocol {
 
   info(user, callback) {
     checkArgs(arguments, ['String', 'Function'], "[Protocol] user.info", 1);
+
+    fetch(base + 'user/' + user)
+      .then(res => res.json())
+      .then(json => {
+        console.log(json);
+      })
+      .catch(e => {
+        console.log(e);
+      });
 
     this.request({
       method: 'GET',

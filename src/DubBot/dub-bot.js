@@ -30,23 +30,33 @@ class DubBot extends EventEmitter {
 
     if (username !== undefined && password !== undefined) {
       var that = this;
-      this.protocol.account.login(username, password, function () {
-        that.protocol.account.info(function (data) {
-          console.log(data);
-          that.id = data._id;
-          that.emit('log-in');
-          that.connected = true;
-
-          //join the rooms that were waiting to log in
-          that.rooms._joinRooms();
-
-          //Start the interval to check the private messages
-          that.pm._checkPM();
-          that.pm.inteval = setInterval(function () {
-            that.pm._checkPM();
-          }, that.pm.time);
+      // this.protocol.account.login(username, password, function () {
+      this.protocol.account.login(username, password)
+        .then(res => res.json())
+        .then(json => {
+          return that.protocol.account.info();
+        })
+        .then(obj => {
+          console.log('obj');
+          console.log(obj);
         });
-      });
+
+      //   that.protocol.account.info(function (data) {
+      //     console.log(data);
+      //     that.id = data._id;
+      //     that.emit('log-in');
+      //     that.connected = true;
+      //
+      //     //join the rooms that were waiting to log in
+      //     that.rooms._joinRooms();
+      //
+      //     //Start the interval to check the private messages
+      //     that.pm._checkPM();
+      //     that.pm.inteval = setInterval(function () {
+      //       that.pm._checkPM();
+      //     }, that.pm.time);
+      //   });
+      // });
     } else {
       this.connected = true;
       this.rooms._joinRooms();

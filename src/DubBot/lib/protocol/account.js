@@ -5,13 +5,14 @@
 import errorCheck from './../utils/errorcheck';
 import checkArgs from './../utils/typecheck';
 
-var base = 'https://api.dubtrack.fm/';
+const base = 'https://api.dubtrack.fm/';
+
 class AccountProtocol {
   constructor(request) {
     this.request = request;
   }
 
-  login(username, password, callback) {
+  login(username, password) {
     checkArgs(arguments, ['String', 'String', 'Function'], "[Protocol] login", 2);
     let login = {
       method: 'POST',
@@ -26,7 +27,7 @@ class AccountProtocol {
       }),
     };
 
-    fetch('https://api.dubtrack.fm/auth/dubtrack', login)
+    return fetch('https://api.dubtrack.fm/auth/dubtrack', login)
       .catch(e => {
         console.log(e);
       });
@@ -44,14 +45,12 @@ class AccountProtocol {
     });
   }
 
-  info(callback) {
+  info() {
     checkArgs(arguments, ['Function'], "[Protocol] getSessionInfo");
 
-    fetch(base + 'auth/session')
+    return fetch(base + 'auth/session')
       .then(res => res.json())
       .then(json => {
-        if (!errorCheck(error, response, json, "[Protocol] getSessionInfo")) return;
-        if (callback != undefined) callback(body ? json.data : undefined);
         console.log(json);
       })
       .catch(e => {
