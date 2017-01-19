@@ -13,21 +13,6 @@
 
 class Protocol {
   constructor() {
-    var req = {
-      followRedirect: false,
-      json: true,
-      gzip: true,
-    };
-    // this.request = fetch('https://api.dubtrack.fm/', req);
-    //we make a custom request with its own cookies (allows logging in with multiple accounts)
-    // this.request = _request.defaults({
-    //   baseUrl: 'https://api.dubtrack.fm/',
-    //   followRedirect: false,
-    //   json: true,
-    //   gzip: true,
-    //   jar: _request.jar()
-    // });
-
     this.account = new (require('./account.js'))(this.request);
     this.user = new (require('./user.js'))(this.request);
     this.playlist = new (require('./playlist.js'))(this.request);
