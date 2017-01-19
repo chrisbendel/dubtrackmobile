@@ -1,6 +1,5 @@
 'use strict';
 
-const checkArgs = require('./utils/typecheck.js');
 const roles = require('./data/roles.js');
 
 class User {
@@ -31,15 +30,11 @@ class User {
 	}
 
 	kick(msg) {
-		checkArgs(arguments, ['String'], "[user] kick");
-
 		this.dubbot.protocol.room.kick(this.room.id, this.id, this.room.realTimeChannel, msg);
 	}
 
 	mute(time) {
 		if (this.room === undefined) return;
-
-		checkArgs(arguments, ['Number'], "[user] mute");
 
 		this.dubbot.protocol.room.mute(this.room.id, this.id, this.room.realTimeChannel);
 
@@ -57,8 +52,6 @@ class User {
 
 	ban(time) {
 		if (this.room === undefined) return;
-
-		checkArgs(arguments, ['Number'], "[user] ban");
 
 		this.dubbot.protocol.room.ban(this.room.id, this.id, this.room.realTimeChannel, time);
 	}
@@ -78,7 +71,6 @@ class User {
 	getDubs(callback) {
 		if (this.room === undefined) return;
 
-		checkArgs(arguments, ['Function'], "[user] getDubs");
 		if (this.dubs === undefined) {
 			let that = this;
 			this.dubbot.protocol.room.userInfo(this.room.id, this.id, function(data){

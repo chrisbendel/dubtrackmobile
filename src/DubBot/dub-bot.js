@@ -1,19 +1,16 @@
 'use strict';
 
-import EventEmitter from 'EventEmitter';
+import EventEmitter from 'event-emitter';
 const RoomList = require('./lib/roomlist.js');
 //const Protocol = require('./protocol.js'); //set dynamically at constructor
 
-const checkArgs = require('./lib/utils/typecheck.js');
 const User = require('./lib/user.js');
 const PMManager = require('./lib/conversationmanager.js');
 
 const roles = require('./lib/data/roles.js');
 
 class DubBot extends EventEmitter {
-
   constructor(username, password, callback, Protocol) {
-    checkArgs(arguments, ['String', 'String', 'Function'], "[DubBot] constructor");
 
     if (Protocol == undefined) Protocol = require('./lib/protocol/protocol.js');
 
@@ -30,47 +27,38 @@ class DubBot extends EventEmitter {
 
     if (username !== undefined && password !== undefined) {
       var that = this;
-      // this.protocol.account.login(username, password, function () {
       this.protocol.account.login(username, password)
         .then(res => res.json())
-        .then(json => {
+        .then(() => {
           return that.protocol.account.info();
         })
-        .then(obj => {
-          console.log('obj');
-          console.log(obj);
+        .then(userData => {
+          let user = userData.data;
+          that.id = user._id;
+          that.emitter.emit('log-in');
+          that.connected = true;
+          that.rooms._joinRooms();
+          that.pm._checkPM();
+          that.pm.interval = setInterval(function () {
+            that.pm._checkPM();
+          }, that.pm.time);
+        })
+        .catch(e => {
+          console.log(e);
         });
-
-      //   that.protocol.account.info(function (data) {
-      //     console.log(data);
-      //     that.id = data._id;
-      //     that.emit('log-in');
-      //     that.connected = true;
-      //
-      //     //join the rooms that were waiting to log in
-      //     that.rooms._joinRooms();
-      //
-      //     //Start the interval to check the private messages
-      //     that.pm._checkPM();
-      //     that.pm.inteval = setInterval(function () {
-      //       that.pm._checkPM();
-      //     }, that.pm.time);
-      //   });
-      // });
     } else {
       this.connected = true;
       this.rooms._joinRooms();
     }
   }
 
-  join(room) {
-    checkArgs(arguments, ['String'], "[DubBot] join", 1);
-
-    return this.rooms.add(room);
-  }
+  join = function (room) {
+    //todo might need to resolve promise with .then() to get returned room
+    var room = this.rooms.add(room);
+    // return this.rooms.add(room);
+  };
 
   getUser(user, callback) {
-    checkArgs(arguments, ['String', 'Function'], "[DubBot] join", 2);
     let that = this;
     this.protocol.user.info(user, function (data) {
       callback(new User(data, undefined, that));
@@ -78,7 +66,6 @@ class DubBot extends EventEmitter {
   }
 
   sendPM(users, message) {
-    checkArgs(arguments, [['Array', 'User'], 'String'], "[DubBot] sendPM", 2);
     this.getConversation(users, function (conver) {
       conver.send(message);
     });
@@ -86,7 +73,6 @@ class DubBot extends EventEmitter {
   }
 
   getConversation(users, callback) {
-    checkArgs(arguments, [['Array', 'User'], 'Function'], "[DubBot] getPMConversation", 2);
 
     if (users.constructor !== Array) {
       users = [users];

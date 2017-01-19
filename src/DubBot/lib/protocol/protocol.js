@@ -1,15 +1,4 @@
-// This file contains all the possible calls to the dubtrack API made function.
-// Take a look at the wiki for more information
-
-
 'use strict';
-
-//base request which the otheres are made of
-// const _request = require('request');
-
-
-// const typeCheck = require('./../utils/typeCheck.js');
-// const errorCheck = require('./../utils/errorcheck.js');
 
 class Protocol {
   constructor() {

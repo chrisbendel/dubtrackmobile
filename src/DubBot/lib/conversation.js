@@ -1,8 +1,5 @@
 'use strict';
 
-const checkArgs = require('./utils/typecheck.js');
-
-
 //After x time the conversation object gets removed (allows to be deleted).
 //This avoids the app of eating the entire memory of the server.
 class Conversation {
@@ -22,7 +19,6 @@ class Conversation {
 	}
 
 	send(message) {
-		checkArgs(arguments, ['String'], "[Conversation] send", 1);
 		this.dubbot.protocol.pm.send(this.id, message);
 	}
 	update(data) {

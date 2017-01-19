@@ -12,21 +12,16 @@ import DubAPI from './DubAPI/index';
 import DubBot from './DubBot/dub-bot';
 
 export default class app extends Component {
-  static api = new DubAPI({username: 'dubtrackmobile', password: 'insecure'}, function (err, bot) {
-  });
+  // static api = new DubAPI({username: 'dubtrackmobile', password: 'insecure'}, function (err, bot) {
+  // });
+  static bot = new DubBot('dubtrackmobile', 'insecure');
 
   componentWillMount() {
-
   }
 
   constructor(props) {
     super(props);
-    var bot = new DubBot('dubtrackmobile', 'insecure');
-    console.log(bot);
-    // console.log(app.bot);
-    // var robot = new DubBot();
-    // console.log(robot);
-
+    var room = app.bot.join('dubtrackmobiletest');
   }
 
   renderScene(route, navigator) {
@@ -37,7 +32,7 @@ export default class app extends Component {
           <Home
             navigator={navigator}
             {...route.passProps}
-            api={app.api}/>;
+            bot={app.bot}/>;
         break;
       case
       'Room':
@@ -45,7 +40,7 @@ export default class app extends Component {
           <Room
             navigator={navigator}
             {...route.passProps}
-            api={app.api}/>;
+            bot={app.bot}/>;
         break;
       case
       'Settings':
@@ -53,7 +48,7 @@ export default class app extends Component {
           <Settings
             navigator={navigator}
             {...route.passProps}
-            api={app.api}/>
+            bot={app.bot}/>
         break;
       default:
         component = null;

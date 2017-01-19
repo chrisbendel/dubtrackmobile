@@ -1,5 +1,6 @@
 'use strict';
 
+var EngineIOClient = require('react-native-engine.io-client');
 import EventEmitter from 'EventEmitter';
 // const EventEmitter = require('EventEmitter');
 const pubnub = require('pubnub');
@@ -9,8 +10,6 @@ const Song = require('./song.js');
 const Message = require('./message.js');
 const CommandList = require('./commandlist.js');
 const _globalCD = require('./globalcd.js');
-
-const checkArgs = require('./utils/typecheck.js');
 
 class NotACommandError {
   constructor(fake, where) {
@@ -25,6 +24,8 @@ class NotACommandError {
   }
 }
 
+//TODO: this class might need to have a socket library added to connect to websocket
+
 class Room extends EventEmitter {
   constructor(ref, dubbot) {
     super();
@@ -35,6 +36,7 @@ class Room extends EventEmitter {
     this.id = '';
     this.realTimeChannel = '';
     this._pubnub = undefined;
+    this.socket = null;
 
     this.currentSong = undefined;
 
@@ -45,7 +47,6 @@ class Room extends EventEmitter {
   }
 
   addCommand(name, cd, callback) {
-    checkArgs(arguments, ['String', ['Number', 'Function'], 'Function'], "[Room] addCommand", 2);
     name = name.split(/\s+/g)[0];
     if (name.charAt(0) != '!') {
       throw NotACommandError(name, "[Room] addCommand");
@@ -60,24 +61,20 @@ class Room extends EventEmitter {
   }
 
   addCommandAlias(original, alias) {
-    checkArgs(arguments, ['String', 'String'], "[DubBot] addAlias", 2);
     this._commands.alias(original, alias);
   }
 
   removeCommand(name) {
-    checkArgs(arguments, ['String'], "[Room] removeCommand", 1);
 
     return this._commands.remove(name);
   }
 
   setGlobalCD(o) {
-    checkArgs(arguments, ['Object'], "[DubBot] set_globalCD", 1);
 
     this._globalCD.setAllCD(o);
   }
 
   getUser(user, callback) {
-    checkArgs(arguments, ['String', 'Function'], "[DubBot] join", 2);
     let that = this;
     this.dubbot.protocol.user.info(user, function (data) {
       callback(new User(data, that, that.dubbot));
@@ -85,7 +82,6 @@ class Room extends EventEmitter {
   }
 
   say(message) {
-    checkArgs(arguments, ['String'], "[Room] say", 1);
     this.dubbot.protocol.room.send(this.id, message, this.realTimeChannel);
   }
 
@@ -93,30 +89,37 @@ class Room extends EventEmitter {
     this.id = id;
     this.realTimeChannel = realTimeChannel;
 
-    this._pubnub = pubnub({
-      backfill: false,
-      restore: false,
-      subscribe_key: 'sub-c-2b40f72a-6b59-11e3-ab46-02ee2ddab7fe',
-      ssl: true,
-      uuid: this.dubbot.id
-
+    this.socket = new EngineIOClient({
+      hostname: 'ws.dubtrack.fm',
+      secure: true,
+      path: '/ws',
+      transports: ['websocket']
     });
 
-    let that = this;
+    //TODO: remove old pubnub requests when engineioclient works
+    // this._pubnub = pubnub({
+    //   backfill: false,
+    //   restore: false,
+    //   subscribe_key: 'sub-c-2b40f72a-6b59-11e3-ab46-02ee2ddab7fe',
+    //   ssl: true,
+    //   uuid: this.dubbot.id
+    //
+    // });
+    // let that = this;
     //For some reason pubnub changes the this in the callback -.-'
-    this._pubnub.subscribe({
-      channel: that.realTimeChannel,
-      connect: function () {
-        that.emit('connect');
-      },
-      disconnect: function () {
-        that.emit('disconnect');
-      },
-      message: function () {
-        that._onmessage.apply(that, arguments);
-      },
-      error: console.error
-    });
+    // this._pubnub.subscribe({
+    //   channel: that.realTimeChannel,
+    //   connect: function () {
+    //     that.emit('connect');
+    //   },
+    //   disconnect: function () {
+    //     that.emit('disconnect');
+    //   },
+    //   message: function () {
+    //     that._onmessage.apply(that, arguments);
+    //   },
+    //   error: console.error
+    // });
   }
 
   _onmessage(msg) {
