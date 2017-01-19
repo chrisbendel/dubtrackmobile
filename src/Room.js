@@ -21,7 +21,6 @@ export default class Room extends Component {
       dataSource: ds.cloneWithRows([]),
     };
     // this.loadChat();
-    this.props.api.sendChat('test');
 
   }
 
@@ -38,6 +37,7 @@ export default class Room extends Component {
       .catch(e => {
         Promise.reject(e);
       });
+    console.log('hi');
 
   }
 
@@ -56,6 +56,7 @@ export default class Room extends Component {
 
 
   render() {
+    console.log(this.state.room);
     return (
       //TODO: maybe put in a before and after updub image
       <View style={styles.container}>

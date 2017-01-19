@@ -82,6 +82,8 @@ RequestHandler.prototype._tick = function () {
 
 RequestHandler.prototype._sendRequest = function (queueItem) {
   queueItem.options.jar = this._.cookieJar;
+  console.log('qitem');
+  console.log(queueItem);
 
   let that = this;
   if (queueItem.options.method == "POST") {
