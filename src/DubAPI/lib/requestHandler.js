@@ -23,8 +23,6 @@ function RequestHandler(dubAPI) {
 RequestHandler.prototype.queue = function (options, callback) {
   if (typeof options !== 'object') throw new TypeError('options must be an object');
   if (typeof options.url !== 'string') throw new TypeError('options.url must be a string');
-  console.log('options');
-  console.log(options);
   var isChat = options.isChat;
   delete options.isChat;
 

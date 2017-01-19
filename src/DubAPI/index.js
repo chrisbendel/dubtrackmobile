@@ -58,8 +58,8 @@ function DubAPI(auth, callback) {
     .then((res) => {
       let code = res.code;
       if (code !== 200) return callback(new DubAPIRequestError(code, that._.reqHandler.endpoint(endpoints.authSession)));
-      that._.self = new SelfModel(res.data);
       that._.sokHandler.connect();
+      that._.self = new SelfModel(res.data);
     })
     .catch(function (err) {
       console.log('auth err' + err);
@@ -167,13 +167,13 @@ DubAPI.prototype.sendChat = function (message, callback) {
 
   message = message.match(/(.{1,255})(?:\s|$)|(.{1,255})/g);
   var body = {};
-  console.log('message: ' + message);
+
   body.type = 'chat-message';
   body.realTimeChannel = this._.room.realTimeChannel;
 
   for (var i = 0; i < message.length; i++) {
     body.time = Date.now();
-    body.message = message[i];
+    body.message += message[i];
 
     this._.reqHandler.queue({method: 'POST', url: endpoints.chat, body: utils.clone(body), isChat: true}, callback);
 

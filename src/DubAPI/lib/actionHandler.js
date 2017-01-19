@@ -32,7 +32,7 @@ function doLogin(auth, callback) {
     })
   };
 
-  fetch('https://api.dubtrack.fm/auth/dubtrack', obj)
+  fetch('https://api.dubtrack.fm/auth/dubtrack/', obj)
     .then(function (res) {
       var code = res.status;
       if (code === 200) {

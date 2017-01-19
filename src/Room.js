@@ -18,10 +18,11 @@ export default class Room extends Component {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       room: {},
+      self: this.props.api._.self,
       dataSource: ds.cloneWithRows([]),
     };
-    // this.loadChat();
-
+    console.log(this.props.api._.self);
+    this.postChat();
   }
 
   componentWillMount() {
@@ -33,17 +34,38 @@ export default class Room extends Component {
           room: room,
           dataSource: this.state.dataSource.cloneWithRows(testchat)
         });
+        this.props.api.sendChat('hello');
       })
       .catch(e => {
+        console.log(e);
         Promise.reject(e);
       });
-    console.log('hi');
-
   }
 
-  renderRow(rowData) {
+  postChat() {
+    let postChat = {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: 'hello',
+        time: '1484697600',
+        realTimeChannel: this.state.room.realTimeChannel,
+        type: 'chat-message',
+        user: this.state.self
+      })
+    };
+    return fetch('https://api.dubtrack/fm/chat/' + this.state.room.id, postChat)
+      .then(res => res.json())
+      .then(json => {
+        console.log(json);
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
-
 
 //TODO: render each chat message in a row
   renderRow(rowData) {
@@ -56,7 +78,6 @@ export default class Room extends Component {
 
 
   render() {
-    console.log(this.state.room);
     return (
       //TODO: maybe put in a before and after updub image
       <View style={styles.container}>
