@@ -11,18 +11,23 @@ class AccountProtocol {
 
   login(username, password, callback) {
     checkArgs(arguments, ['String', 'String', 'Function'], "[Protocol] login", 2);
+    let login = {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Origin': '',
+      },
+      body: JSON.stringify({
+        'username': username,
+        'password': password
+      }),
+    };
 
-    // this.request({
-    //   method: 'POST',
-    //   url: 'auth/dubtrack',
-    //   form: {
-    //     username: username,
-    //     password: password
-    //   }
-    // }, function (error, response, body) {
-    //   if (!errorCheck(error, response, body, "[Protocol] login")) return;
-    //   if (callback != undefined) callback();
-    // });
+    fetch('https://api.dubtrack.fm/auth/dubtrack', login)
+      .catch(e => {
+        console.log(e);
+      });
   }
 
   logout(callback) {

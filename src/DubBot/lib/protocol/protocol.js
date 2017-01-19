@@ -18,7 +18,7 @@ class Protocol {
       json: true,
       gzip: true,
     };
-    this.request = fetch('https://api.dubtrack.fm/', req);
+    // this.request = fetch('https://api.dubtrack.fm/', req);
     //we make a custom request with its own cookies (allows logging in with multiple accounts)
     // this.request = _request.defaults({
     //   baseUrl: 'https://api.dubtrack.fm/',
