@@ -16,18 +16,16 @@ import app from './app';
 export default class Room extends Component {
   constructor(props) {
     super(props);
-    // console.log(this.props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       dataSource: ds.cloneWithRows([]),
     };
+    app.bot.socket.send(JSON.stringify({'action': 10, 'channel': 'room:587aba8e37aa1e7f0006742a'}));
+    // app.bot.socket.send(JSON.stringify({'action': 10, 'channel': 'room:' + this.props.roomId}));
+    console.log(app.bot);
   }
 
-  componentWillMount() {
-    app.bot.join('dubtrackmobiletest');
-  }
-
-//TODO: render each chat message in a row
+  //TODO: render each chat message in a row
   renderRow(rowData) {
     return (
       <View>
@@ -35,7 +33,6 @@ export default class Room extends Component {
       </View>
     );
   }
-
 
   render() {
     return (
@@ -50,7 +47,9 @@ export default class Room extends Component {
           <Text name="queue" onPress={() => {
             app.bot.protocol.account.logout();
           }}>queue</Text>
-          <Text name="heart">heart</Text>
+          <Text name="heart" onPress={() => {
+            app.bot.protocol.account.logout();
+          }}>heart</Text>
           <Text name="up">up</Text>
           <Text name="down">down</Text>
         </Tabs>

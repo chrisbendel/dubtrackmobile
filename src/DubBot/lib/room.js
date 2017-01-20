@@ -22,8 +22,6 @@ class NotACommandError {
   }
 }
 
-//TODO: this class might need to have a socket library added to connect to websocket
-
 class Room extends EventEmitter {
   constructor(ref, dubbot) {
     super();
@@ -33,8 +31,6 @@ class Room extends EventEmitter {
     this._ref = ref;
     this.id = '';
     this.realTimeChannel = '';
-    this.socket = null;
-
 
     this.currentSong = undefined;
 
@@ -63,12 +59,10 @@ class Room extends EventEmitter {
   }
 
   removeCommand(name) {
-
     return this._commands.remove(name);
   }
 
   setGlobalCD(o) {
-
     this._globalCD.setAllCD(o);
   }
 
@@ -84,28 +78,28 @@ class Room extends EventEmitter {
   }
 
   setSocket(token) {
-    this.socket = new EngineIOClient({
+    this.dubbot.socket = new EngineIOClient({
       hostname: 'ws.dubtrack.fm',
       secure: true,
       path: '/ws',
       query: {access_token: token},
       transports: ['websocket']
     });
-
     //socket listeners
-    this.socket.on('open', function () {
+    this.dubbot.socket.on('open', function () {
       console.log('socket open');
     });
-    this.socket.on('message', function (msg) {
+    this.dubbot.socket.on('message', function (msg) {
       console.log('socket message');
-      console.log(msg);
+      console.log(JSON.parse(msg));
     });
-    this.socket.on('close', function () {
+    this.dubbot.socket.on('close', function () {
       console.log('socket closed');
     });
-    this.socket.on('error', function () {
+    this.dubbot.socket.on('error', function () {
       console.log('socket error');
     });
+    return this.dubbot.socket;
   }
 
   _join(id, realTimeChannel) {
@@ -115,7 +109,7 @@ class Room extends EventEmitter {
     return fetch('https://api.dubtrack.fm/auth/token')
       .then((res) => res.json())
       .then((json) => {
-        this.setSocket(json.data.token);
+        return this.setSocket(json.data.token);
       })
       .catch(() => {
         console.log('error');

@@ -14,12 +14,11 @@ export default class app extends Component {
   static bot = new DubBot('dubtrackmobile', 'insecure');
 
   componentWillMount() {
-    app.bot.join('dubtrackmobiletest');
   }
 
   constructor(props) {
     super(props);
-    // app.bot.join('dubtrackmobiletest');
+    app.bot.join('dubtrackmobiletest');
   }
 
   renderScene(route, navigator) {

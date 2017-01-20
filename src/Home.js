@@ -22,6 +22,7 @@ import {
 } from 'react-native-card-view';
 
 import Room from './Room';
+import app from './app';
 
 export default class Home extends Component {
 
@@ -95,6 +96,7 @@ export default class Home extends Component {
   }
 
   pressRow(rowData) {
+    // app.bot.join(rowData._id);
     this.props.navigator.push({
       title: 'Room',
       passProps: {

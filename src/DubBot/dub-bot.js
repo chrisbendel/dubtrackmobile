@@ -19,6 +19,7 @@ class DubBot extends EventEmitter {
     this.username = username;
     this.emitter = new EventEmitter();
     this.protocol = new Protocol();
+    this.socket = null;
     this.rooms = new RoomList(this);
     this.pm = new PMManager(this);
     this.id = '';
@@ -71,7 +72,6 @@ class DubBot extends EventEmitter {
   }
 
   getConversation(users, callback) {
-
     if (users.constructor !== Array) {
       users = [users];
     }
