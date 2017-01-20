@@ -111,6 +111,14 @@ class Room extends EventEmitter {
       .then((json) => {
         return this.setSocket(json.data.token);
       })
+      .then(() => {
+        this.dubbot.socket.send(JSON.stringify({
+          action: 15,
+          channel: 'room:55f8353d44809b0300f88699',
+          serverId: 'd34a1cf7ec7d3409fd5e7a4ad15a288b'
+        }));
+        // this.dubbot.socket.send(JSON.stringify({action: 14, channel: 'room:55f8353d44809b0300f88699'}));
+      })
       .catch(() => {
         console.log('error');
       });

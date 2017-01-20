@@ -53,6 +53,10 @@ class DubBot extends EventEmitter {
     }
   }
 
+  connect = function () {
+    this.socket.send(JSON.stringify({action: 10, channel: 'room:55f8353d44809b0300f88699'}))
+  }
+
   join = function (room) {
     return this.rooms.add(room);
   };

@@ -20,7 +20,7 @@ export default class Room extends Component {
     this.state = {
       dataSource: ds.cloneWithRows([]),
     };
-    app.bot.socket.send(JSON.stringify({'action': 10, 'channel': 'room:587aba8e37aa1e7f0006742a'}));
+    // app.bot.socket.send(JSON.stringify({'action': 10, 'channel': 'room:587aba8e37aa1e7f0006742a'}));
     // app.bot.socket.send(JSON.stringify({'action': 10, 'channel': 'room:' + this.props.roomId}));
     console.log(app.bot);
   }
@@ -45,7 +45,10 @@ export default class Room extends Component {
           renderRow={this.renderRow.bind(this)}/>
         <Tabs>
           <Text name="queue" onPress={() => {
-            app.bot.protocol.account.logout();
+            app.bot.connect();
+            {/*app.bot.socket.send(JSON.stringify({action: 10, channel: 'room:' + this.props.roomId}));*/}
+            {/*app.bot.socket.send(JSON.stringify({action: 10, channel: 'room:55f8353d44809b0300f88699'}));*/}
+
           }}>queue</Text>
           <Text name="heart" onPress={() => {
             app.bot.protocol.account.logout();
