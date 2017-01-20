@@ -8,8 +8,7 @@ class PlaylistProtocol {
   }
 
   list(callback) {
-
-    fetch(base + 'playlist')
+    return fetch(base + 'playlist')
       .then(res => res.json())
       .then(json => {
         console.log(json);

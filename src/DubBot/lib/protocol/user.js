@@ -3,17 +3,16 @@
 const base = 'https://api.dubtrack.fm/';
 
 class UserProtocol {
-  constructor(request) {
-    this.request = request;
+  constructor() {
   }
 
-
-  info(user, callback) {
+  info(user) {
     return fetch(base + 'user/' + user)
       .then(res => res.json())
       .then(json => {
         console.log('inside user.info');
         console.log(json);
+        return json;
       })
       .catch(e => {
         console.log(e);

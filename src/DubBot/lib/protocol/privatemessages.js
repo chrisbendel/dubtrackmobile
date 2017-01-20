@@ -1,38 +1,51 @@
 'use strict';
 
+var base = 'https://api.dubtrack.fm/';
+
 class PMProtocol {
-  constructor(request) {
-    this.request = request;
+  constructor() {
   }
 
-  list(callback) {
-    this.request({
-      method: 'GET',
-      url: 'message'
-    }, function (error, response, body) {
-      if (callback != undefined) callback(body.data);
-    });
+  list() {
+    return fetch(base + 'message')
+      .then(res => res.json())
+      .then(json => {
+        console.log('json inside pm.list()');
+        console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 
-  checkNew(callback) {
-    this.request({
-      method: 'GET',
-      url: 'message/new'
-    }, function (error, response, body) {
-      if (callback != undefined) callback(body.data);
-    });
+  checkNew() {
+    return fetch(base + 'message/new')
+      .then(res => res.json())
+      .then(json => {
+        console.log('json inside pm.checkNew()');
+        console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 
-  messages(converid, callback) {
-    this.request({
-      method: 'GET',
-      url: 'message/' + converid
-    }, function (error, response, body) {
-      if (callback != undefined) callback(body.data);
-    });
+  messages(converid) {
+    return fetch(base + 'message/' + converid)
+      .then(res => res.json())
+      .then(json => {
+        console.log('json inside pm.messages()');
+        console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 
-  get(usersid, callback) {
+  get(usersid) {
     if (usersid.constructor === String) {
       usersid = [usersid];
     }
@@ -42,37 +55,76 @@ class PMProtocol {
       return;
     }
 
-    this.request({
+    let obj = {
       method: 'POST',
-      url: 'message',
-      form: {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Origin': '',
+      },
+      body: JSON.stringify({
         'usersid': usersid
-      }
-    }, function (error, response, body) {
-      if (callback != undefined) callback(body.data);
-    });
+      })
+    };
+
+    return fetch(base + 'message', obj)
+      .then(res => res.json())
+      .then(json => {
+        console.log('json inside pm.get()');
+        console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 
-  send(converid, message, callback) {
-    this.request({
+  send(converid, message) {
+    let obj = {
       method: 'POST',
-      url: 'message/' + converid,
-      form: {
-        message: message,
-        time: Date.now()
-      }
-    }, function (error, response, body) {
-      if (callback != undefined) callback(body.data);
-    });
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Origin': '',
+      },
+      body: JSON.stringify({
+        'message': message,
+        'time': Date.now()
+      })
+    };
+
+    return fetch(base + 'message/' + converid, obj)
+      .then(res => res.json())
+      .then(json => {
+        console.log('json inside pm.send()');
+        console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 
-  read(converid, callback) {
-    this.request({
+  read(converid) {
+    let obj = {
       method: 'POST',
-      url: 'message/' + converid + "/read"
-    }, function (error, response, body) {
-      if (callback != undefined) callback(body.data);
-    });
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Origin': '',
+      }
+    };
+
+    return fetch(base + 'message/' + converid + '/read', obj)
+      .then(res => res.json())
+      .then(json => {
+        console.log('json inside pm.read()');
+        console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 }
 

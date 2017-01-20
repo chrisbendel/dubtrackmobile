@@ -2,53 +2,84 @@
 
 var base = 'https://api.dubtrack.fm/';
 class RoomProtocol {
-  constructor(request) {
-    // this.get = function (endpoint) {
-    //   return fetch('https://api.dubtrack.fm/' + endpoint)
-    //     .then(res => res.json())
-    //     .then(json => {
-    //       return json;
-    //     });
-    // };
+  constructor() {
+    //TODO might be broken
+    this.queue = new (require('./room/queue.js'));
+    this.userQueue = new (require('./room/userqueue.js'));
 
-    this.queue = new (require('./room/queue.js'))(request);
-    this.userQueue = new (require('./room/userqueue.js'))(request);
+    // this.queue = new (require('./room/queue.js'))(request);
+    // this.userQueue = new (require('./room/userqueue.js'))(request);
   }
 
-  listPublic(callback) {
-
-    this.request({
-      method: 'GET',
-      url: 'room'
-    }, function (error, response, body) {
-      if (callback != undefined) callback(body.data);
-    });
+  listPublic() {
+    return fetch(base + 'room')
+      .then(res => res.json())
+      .then(json => {
+        console.log('json inside room.listpublic()');
+        console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 
-  make(roomObject, callback) {
-    this.request({
+  make(roomObject) {
+    let obj = {
       method: 'POST',
-      url: 'room',
-      form: roomObject
-    }, function (error, response, body) {
-      if (callback != undefined) callback(body);
-    });
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Origin': '',
+      },
+      body: JSON.stringify({
+        'roomObject': roomObject
+      })
+    };
+
+    return fetch(base + 'room', obj)
+      .then(res => res.json())
+      .then(json => {
+        console.log('json inside room.make()')
+        console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e)
+      });
   }
 
-  update(roomObject, callback) {
-    this.request({
+  update(roomObject) {
+    let obj = {
       method: 'PUT',
-      url: 'room',
-      form: roomObject
-    }, function (error, response, body) {
-      if (callback != undefined) callback(body);
-    });
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Origin': '',
+      },
+      body: JSON.stringify({
+        'roomObject': roomObject
+      })
+    };
+
+    return fetch(base + 'room', obj)
+      .then(res => res.json())
+      .then(json => {
+        console.log('json inside room.update()');
+        console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e)
+      });
   }
 
   info(room) {
     return fetch(base + 'room/' + room)
       .then(res => res.json())
       .then(json => {
+        console.log('json inside room.info()');
+        console.log(json);
         return json;
       })
       .catch(e => {

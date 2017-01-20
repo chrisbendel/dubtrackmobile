@@ -4,22 +4,9 @@ var base = 'https://api.dubtrack.fm/';
 
 class RoomQueueProtocol {
   constructor() {
-    this.fetchData = function (endpoint, method) {
-      return fetch('https://api.dubtrack.fm/' + endpoint, {
-        method: method,
-      })
-        .then(res => res.json())
-        .then(json => {
-          console.log(json);
-        })
-        .catch(e => {
-          console.log(e);
-        })
-    }
   }
 
   info(roomid, detailed, callback) {
-
     if (detailed !== undefined) {
       if (detailed.constructor === Function) {
         callback = detailed;
@@ -32,7 +19,35 @@ class RoomQueueProtocol {
     return fetch(base + 'room/' + roomid + '/playlist' + (details ? '/details' : ''))
       .then(res => res.json())
       .then(json => {
+        console.log('json in queue.info()');
         console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
+
+  currentSong(roomid) {
+    return fetch(base + 'room/' + roomid + '/playlist/active')
+      .then(res => res.json())
+      .then(json => {
+        console.log('json in queue.currentSong()');
+        console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
+
+  currentSongDubs(roomid, callback) {
+    return fetch(base + 'room/' + '/playlist/active/dubs')
+      .then(res => res.json())
+      .then(json => {
+        console.log('json in queue.currentsongdubs()');
+        console.log(json);
+        return json;
       })
       .catch(e => {
         console.log(e);
@@ -40,37 +55,39 @@ class RoomQueueProtocol {
 
     // this.request({
     //   method: 'GET',
-    //   url: 'room/' + roomid + '/playlist' + (detailed ? '/details' : '')
+    //   url: 'room/' + roomid + '/playlist/active/dubs'
     // }, function (error, response, body) {
     //   if (callback != undefined) callback(body.data);
     // });
   }
 
-  currentSong(roomid, callback) {
-    this.request({
-      method: 'GET',
-      url: 'room/' + roomid + '/playlist/active'
-    }, function (error, response, body) {
-      if (callback != undefined) callback(body.data);
-    });
-  }
-
-  currentSongDubs(roomid, callback) {
-    this.request({
-      method: 'GET',
-      url: 'room/' + roomid + '/playlist/active/dubs'
-    }, function (error, response, body) {
-      if (callback != undefined) callback(body.data);
-    });
-  }
-
   skip(roomid, songid, callback) {
-    this.request({
+    let obj = {
       method: 'POST',
-      url: 'chat/skip/' + roomid + '/' + songid
-    }, function (error, response, body) {
-      if (callback != undefined) callback(body);
-    });
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Origin': '',
+      }
+    };
+
+    return fetch(base + 'chat/skip/' + roomid + '/' + songid, obj)
+      .then(res => res.json())
+      .then(json => {
+        console.log('json from skip post')
+        console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e);
+      });
+
+    // this.request({
+    //   method: 'POST',
+    //   url: 'chat/skip/' + roomid + '/' + songid
+    // }, function (error, response, body) {
+    //   if (callback != undefined) callback(body);
+    // });
   }
 
 //TODO check from here
