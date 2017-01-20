@@ -2,8 +2,6 @@
 
 var EngineIOClient = require('react-native-engine.io-client');
 import EventEmitter from 'EventEmitter';
-// const EventEmitter = require('EventEmitter');
-const pubnub = require('pubnub');
 
 const User = require('./user.js');
 const Song = require('./song.js');
@@ -35,8 +33,8 @@ class Room extends EventEmitter {
     this._ref = ref;
     this.id = '';
     this.realTimeChannel = '';
-    this._pubnub = undefined;
     this.socket = null;
+
 
     this.currentSong = undefined;
 
@@ -85,41 +83,43 @@ class Room extends EventEmitter {
     this.dubbot.protocol.room.send(this.id, message, this.realTimeChannel);
   }
 
-  _join(id, realTimeChannel) {
-    this.id = id;
-    this.realTimeChannel = realTimeChannel;
-
+  setSocket(token) {
     this.socket = new EngineIOClient({
       hostname: 'ws.dubtrack.fm',
       secure: true,
       path: '/ws',
+      query: {access_token: token},
       transports: ['websocket']
     });
 
-    //TODO: remove old pubnub requests when engineioclient works
-    // this._pubnub = pubnub({
-    //   backfill: false,
-    //   restore: false,
-    //   subscribe_key: 'sub-c-2b40f72a-6b59-11e3-ab46-02ee2ddab7fe',
-    //   ssl: true,
-    //   uuid: this.dubbot.id
-    //
-    // });
-    // let that = this;
-    //For some reason pubnub changes the this in the callback -.-'
-    // this._pubnub.subscribe({
-    //   channel: that.realTimeChannel,
-    //   connect: function () {
-    //     that.emit('connect');
-    //   },
-    //   disconnect: function () {
-    //     that.emit('disconnect');
-    //   },
-    //   message: function () {
-    //     that._onmessage.apply(that, arguments);
-    //   },
-    //   error: console.error
-    // });
+    //socket listeners
+    this.socket.on('open', function () {
+      console.log('socket open');
+    });
+    this.socket.on('message', function (msg) {
+      console.log('socket message');
+      console.log(msg);
+    });
+    this.socket.on('close', function () {
+      console.log('socket closed');
+    });
+    this.socket.on('error', function () {
+      console.log('socket error');
+    });
+  }
+
+  _join(id, realTimeChannel) {
+    this.id = id;
+    this.realTimeChannel = realTimeChannel;
+
+    return fetch('https://api.dubtrack.fm/auth/token')
+      .then((res) => res.json())
+      .then((json) => {
+        this.setSocket(json.data.token);
+      })
+      .catch(() => {
+        console.log('error');
+      });
   }
 
   _onmessage(msg) {

@@ -19,54 +19,13 @@ export default class Room extends Component {
     // console.log(this.props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
-      room: {},
-      self: {},
-      // self: this.props.api._.self,
       dataSource: ds.cloneWithRows([]),
     };
   }
 
   componentWillMount() {
-    // let testchat = ['1', '2', '3', '4'];
-    // this.props.api.disconnect();
-    // this.props.api.connect(this.props.roomId)
-    //   .then(room => {
-    //     this.setState({
-    //       room: room,
-    //       dataSource: this.state.dataSource.cloneWithRows(testchat)
-    //     });
-    //     this.props.api.sendChat('hello');
-    //   })
-    //   .catch(e => {
-    //     console.log(e);
-    //     Promise.reject(e);
-    //   });
+    app.bot.join('dubtrackmobiletest');
   }
-
-  // postChat() {
-  //   let postChat = {
-  //     method: 'POST',
-  //     headers: {
-  //       'Accept': 'application/json',
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify({
-  //       message: 'hello',
-  //       time: '1484697600',
-  //       realTimeChannel: this.state.room.realTimeChannel,
-  //       type: 'chat-message',
-  //       user: this.state.self
-  //     })
-  //   };
-  //   return fetch('https://api.dubtrack/fm/chat/' + this.state.room.id, postChat)
-  //     .then(res => res.json())
-  //     .then(json => {
-  //       console.log(json);
-  //     })
-  //     .catch(e => {
-  //       console.log(e);
-  //     });
-  // }
 
 //TODO: render each chat message in a row
   renderRow(rowData) {
@@ -82,14 +41,14 @@ export default class Room extends Component {
     return (
       //TODO: maybe put in a before and after updub image
       <View style={styles.container}>
-        <Text style={styles.roomTitle}> {this.state.room.name} </Text>
+        <Text style={styles.roomTitle}> room name goes here </Text>
         <ListView
           enableEmptySections={true}
           dataSource={this.state.dataSource}
           renderRow={this.renderRow.bind(this)}/>
         <Tabs>
           <Text name="queue" onPress={() => {
-            console.log(app.bot);
+            app.bot.protocol.account.logout();
           }}>queue</Text>
           <Text name="heart">heart</Text>
           <Text name="up">up</Text>
