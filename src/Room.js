@@ -16,7 +16,7 @@ import app from './app';
 export default class Room extends Component {
   constructor(props) {
     super(props);
-    // console.log(app.bot);
+    // console.log(this.props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       room: {},
@@ -24,8 +24,6 @@ export default class Room extends Component {
       // self: this.props.api._.self,
       dataSource: ds.cloneWithRows([]),
     };
-    // var room = bot.join('dubtrackmobile');
-    // console.log(room);
   }
 
   componentWillMount() {
@@ -90,7 +88,9 @@ export default class Room extends Component {
           dataSource={this.state.dataSource}
           renderRow={this.renderRow.bind(this)}/>
         <Tabs>
-          <Text name="queue">queue</Text>
+          <Text name="queue" onPress={() => {
+            console.log(app.bot);
+          }}>queue</Text>
           <Text name="heart">heart</Text>
           <Text name="up">up</Text>
           <Text name="down">down</Text>

@@ -43,8 +43,8 @@ export default class Home extends Component {
           dataSource: this.state.dataSource.cloneWithRows(json.data)
         });
       })
-      .catch(() => {
-        console.log('error');
+      .catch(e => {
+        console.log(e);
       });
   }
 

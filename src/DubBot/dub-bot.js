@@ -10,7 +10,7 @@ const PMManager = require('./lib/conversationmanager.js');
 const roles = require('./lib/data/roles.js');
 
 class DubBot extends EventEmitter {
-  constructor(username, password, callback, Protocol) {
+  constructor(username, password, Protocol) {
 
     if (Protocol == undefined) Protocol = require('./lib/protocol/protocol.js');
 
@@ -53,9 +53,7 @@ class DubBot extends EventEmitter {
   }
 
   join = function (room) {
-    //todo might need to resolve promise with .then() to get returned room
-    var room = this.rooms.add(room);
-    // return this.rooms.add(room);
+    return this.rooms.add(room);
   };
 
   getUser(user, callback) {
