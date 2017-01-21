@@ -23,8 +23,8 @@ class PMProtocol {
     return fetch(base + 'message/new')
       .then(res => res.json())
       .then(json => {
-        console.log('json inside pm.checkNew()');
-        console.log(json);
+        // console.log('json inside pm.checkNew()');
+        // console.log(json);
         return json;
       })
       .catch(e => {

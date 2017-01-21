@@ -11,38 +11,30 @@ class RoomList {
 
   add(room) {
     let r = new Room(room, this.dubbot);
-
     if (this.dubbot.connected) {
       this._joinRoom(r);
     } else {
       this.toJoin.push(r);
     }
-
     return r;
   }
 
   _joinRoom(room) {
     let that = this;
-    // var info = this.dubbot.room.info(room._ref);
     this.dubbot.protocol.room.info(room._ref)
       .then(res => {
         let data = res.data;
         let id = data._id;
-        if (that.rooms[id] === undefined) {
-          room._join(id, data.realTimeChannel);
-          that.rooms[id] = room;
-        }
+        room._join(id, data.realTimeChannel);
+        that.rooms[id] = room;
+        // if (that.rooms[id] === undefined) {
+        //   that.rooms[id] = room;
+        //   room._join(id, data.realTimeChannel);
+        // }
       })
       .catch(e => {
         console.log(e);
       });
-    // this.dubbot.protocol.room.info(room._ref, function (data) {
-    //   let id = data._id;
-    //   if (that.rooms[id] === undefined) {
-    //     room._join(id, data.realTimeChannel);
-    //     that.rooms[id] = room;
-    //   }
-    // });
   }
 
   _joinRooms() {

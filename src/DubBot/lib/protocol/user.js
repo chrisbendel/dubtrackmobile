@@ -19,49 +19,82 @@ class UserProtocol {
       });
   }
 
-  image(userid, large, callback) {
+  image(userid, large) {
     if (large !== undefined) {
       if (large.constructor === Function) {
-        callback = large;
         large = false;
       }
     } else {
       large = false;
     }
 
-    this.request({
-      method: 'GET',
-      url: 'user/' + userid + '/image' + (large ? '/large' : '')
-    }, function (error, response, body) {
-      if (callback != undefined) callback(response.caseless.dict.location);
-    });
+    return fetch(base + 'user/' + userid + '/image' + (large ? '/large' : ''))
+      .then(res => res.json())
+      .then(json => {
+        console.log('inside user.image()');
+        console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 
-  followers(userid, callback) {
-    this.request({
-      method: 'GET',
-      url: 'user/' + userid + '/following'
-    }, function (error, response, body) {
-      if (callback != undefined) callback(body.data);
-    });
+  followers(userid) {
+    return fetch(base + 'user/' + userid + '/following')
+      .then(res => res.json())
+      .then(json => {
+        console.log('inside user.followers()');
+        console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 
-  follow(userid, callback) {
-    this.request({
+  follow(userid) {
+    let obj = {
       method: 'POST',
-      url: 'user/' + userid + '/following'
-    }, function (error, response, body) {
-      if (callback != undefined) callback(body.data);
-    });
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Origin': '',
+      }
+    };
+
+    return fetch(base + 'user/' + userid + '/following', obj)
+      .then(res => res.json())
+      .then(json => {
+        console.log('json in user.follow()');
+        console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 
-  unfollow(userid, callback) {
-    this.request({
+  unfollow(userid) {
+    let obj = {
       method: 'DELETE',
-      url: 'user/' + userid + '/following'
-    }, function (error, response, body) {
-      if (callback != undefined) callback(body.data);
-    });
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Origin': '',
+      }
+    };
+
+    return fetch(base + 'user/' + userid + '/following', obj)
+      .then(res => res.json())
+      .then(json => {
+        console.log('json in user.unfollow()');
+        console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 }
 

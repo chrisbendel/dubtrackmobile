@@ -29,12 +29,6 @@ class AccountProtocol {
 
   logout() {
     return fetch(base + 'auth/logout')
-      .then(res => res.json())
-      .then(json => {
-        console.log('json inside account.logout()');
-        console.log(json);
-        return json;
-      })
       .catch(e => {
         console.log(e);
       });

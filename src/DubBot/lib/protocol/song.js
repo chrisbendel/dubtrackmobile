@@ -1,44 +1,56 @@
 'use strict';
 
+const base = 'https://api.dubtrack.fm/';
+
 class SongProtocol {
-  constructor(request) {
-    this.request = request;
+  constructor() {
   }
 
-  search(type, name, nextPageToken, callback) {
+  search(type, name, nextPageToken) {
     if (nextPageToken !== undefined) {
       if (nextPageToken.constructor === Function) {
-        callback = nextPageToken;
         nextPageToken = '';
       }
     } else {
       nextPageToken = '';
     }
 
-    this.request({
-      method: 'GET',
-      url: 'song?name=' + name + '&type=' + type + '&details=1&nextPageToken=' + nextPageToken
-    }, function (error, response, body) {
-      if (callback != undefined) callback(body.data);
-    });
+    return fetch(base + 'song?name=' + name + '&type=' + type + '&details=1&nextPageToken=' + nextPageToken)
+      .then(res => res.json())
+      .then(json => {
+        console.log('json inside song.search()');
+        console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 
-  info(song, callback) {
-    this.request({
-      method: 'GET',
-      url: 'song/' + song
-    }, function (error, response, body) {
-      if (callback != undefined) callback(response);
-    });
+  info(song) {
+    return fetch(base + 'song/' + song)
+      .then(res => res.json())
+      .then(json => {
+        console.log('json inside song.info()');
+        console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 
-  link(songId, callback) {
-    this.request({
-      method: 'GET',
-      url: 'song/' + songId + '/redirect'
-    }, function (error, response, body) {
-      if (callback != undefined) callback(response.caseless.dict.location);
-    });
+  link(songId) {
+    return fetch(base + 'song/' + songId + '/redirect')
+      .then(res => res.json())
+      .then(json => {
+        console.log('json inside song.link()');
+        console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 }
 

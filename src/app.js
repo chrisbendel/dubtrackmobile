@@ -8,12 +8,9 @@ import Home from './Home';
 import Room from './Room';
 import Settings from './Settings';
 
-import DubAPI from './DubAPI/index';
 import DubBot from './DubBot/dub-bot';
 
 export default class app extends Component {
-  // static api = new DubAPI({username: 'dubtrackmobile', password: 'insecure'}, function (err, bot) {
-  // });
   static bot = new DubBot('dubtrackmobile', 'insecure');
 
   componentWillMount() {
@@ -21,7 +18,7 @@ export default class app extends Component {
 
   constructor(props) {
     super(props);
-    var room = app.bot.join('dubtrackmobiletest');
+    app.bot.join('dubtrackmobiletest');
   }
 
   renderScene(route, navigator) {
@@ -48,7 +45,7 @@ export default class app extends Component {
           <Settings
             navigator={navigator}
             {...route.passProps}
-            bot={app.bot}/>
+            bot={app.bot}/>;
         break;
       default:
         component = null;

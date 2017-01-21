@@ -16,61 +16,16 @@ import app from './app';
 export default class Room extends Component {
   constructor(props) {
     super(props);
-    // console.log(app.bot);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
-      room: {},
-      self: {},
-      // self: this.props.api._.self,
       dataSource: ds.cloneWithRows([]),
     };
-    // var room = bot.join('dubtrackmobile');
-    // console.log(room);
+    // app.bot.socket.send(JSON.stringify({'action': 10, 'channel': 'room:587aba8e37aa1e7f0006742a'}));
+    // app.bot.socket.send(JSON.stringify({'action': 10, 'channel': 'room:' + this.props.roomId}));
+    console.log(app.bot);
   }
 
-  componentWillMount() {
-    // let testchat = ['1', '2', '3', '4'];
-    // this.props.api.disconnect();
-    // this.props.api.connect(this.props.roomId)
-    //   .then(room => {
-    //     this.setState({
-    //       room: room,
-    //       dataSource: this.state.dataSource.cloneWithRows(testchat)
-    //     });
-    //     this.props.api.sendChat('hello');
-    //   })
-    //   .catch(e => {
-    //     console.log(e);
-    //     Promise.reject(e);
-    //   });
-  }
-
-  // postChat() {
-  //   let postChat = {
-  //     method: 'POST',
-  //     headers: {
-  //       'Accept': 'application/json',
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify({
-  //       message: 'hello',
-  //       time: '1484697600',
-  //       realTimeChannel: this.state.room.realTimeChannel,
-  //       type: 'chat-message',
-  //       user: this.state.self
-  //     })
-  //   };
-  //   return fetch('https://api.dubtrack/fm/chat/' + this.state.room.id, postChat)
-  //     .then(res => res.json())
-  //     .then(json => {
-  //       console.log(json);
-  //     })
-  //     .catch(e => {
-  //       console.log(e);
-  //     });
-  // }
-
-//TODO: render each chat message in a row
+  //TODO: render each chat message in a row
   renderRow(rowData) {
     return (
       <View>
@@ -79,20 +34,25 @@ export default class Room extends Component {
     );
   }
 
-
   render() {
     return (
-      //TODO: maybe put in a before and after updub image
+      //TODO: maybe put in icon before and after updub image
       <View style={styles.container}>
-        <Text style={styles.roomTitle}> {this.state.room.name} </Text>
+        <Text style={styles.roomTitle}> room name goes here </Text>
         <ListView
           enableEmptySections={true}
           dataSource={this.state.dataSource}
           renderRow={this.renderRow.bind(this)}/>
         <Tabs>
-          <Text name="queue">queue</Text>
-          <Text name="heart">heart</Text>
-          <Text name="up">up</Text>
+          <Text name="queue" onPress={() => {
+             app.bot.connectToRoom(this.props.roomId);
+          }}>queue</Text>
+          <Text name="heart" onPress={() => {
+            app.bot.protocol.account.logout();
+          }}>heart</Text>
+          <Text name="send" onPress={() => {
+            console.log('todo send message using the api');
+          }}>up</Text>
           <Text name="down">down</Text>
         </Tabs>
       </View>

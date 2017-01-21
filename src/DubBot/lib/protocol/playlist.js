@@ -4,10 +4,9 @@ var base = 'https://api.dubtrack.fm/';
 
 class PlaylistProtocol {
   constructor() {
-    // this.request = request;
   }
 
-  list(callback) {
+  list() {
     return fetch(base + 'playlist')
       .then(res => res.json())
       .then(json => {
@@ -20,7 +19,6 @@ class PlaylistProtocol {
   }
 
   make(name, callback) {
-
     this.request({
       method: 'POST',
       url: 'playlist',
@@ -33,7 +31,6 @@ class PlaylistProtocol {
   }
 
   remove(playlistid, callback) {
-
     this.request({
       method: 'DELETE',
       url: 'playlist/' + playlistid
