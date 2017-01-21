@@ -13,12 +13,8 @@ import DubBot from './DubBot/dub-bot';
 export default class app extends Component {
   static bot = new DubBot('dubtrackmobile', 'insecure');
 
-  componentWillMount() {
-  }
-
   constructor(props) {
     super(props);
-    app.bot.join('dubtrackmobiletest');
   }
 
   renderScene(route, navigator) {
