@@ -10,7 +10,8 @@ import {
   Image,
   Dimensions,
   Navigator,
-  Button
+  Button,
+  Menu
 } from 'react-native';
 
 import {
@@ -22,7 +23,9 @@ import {
 } from 'react-native-card-view';
 
 import Room from './Room';
+import Tabs from 'react-native-tabs';
 import app from './app';
+import SideMenu from 'react-native-side-menu';
 
 export default class Home extends Component {
 
@@ -36,7 +39,6 @@ export default class Home extends Component {
   }
 
   loadData() {
-    var rooms = [];
     return fetch('https://api.dubtrack.fm/room')
       .then((res) => res.json())
       .then((json) => {
@@ -51,21 +53,27 @@ export default class Home extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Button
-          onPress={() => {
-            this.props.navigator.push({
-              title: 'Settings',
-            });
-          }}
-          title="Settings"
-        />
-        <ListView
-          enableEmptySections={true}
-          dataSource={this.state.dataSource}
-          renderRow={this.renderRow.bind(this)}
-        />
-      </View>
+        <View style={styles.container}>
+          <View style={styles.nav}>
+            <Tabs>
+              <Text name="Home" onPress={() => {
+
+              }}>Lobby</Text>
+              <Text name="Current Room" onPress={() => {
+
+              }}>Current Room</Text>
+              <Text name="Settings" onPress={() => {
+
+              }}>Settings</Text>
+            </Tabs>
+          </View>
+          <ListView
+            style={styles.roomList}
+            enableEmptySections={true}
+            dataSource={this.state.dataSource}
+            renderRow={this.renderRow.bind(this)}
+          />
+        </View>
     );
   }
 
@@ -96,7 +104,6 @@ export default class Home extends Component {
   }
 
   pressRow(rowData) {
-    // app.bot.join(rowData._id);
     this.props.navigator.push({
       title: 'Room',
       passProps: {
@@ -109,7 +116,20 @@ export default class Home extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 20,
+    marginTop: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  nav: {
+    position: 'absolute',
+    top: 30,
+    flex: 1,
+    alignSelf: 'stretch',
+    right: 0,
+    left: 0,
+  },
+  roomList: {
+    marginTop: 30,
   },
   rowContainer: {
     paddingTop: 10,

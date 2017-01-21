@@ -20,12 +20,8 @@ export default class Room extends Component {
     this.state = {
       dataSource: ds.cloneWithRows([]),
     };
-    // app.bot.socket.send(JSON.stringify({'action': 10, 'channel': 'room:587aba8e37aa1e7f0006742a'}));
-    // app.bot.socket.send(JSON.stringify({'action': 10, 'channel': 'room:' + this.props.roomId}));
-    console.log(app.bot);
   }
 
-  //TODO: render each chat message in a row
   renderRow(rowData) {
     return (
       <View>
@@ -45,7 +41,7 @@ export default class Room extends Component {
           renderRow={this.renderRow.bind(this)}/>
         <Tabs>
           <Text name="queue" onPress={() => {
-             app.bot.connectToRoom(this.props.roomId);
+            app.bot.connectToRoom(this.props.roomId);
           }}>queue</Text>
           <Text name="heart" onPress={() => {
             app.bot.protocol.account.logout();
