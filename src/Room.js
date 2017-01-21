@@ -36,7 +36,7 @@ export default class Room extends Component {
 
   render() {
     return (
-      //TODO: maybe put in a before and after updub image
+      //TODO: maybe put in icon before and after updub image
       <View style={styles.container}>
         <Text style={styles.roomTitle}> room name goes here </Text>
         <ListView
@@ -45,15 +45,14 @@ export default class Room extends Component {
           renderRow={this.renderRow.bind(this)}/>
         <Tabs>
           <Text name="queue" onPress={() => {
-            app.bot.connect();
-            {/*app.bot.socket.send(JSON.stringify({action: 10, channel: 'room:' + this.props.roomId}));*/}
-            {/*app.bot.socket.send(JSON.stringify({action: 10, channel: 'room:55f8353d44809b0300f88699'}));*/}
-
+             app.bot.connectToRoom(this.props.roomId);
           }}>queue</Text>
           <Text name="heart" onPress={() => {
             app.bot.protocol.account.logout();
           }}>heart</Text>
-          <Text name="up">up</Text>
+          <Text name="send" onPress={() => {
+            console.log('todo send message using the api');
+          }}>up</Text>
           <Text name="down">down</Text>
         </Tabs>
       </View>
