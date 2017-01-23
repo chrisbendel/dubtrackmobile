@@ -7,50 +7,25 @@ import Home from './Home';
 import Room from './Room';
 import Settings from './Settings';
 import DubBot from './DubBot/dub-bot';
-import SideMenu from 'react-native-side-menu';
-import SettingsMenu from './Menu';
+import SettingsMenu from './Settings';
 
 export default class app extends Component {
   static bot = new DubBot('dubtrackmobile', 'insecure');
 
   constructor(props) {
     super(props);
-    this.state = {
-      isOpen: false,
-      selectedItem: 'About'
-    };
   }
-
-  toggle() {
-    this.setState({
-      isOpen: !this.state.isOpen,
-    });
-  }
-
-  updateMenuState(isOpen) {
-    this.setState({isOpen,});
-  }
-
-  onMenuItemSelected = (item) => {
-    this.setState({
-      isOpen: false,
-      selectedItem: item,
-    });
-  };
 
   renderScene(route, navigator) {
-    const menu = <SettingsMenu onItemSelected={this.onMenuItemSelected}/>;
+    let menu = <SettingsMenu navigator={navigator}/>;
     let component;
     switch (route.title) {
       case 'Home':
         component =
-          <SideMenu menu={menu}
-                    menuPosition="right">
-            <Home
-              navigator={navigator}
-              {...route.passProps}
-              bot={app.bot}/>
-          </SideMenu>;
+          <Home
+            navigator={navigator}
+            {...route.passProps}
+            bot={app.bot}/>;
         break;
       case
       'Room':

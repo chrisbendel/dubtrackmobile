@@ -40,10 +40,6 @@ const styles = StyleSheet.create({
 });
 
 export default class Menu extends Component {
-  static propTypes = {
-    // onItemSelected: React.PropTypes.func.isRequired,
-  };
-
   render() {
     return (
       <ScrollView scrollsToTop={false} style={styles.menu}>

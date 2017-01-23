@@ -123,7 +123,7 @@ class Room extends EventEmitter {
             'Origin': '',
           },
         };
-        return fetch('https://api.dubtrack.fm/room/' + room + '/users', obj)
+        return fetch('https://api.dubtrack.fm/room/' + id + '/users', obj)
           .then(res => res.json())
           .then(json => {
             console.log(json);
