@@ -141,7 +141,7 @@ export default class Home extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 40,
+    marginTop: 22,
   },
   nav: {
     position: 'absolute',
@@ -172,6 +172,8 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+    textAlign: 'center',
+    margin: 10,
   },
   rowContainer: {
     paddingTop: 10,
