@@ -71,18 +71,7 @@ export default class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <TouchableHighlight
-          style={styles.settingsButton}
-          onPress={() => {
-            this.props.navigator.push({
-              title: 'Settings',
-            })
-          }}
-        >
-          <Image
-            source={Gear}
-          />
-        </TouchableHighlight>
+
         <ListView
           enableEmptySections={true}
           dataSource={this.state.dataSource}
