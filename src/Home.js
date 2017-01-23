@@ -11,6 +11,7 @@ import {
   Dimensions,
   Navigator,
   Button,
+  TextInput
   Menu
 } from 'react-native';
 
@@ -23,6 +24,7 @@ import {
 } from 'react-native-card-view';
 
 import Room from './Room';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 import Tabs from 'react-native-tabs';
 import app from './app';
 import SideMenu from 'react-native-side-menu';
@@ -33,47 +35,67 @@ export default class Home extends Component {
     super(props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
+      roomSearch: '',
       dataSource: ds.cloneWithRows([])
     };
     this.loadData();
   }
 
-  loadData() {
-    return fetch('https://api.dubtrack.fm/room')
-      .then((res) => res.json())
-      .then((json) => {
-        this.setState({
-          dataSource: this.state.dataSource.cloneWithRows(json.data)
+  loadData(room) {
+    if (room) {
+      return fetch('https://api.dubtrack.fm/room/term/' + room)
+        .then((res) => res.json())
+        .then((json) => {
+          this.setState({
+            dataSource: this.state.dataSource.cloneWithRows(json.data)
+          });
+        })
+        .catch(e => {
+          console.log(e);
         });
-      })
-      .catch(e => {
-        console.log(e);
-      });
+    } else {
+      return fetch('https://api.dubtrack.fm/room')
+        .then((res) => res.json())
+        .then((json) => {
+          this.setState({
+            dataSource: this.state.dataSource.cloneWithRows(json.data)
+          });
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    }
   }
 
+  //use command+shift+k to enable keyboard hardware on ios emulator to test search bar
   render() {
     return (
-        <View style={styles.container}>
-          <View style={styles.nav}>
-            <Tabs>
-              <Text name="Home" onPress={() => {
-
-              }}>Lobby</Text>
-              <Text name="Current Room" onPress={() => {
-
-              }}>Current Room</Text>
-              <Text name="Settings" onPress={() => {
-
-              }}>Settings</Text>
-            </Tabs>
-          </View>
-          <ListView
-            style={styles.roomList}
-            enableEmptySections={true}
-            dataSource={this.state.dataSource}
-            renderRow={this.renderRow.bind(this)}
-          />
-        </View>
+      <View style={styles.container}>
+        <Button
+          onPress={() => {
+            this.props.navigator.push({
+              title: 'Settings',
+            });
+          }}
+          title="Settings"
+        />
+        <ListView
+          enableEmptySections={true}
+          dataSource={this.state.dataSource}
+          renderRow={this.renderRow.bind(this)}
+        />
+        <TextInput
+          style={styles.searchBar}
+          placeholder="Search for a room"
+          returnKeyType='search'
+          returnKeyLabel='search'
+          onChangeText={(roomSearch) => this.setState({roomSearch})}
+          onSubmitEditing={() => {
+            this.loadData(this.state.roomSearch)
+          }}
+        />
+        <KeyboardSpacer/>
+      </View>
     );
   }
 
@@ -130,6 +152,13 @@ const styles = StyleSheet.create({
   },
   roomList: {
     marginTop: 30,
+  },
+  searchBar: {
+    height: 30,
+    borderColor: 'black',
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   rowContainer: {
     paddingTop: 10,
