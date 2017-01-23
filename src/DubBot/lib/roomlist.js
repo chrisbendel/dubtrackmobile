@@ -25,12 +25,8 @@ class RoomList {
       .then(res => {
         let data = res.data;
         let id = data._id;
-        room._join(id, data.realTimeChannel);
         that.rooms[id] = room;
-        // if (that.rooms[id] === undefined) {
-        //   that.rooms[id] = room;
-        //   room._join(id, data.realTimeChannel);
-        // }
+        return room._join(id, data.realTimeChannel);
       })
       .catch(e => {
         console.log(e);

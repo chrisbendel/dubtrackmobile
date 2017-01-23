@@ -12,6 +12,7 @@ import {
   Navigator,
   Button,
   TextInput
+  Menu
 } from 'react-native';
 
 import {
@@ -24,7 +25,9 @@ import {
 
 import Room from './Room';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import Tabs from 'react-native-tabs';
 import app from './app';
+import SideMenu from 'react-native-side-menu';
 
 export default class Home extends Component {
 
@@ -123,7 +126,6 @@ export default class Home extends Component {
   }
 
   pressRow(rowData) {
-    // app.bot.connectToRoom(rowData._id);
     this.props.navigator.push({
       title: 'Room',
       passProps: {
@@ -136,7 +138,20 @@ export default class Home extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 20,
+    marginTop: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  nav: {
+    position: 'absolute',
+    top: 30,
+    flex: 1,
+    alignSelf: 'stretch',
+    right: 0,
+    left: 0,
+  },
+  roomList: {
+    marginTop: 30,
   },
   searchBar: {
     height: 30,
