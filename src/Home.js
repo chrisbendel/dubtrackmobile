@@ -25,6 +25,8 @@ import {
 
 import Room from './Room';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+const Gear = require('./icons/gear.png');
+const Search = require('./icons/search.png');
 import app from './app';
 
 export default class Home extends Component {
@@ -69,14 +71,18 @@ export default class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Button
+        <TouchableHighlight
+          style={styles.settingsButton}
           onPress={() => {
             this.props.navigator.push({
               title: 'Settings',
-            });
+            })
           }}
-          title="Settings"
-        />
+        >
+          <Image
+            source={Gear}
+          />
+        </TouchableHighlight>
         <ListView
           enableEmptySections={true}
           dataSource={this.state.dataSource}
@@ -90,8 +96,7 @@ export default class Home extends Component {
           onChangeText={(roomSearch) => this.setState({roomSearch})}
           onSubmitEditing={() => {
             this.loadData(this.state.roomSearch)
-          }}
-        />
+          }}/>
         <KeyboardSpacer/>
       </View>
     );
@@ -137,8 +142,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   nav: {
     position: 'absolute',
@@ -147,6 +150,18 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     right: 0,
     left: 0,
+  },
+  settingsButton: {
+    zIndex: 1,
+    position: 'absolute',
+    right: 20,
+    shadowColor: "#000000",
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    shadowOffset: {
+      height: 1,
+      width: 0
+    }
   },
   roomList: {
     marginTop: 30,
