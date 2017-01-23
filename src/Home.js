@@ -64,6 +64,7 @@ export default class Home extends Component {
     }
   }
 
+  //use command+shift+k to enable keyboard hardware on ios emulator to test search bar
   render() {
     return (
       <View style={styles.container}>
