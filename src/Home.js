@@ -71,18 +71,7 @@ export default class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <TouchableHighlight
-          style={styles.settingsButton}
-          onPress={() => {
-            this.props.navigator.push({
-              title: 'Settings',
-            })
-          }}
-        >
-          <Image
-            source={Gear}
-          />
-        </TouchableHighlight>
+
         <ListView
           enableEmptySections={true}
           dataSource={this.state.dataSource}
@@ -157,13 +146,6 @@ const styles = StyleSheet.create({
     zIndex: 1,
     position: 'absolute',
     right: 20,
-    shadowColor: "#000000",
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    shadowOffset: {
-      height: 1,
-      width: 0
-    }
   },
   roomList: {
     marginTop: 30,

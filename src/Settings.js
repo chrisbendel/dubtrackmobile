@@ -6,30 +6,59 @@ import {
   Image,
   ListView,
   TouchableHighlight,
+  TouchableOpacity,
   Button,
-  TextInput
+  TextInput,
+  Modal
 } from 'react-native';
+import DubBot from './DubBot/dub-bot';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
+import app from './app';
 
 export default class Settings extends Component {
   constructor(props) {
     super(props);
     console.log(this.props);
+    console.log('user');
+    console.log(app.user);
     this.state = {
       username: '',
-      password: ''
+      password: '',
     }
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <Button
-          onPress={() => {
-            console.log('pressed');
-          }}
-          title="Login"
-        />
-        <Text> Settings </Text>
+        <Text> Username </Text>
+        <TextInput
+          style={styles.form}
+          autoCorrect={false}
+          autoCapitalize="none"
+          placeholder="Username"
+          returnKeyType='done'
+          returnKeyLabel='done'
+          onChangeText={(username) => this.setState({username: username})}/>
+        <KeyboardSpacer/>
+        <Text> Password </Text>
+        <TextInput
+          style={styles.form}
+          autoCorrect={false}
+          secureTextEntry={true}
+          autoCapitalize="none"
+          placeholder="Password"
+          returnKeyType='done'
+          returnKeyLabel='done'
+          onChangeText={(password) => this.setState({password: password})}/>
+        <KeyboardSpacer/>
+        <View style={styles.button}>
+          <Button
+            onPress={() => {
+              app.user = new DubBot(this.state.username, this.state.password);
+            }}
+            title="Login">
+          </Button>
+        </View>
       </View>
     );
   }
@@ -38,18 +67,19 @@ export default class Settings extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 20,
+    marginTop: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  rowContainer: {
-    paddingTop: 10,
-    paddingBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#333333',
-    paddingLeft: 10,
-    paddingRight: 10,
+  form: {
+    height: 30,
+    margin: 10,
+    textAlign: 'center',
   },
-  rowTitle: {
-    color: '#333333',
-    fontSize: 18,
-  },
+  button: {
+    padding: 25,
+    borderWidth: 1,
+    borderColor: '#272635',
+    backgroundColor: '#B1E5F2'
+  }
 });

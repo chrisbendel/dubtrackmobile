@@ -1,23 +1,31 @@
 GLOBAL = require('../src/Globals');
 
 import React, {Component} from 'react';
-import {Text, View, Platform, Menu, Navigator, TouchableHighlight} from 'react-native';
+import {Text, View, Platform, StyleSheet, Menu, Image, Navigator, TouchableHighlight} from 'react-native';
 
 import Home from './Home';
 import Room from './Room';
-import Settings from './Settings';
 import DubBot from './DubBot/dub-bot';
-import SettingsMenu from './Settings';
+import Settings from './Settings';
+import Drawer from 'react-native-drawer'
+const Gear = require('./icons/gear.png');
 
 export default class app extends Component {
-  static bot = new DubBot('dubtrackmobile', 'insecure');
+  static user = new DubBot();
 
   constructor(props) {
     super(props);
   }
 
+  closeSettings = () => {
+    this._drawer.close()
+  };
+
+  openSettings = () => {
+    this._drawer.open()
+  };
+
   renderScene(route, navigator) {
-    let menu = <SettingsMenu navigator={navigator}/>;
     let component;
     switch (route.title) {
       case 'Home':
@@ -25,7 +33,7 @@ export default class app extends Component {
           <Home
             navigator={navigator}
             {...route.passProps}
-            bot={app.bot}/>;
+            user={app.user}/>;
         break;
       case
       'Room':
@@ -33,7 +41,7 @@ export default class app extends Component {
           <Room
             navigator={navigator}
             {...route.passProps}
-            bot={app.bot}/>;
+            user={app.user}/>;
         break;
       case
       'Settings':
@@ -41,7 +49,7 @@ export default class app extends Component {
           <Settings
             navigator={navigator}
             {...route.passProps}
-            bot={app.bot}/>;
+            user={app.user}/>;
         break;
       default:
         component = null;
@@ -56,10 +64,41 @@ export default class app extends Component {
       {title: 'Settings', index: 2}
     ];
     return (
-      <Navigator
-        initialRoute={routes[0]}
-        renderScene={this.renderScene}>
-      </Navigator>
+      <Drawer
+        ref={(ref) => this._drawer = ref}
+        content={<Settings user={app.user}/>}
+        side="right"
+        panOpenMask={100}
+        panCloseMask={100}>
+        <TouchableHighlight
+          style={styles.settingsButton}
+          onPress={() => {
+            this.openSettings();
+          }}>
+          <Image source={Gear}/>
+        </TouchableHighlight>
+        <Navigator
+          initialRoute={routes[0]}
+          renderScene={this.renderScene}>
+        </Navigator>
+      </Drawer>
+
     );
   }
 }
+
+const styles = StyleSheet.create({
+  settingsButton: {
+    top: 22,
+    zIndex: 1,
+    position: 'absolute',
+    right: 20,
+    shadowColor: "#000000",
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    shadowOffset: {
+      height: 1,
+      width: 0
+    }
+  },
+});
