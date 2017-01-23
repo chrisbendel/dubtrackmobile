@@ -16,6 +16,6 @@
 
 
 ## Colors and styles (subject to change - could use feedback on how to make things more pretty)
-- ![#CECECE](http://placehold.it/15/CECECE/000000?text=+) `Main background color`
-- ![#B1E5F2](http://placehold.it/15/B1E5F2/000000?text=+) `Buttons background color`
-- ![#272635](http://placehold.it/15/272635/000000?text=+) `Text colors`
+- ![#CECECE](http://placehold.it/15/CECECE/000000?text=+) `Main background color - #CECECE`
+- ![#B1E5F2](http://placehold.it/15/B1E5F2/000000?text=+) `Buttons background color - #B1E5F2`
+- ![#272635](http://placehold.it/15/272635/000000?text=+) `Text colors - #272635`
