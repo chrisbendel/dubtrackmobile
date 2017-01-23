@@ -146,13 +146,6 @@ const styles = StyleSheet.create({
     zIndex: 1,
     position: 'absolute',
     right: 20,
-    shadowColor: "#000000",
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    shadowOffset: {
-      height: 1,
-      width: 0
-    }
   },
   roomList: {
     marginTop: 30,

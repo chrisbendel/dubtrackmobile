@@ -11,7 +11,7 @@ import Drawer from 'react-native-drawer'
 const Gear = require('./icons/gear.png');
 
 export default class app extends Component {
-  static bot = new DubBot('dubtrackmobile', 'insecure');
+  static user = new DubBot();
 
   constructor(props) {
     super(props);
@@ -33,7 +33,7 @@ export default class app extends Component {
           <Home
             navigator={navigator}
             {...route.passProps}
-            bot={app.bot}/>;
+            user={app.user}/>;
         break;
       case
       'Room':
@@ -41,7 +41,7 @@ export default class app extends Component {
           <Room
             navigator={navigator}
             {...route.passProps}
-            bot={app.bot}/>;
+            user={app.user}/>;
         break;
       case
       'Settings':
@@ -49,7 +49,7 @@ export default class app extends Component {
           <Settings
             navigator={navigator}
             {...route.passProps}
-            bot={app.bot}/>;
+            user={app.user}/>;
         break;
       default:
         component = null;
@@ -66,20 +66,16 @@ export default class app extends Component {
     return (
       <Drawer
         ref={(ref) => this._drawer = ref}
-        content={<Settings/>}
+        content={<Settings user={app.user}/>}
         side="right"
         panOpenMask={100}
-        panCloseMask={100}
-      >
+        panCloseMask={100}>
         <TouchableHighlight
           style={styles.settingsButton}
           onPress={() => {
             this.openSettings();
-          }}
-        >
-          <Image
-            source={Gear}
-          />
+          }}>
+          <Image source={Gear}/>
         </TouchableHighlight>
         <Navigator
           initialRoute={routes[0]}

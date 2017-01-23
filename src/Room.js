@@ -41,10 +41,10 @@ export default class Room extends Component {
           renderRow={this.renderRow.bind(this)}/>
         <Tabs>
           <Text name="queue" onPress={() => {
-            app.bot.join(this.props.roomId);
+            app.user.join(this.props.roomId);
           }}>join room</Text>
           <Text name="heart" onPress={() => {
-            app.bot.protocol.account.logout();
+            app.user.protocol.account.logout();
           }}>logout</Text>
           <Text name="send" onPress={() => {
             console.log('todo send message using the api');
