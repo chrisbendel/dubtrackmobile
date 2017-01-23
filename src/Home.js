@@ -11,7 +11,7 @@ import {
   Dimensions,
   Navigator,
   Button,
-  TextInput
+  TextInput,
   Menu
 } from 'react-native';
 
@@ -25,9 +25,7 @@ import {
 
 import Room from './Room';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-import Tabs from 'react-native-tabs';
 import app from './app';
-import SideMenu from 'react-native-side-menu';
 
 export default class Home extends Component {
 
