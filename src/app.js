@@ -1,14 +1,13 @@
 GLOBAL = require('../src/Globals');
 
 import React, {Component} from 'react';
-import {Text, Platform, Menu, Navigator, TouchableHighlight} from 'react-native';
-const SideMenu = require('react-native-side-menu');
+import {Text, View, Platform, Menu, Navigator, TouchableHighlight} from 'react-native';
 
 import Home from './Home';
 import Room from './Room';
 import Settings from './Settings';
-
 import DubBot from './DubBot/dub-bot';
+import SettingsMenu from './Settings';
 
 export default class app extends Component {
   static bot = new DubBot('dubtrackmobile', 'insecure');
@@ -18,6 +17,7 @@ export default class app extends Component {
   }
 
   renderScene(route, navigator) {
+    let menu = <SettingsMenu navigator={navigator}/>;
     let component;
     switch (route.title) {
       case 'Home':
@@ -58,8 +58,7 @@ export default class app extends Component {
     return (
       <Navigator
         initialRoute={routes[0]}
-        renderScene={this.renderScene
-        }>
+        renderScene={this.renderScene}>
       </Navigator>
     );
   }

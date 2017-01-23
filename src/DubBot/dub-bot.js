@@ -53,22 +53,8 @@ class DubBot extends EventEmitter {
     }
   }
 
-  connectToRoom = function (room) {
-    this.socket.send(JSON.stringify({action: 10, channel: 'room:' + room}));
-    let obj = {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Origin': '',
-      },
-    };
-    return fetch('https://api.dubtrack.fm/room/' + room + '/users', obj)
-      .then(res => res.json())
-      .then(json => {
-        console.log(json);
-        return json;
-      });
+  join = function (room) {
+    this.rooms.add(room);
   };
 
   getUser(user, callback) {

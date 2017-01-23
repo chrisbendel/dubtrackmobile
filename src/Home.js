@@ -10,7 +10,9 @@ import {
   Image,
   Dimensions,
   Navigator,
-  Button
+  Button,
+  TextInput,
+  Menu
 } from 'react-native';
 
 import {
@@ -22,6 +24,9 @@ import {
 } from 'react-native-card-view';
 
 import Room from './Room';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
+const Gear = require('./icons/gear.png');
+const Search = require('./icons/search.png');
 import app from './app';
 
 export default class Home extends Component {
@@ -30,41 +35,71 @@ export default class Home extends Component {
     super(props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
+      roomSearch: '',
       dataSource: ds.cloneWithRows([])
     };
     this.loadData();
   }
 
-  loadData() {
-    var rooms = [];
-    return fetch('https://api.dubtrack.fm/room')
-      .then((res) => res.json())
-      .then((json) => {
-        this.setState({
-          dataSource: this.state.dataSource.cloneWithRows(json.data)
+  loadData(room) {
+    if (room) {
+      return fetch('https://api.dubtrack.fm/room/term/' + room)
+        .then((res) => res.json())
+        .then((json) => {
+          this.setState({
+            dataSource: this.state.dataSource.cloneWithRows(json.data)
+          });
+        })
+        .catch(e => {
+          console.log(e);
         });
-      })
-      .catch(e => {
-        console.log(e);
-      });
+    } else {
+      return fetch('https://api.dubtrack.fm/room')
+        .then((res) => res.json())
+        .then((json) => {
+          this.setState({
+            dataSource: this.state.dataSource.cloneWithRows(json.data)
+          });
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    }
   }
 
+  //use command+shift+k to enable keyboard hardware on ios emulator to test search bar
   render() {
     return (
       <View style={styles.container}>
-        <Button
+        <TouchableHighlight
+          style={styles.settingsButton}
           onPress={() => {
             this.props.navigator.push({
               title: 'Settings',
-            });
+            })
           }}
-          title="Settings"
-        />
+        >
+          <Image
+            source={Gear}
+          />
+        </TouchableHighlight>
         <ListView
           enableEmptySections={true}
           dataSource={this.state.dataSource}
           renderRow={this.renderRow.bind(this)}
         />
+        <TextInput
+          style={styles.searchBar}
+          autoCorrect={false}
+          autoCapitalize="none"
+          placeholder="Search for a room"
+          returnKeyType='search'
+          returnKeyLabel='search'
+          onChangeText={(roomSearch) => this.setState({roomSearch})}
+          onSubmitEditing={() => {
+            this.loadData(this.state.roomSearch)
+          }}/>
+        <KeyboardSpacer/>
       </View>
     );
   }
@@ -96,7 +131,6 @@ export default class Home extends Component {
   }
 
   pressRow(rowData) {
-    // app.bot.join(rowData._id);
     this.props.navigator.push({
       title: 'Room',
       passProps: {
@@ -109,7 +143,39 @@ export default class Home extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 20,
+    marginTop: 22,
+  },
+  nav: {
+    position: 'absolute',
+    top: 30,
+    flex: 1,
+    alignSelf: 'stretch',
+    right: 0,
+    left: 0,
+  },
+  settingsButton: {
+    zIndex: 1,
+    position: 'absolute',
+    right: 20,
+    shadowColor: "#000000",
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    shadowOffset: {
+      height: 1,
+      width: 0
+    }
+  },
+  roomList: {
+    marginTop: 30,
+  },
+  searchBar: {
+    height: 30,
+    borderColor: 'black',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    textAlign: 'center',
+    margin: 10,
   },
   rowContainer: {
     paddingTop: 10,
