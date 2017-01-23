@@ -41,11 +41,11 @@ export default class Room extends Component {
           renderRow={this.renderRow.bind(this)}/>
         <Tabs>
           <Text name="queue" onPress={() => {
-            app.bot.connectToRoom(this.props.roomId);
-          }}>queue</Text>
+            app.bot.join(this.props.roomId);
+          }}>join room</Text>
           <Text name="heart" onPress={() => {
             app.bot.protocol.account.logout();
-          }}>heart</Text>
+          }}>logout</Text>
           <Text name="send" onPress={() => {
             console.log('todo send message using the api');
           }}>up</Text>

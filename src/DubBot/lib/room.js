@@ -112,12 +112,23 @@ class Room extends EventEmitter {
         return this.setSocket(json.data.token);
       })
       .then(() => {
-        this.dubbot.socket.send(JSON.stringify({
-          action: 15,
-          channel: 'room:55f8353d44809b0300f88699',
-          serverId: 'd34a1cf7ec7d3409fd5e7a4ad15a288b'
-        }));
-        // this.dubbot.socket.send(JSON.stringify({action: 14, channel: 'room:55f8353d44809b0300f88699'}));
+        return this.dubbot.socket.send(JSON.stringify({action: 10, channel: 'room:' + id}));
+      })
+      .then(() => {
+        let obj = {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Origin': '',
+          },
+        };
+        return fetch('https://api.dubtrack.fm/room/' + room + '/users', obj)
+          .then(res => res.json())
+          .then(json => {
+            console.log(json);
+            return json;
+          });
       })
       .catch(() => {
         console.log('error');
