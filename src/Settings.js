@@ -23,9 +23,6 @@ export default class Settings extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <TextInput
-
-        />
         <Button
           onPress={() => {
             console.log('pressed');
