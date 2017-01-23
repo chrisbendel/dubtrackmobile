@@ -25,6 +25,8 @@ import {
 
 import Room from './Room';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+const Gear = require('./icons/gear.png');
+// import Gear from './icons/gear.png';
 import app from './app';
 
 export default class Home extends Component {
@@ -69,6 +71,9 @@ export default class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <Image
+          source={Gear}
+        />
         <Button
           onPress={() => {
             this.props.navigator.push({
