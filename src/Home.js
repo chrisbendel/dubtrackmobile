@@ -90,6 +90,8 @@ export default class Home extends Component {
         />
         <TextInput
           style={styles.searchBar}
+          autoCorrect={false}
+          autoCapitalize="none"
           placeholder="Search for a room"
           returnKeyType='search'
           returnKeyLabel='search'
