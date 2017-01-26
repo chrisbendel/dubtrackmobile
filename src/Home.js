@@ -12,6 +12,7 @@ import {
   Navigator,
   Button,
   TextInput,
+  RefreshControl,
   Menu
 } from 'react-native';
 
@@ -25,18 +26,15 @@ import {
 
 import Room from './Room';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-const Gear = require('./icons/gear.png');
-const Search = require('./icons/search.png');
-import app from './app';
 
 export default class Home extends Component {
-
   constructor(props) {
     super(props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       roomSearch: '',
-      dataSource: ds.cloneWithRows([])
+      dataSource: ds.cloneWithRows([]),
+      refreshing: false,
     };
     this.loadData();
   }
@@ -58,7 +56,8 @@ export default class Home extends Component {
         .then((res) => res.json())
         .then((json) => {
           this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(json.data)
+            dataSource: this.state.dataSource.cloneWithRows(json.data),
+            refreshing: false,
           });
         })
         .catch(e => {
@@ -67,15 +66,26 @@ export default class Home extends Component {
     }
   }
 
+  _onRefresh() {
+    this.setState({refreshing: true});
+    this.loadData();
+  }
+
+
   //use command+shift+k to enable keyboard hardware on ios emulator to test search bar
   render() {
     return (
       <View style={styles.container}>
-
         <ListView
           enableEmptySections={true}
           dataSource={this.state.dataSource}
           renderRow={this.renderRow.bind(this)}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh.bind(this)}
+            />
+          }
         />
         <TextInput
           style={styles.searchBar}

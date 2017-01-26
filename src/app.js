@@ -15,13 +15,18 @@ export default class app extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      drawerOpen: false,
+    }
   }
 
   closeSettings = () => {
+    this.setState({drawerOpen: false});
     this._drawer.close()
   };
 
   openSettings = () => {
+    this.setState({drawerOpen: true});
     this._drawer.open()
   };
 
@@ -66,14 +71,15 @@ export default class app extends Component {
     return (
       <Drawer
         ref={(ref) => this._drawer = ref}
-        content={<Settings user={app.user}/>}
+        content={<Settings user={app.user} closeSettings={this.closeSettings.bind(this)}/>}
         side="right"
-        panOpenMask={100}
-        panCloseMask={100}>
+        openDrawerOffset={35}
+        panOpenMask={200}
+        panCloseMask={200}>
         <TouchableHighlight
           style={styles.settingsButton}
           onPress={() => {
-            this.openSettings();
+            !this.state.drawerOpen ? this.openSettings() : this.closeSettings();
           }}>
           <Image source={Gear}/>
         </TouchableHighlight>
@@ -82,7 +88,6 @@ export default class app extends Component {
           renderScene={this.renderScene}>
         </Navigator>
       </Drawer>
-
     );
   }
 }
