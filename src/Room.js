@@ -16,6 +16,8 @@ import app from './app';
 export default class Room extends Component {
   constructor(props) {
     super(props);
+    console.log('props');
+    console.log(app.user);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       dataSource: ds.cloneWithRows([]),
@@ -34,7 +36,7 @@ export default class Room extends Component {
     return (
       //TODO: maybe put in icon before and after updub image
       <View style={styles.container}>
-        <Text style={styles.roomTitle}> room name goes here </Text>
+        <Text style={styles.roomTitle}>{this.props.room.name} </Text>
         <ListView
           enableEmptySections={true}
           dataSource={this.state.dataSource}
@@ -50,6 +52,9 @@ export default class Room extends Component {
             console.log('todo send message using the api');
           }}>up</Text>
           <Text name="down">down</Text>
+          <Text name="userinfo" onPress={() => {
+            console.log(app.user);
+          }}>User</Text>
         </Tabs>
       </View>
     );
