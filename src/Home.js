@@ -25,11 +25,15 @@ import {
 } from 'react-native-card-view';
 
 import Room from './Room';
+import app from './app';
+
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 export default class Home extends Component {
   constructor(props) {
     super(props);
+    console.log(this.props);
+    console.log(this);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       roomSearch: '',
@@ -130,12 +134,13 @@ export default class Home extends Component {
   }
 
   pressRow(rowData) {
-    this.props.navigator.push({
-      title: 'Room',
-      passProps: {
-        roomId: rowData._id
-      }
-    });
+    app.user.join(rowData._id);
+    app.user.protocol.room.info(rowData._id)
+      .then(room => {
+        this.props.updateRoom(room.data);
+      });
+    // this.props.updateRoom(room);
+    this.props.goToPage(1);
   }
 }
 
@@ -143,19 +148,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 22,
-  },
-  nav: {
-    position: 'absolute',
-    top: 30,
-    flex: 1,
-    alignSelf: 'stretch',
-    right: 0,
-    left: 0,
-  },
-  settingsButton: {
-    zIndex: 1,
-    position: 'absolute',
-    right: 20,
   },
   roomList: {
     marginTop: 30,
