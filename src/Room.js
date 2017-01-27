@@ -50,7 +50,6 @@ export default class Room extends Component {
           }}>logout</Text>
           <Text name="send" onPress={() => {
             app.user.postChat('hello');
-            {/*app.user.protocol.room.send(this.props.room._id)*/}
           }}>send chat</Text>
           <Text name="down">down</Text>
           <Text name="userinfo" onPress={() => {

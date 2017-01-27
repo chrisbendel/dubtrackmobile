@@ -2,7 +2,6 @@
 
 import EventEmitter from 'event-emitter';
 const RoomList = require('./lib/roomlist.js');
-//const Protocol = require('./protocol.js'); //set dynamically at constructor
 
 const User = require('./lib/user.js');
 const PMManager = require('./lib/conversationmanager.js');
@@ -27,31 +26,35 @@ class DubBot extends EventEmitter {
     this.connected = false;
 
     if (username !== undefined && password !== undefined) {
-      var that = this;
-      this.protocol.account.login(username, password)
-        .then(res => res.json())
-        .then(() => {
-          return that.protocol.account.info();
-        })
-        .then(userData => {
-          let user = userData.data;
-          that.id = user._id;
-          that.emitter.emit('log-in');
-          that.connected = true;
-          that.rooms._joinRooms();
-          that.pm._checkPM();
-          that.pm.interval = setInterval(function () {
-            that.pm._checkPM();
-          }, that.pm.time);
-        })
-        .catch(e => {
-          console.log(e);
-        });
+      this.login(username, password);
     } else {
       this.connected = true;
       this.rooms._joinRooms();
     }
   }
+
+  login = function (username, password) {
+    var that = this;
+    this.protocol.account.login(username, password)
+      .then(res => res.json())
+      .then(() => {
+        return that.protocol.account.info();
+      })
+      .then(userData => {
+        let user = userData.data;
+        that.id = user._id;
+        that.emitter.emit('log-in');
+        that.connected = true;
+        that.rooms._joinRooms();
+        that.pm._checkPM();
+        that.pm.interval = setInterval(function () {
+          that.pm._checkPM();
+        }, that.pm.time);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
 
   join = function (room) {
     this.rooms.add(room);
