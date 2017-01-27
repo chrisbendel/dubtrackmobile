@@ -3,12 +3,8 @@
 var base = 'https://api.dubtrack.fm/';
 class RoomProtocol {
   constructor() {
-    //TODO might be broken
     this.queue = new (require('./room/queue.js'));
     this.userQueue = new (require('./room/userqueue.js'));
-
-    // this.queue = new (require('./room/queue.js'))(request);
-    // this.userQueue = new (require('./room/userqueue.js'))(request);
   }
 
   listPublic() {
