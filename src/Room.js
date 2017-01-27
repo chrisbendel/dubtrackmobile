@@ -17,7 +17,7 @@ export default class Room extends Component {
   constructor(props) {
     super(props);
     console.log('props');
-    console.log(app.user);
+    console.log(this.props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       dataSource: ds.cloneWithRows([]),
@@ -49,8 +49,9 @@ export default class Room extends Component {
             app.user.protocol.account.logout();
           }}>logout</Text>
           <Text name="send" onPress={() => {
-            console.log('todo send message using the api');
-          }}>up</Text>
+            app.user.postChat('hello');
+            {/*app.user.protocol.room.send(this.props.room._id)*/}
+          }}>send chat</Text>
           <Text name="down">down</Text>
           <Text name="userinfo" onPress={() => {
             console.log(app.user);

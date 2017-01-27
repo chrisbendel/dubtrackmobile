@@ -139,7 +139,6 @@ class RoomProtocol {
       });
   }
 
-
   send(roomid, message, realTimeChannel) {
     let obj = {
       method: 'POST',

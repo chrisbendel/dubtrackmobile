@@ -57,6 +57,10 @@ class DubBot extends EventEmitter {
     this.rooms.add(room);
   };
 
+  postChat = function (message) {
+    this.protocol.room.send(message);
+  };
+
   getUser(user, callback) {
     let that = this;
     this.protocol.user.info(user, function (data) {
