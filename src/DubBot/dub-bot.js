@@ -9,9 +9,9 @@ const PMManager = require('./lib/conversationmanager.js');
 const roles = require('./lib/data/roles.js');
 
 class DubBot extends EventEmitter {
-  constructor(username, password, Protocol) {
+  constructor(username, password) {
 
-    if (Protocol == undefined) Protocol = require('./lib/protocol/protocol.js');
+    let Protocol = require('./lib/protocol/protocol.js');
 
     super();
 
@@ -54,6 +54,10 @@ class DubBot extends EventEmitter {
       .catch(e => {
         console.log(e);
       });
+  };
+
+  logout = function() {
+
   };
 
   join = function (room) {

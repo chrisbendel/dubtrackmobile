@@ -8,6 +8,7 @@ import Room from './Room';
 import DubBot from './DubBot/dub-bot';
 import Settings from './Settings';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
+import store from 'react-native-simple-store';
 
 export default class app extends Component {
   static user = new DubBot();
