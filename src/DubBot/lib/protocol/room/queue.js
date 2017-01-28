@@ -52,13 +52,6 @@ class RoomQueueProtocol {
       .catch(e => {
         console.log(e);
       });
-
-    // this.request({
-    //   method: 'GET',
-    //   url: 'room/' + roomid + '/playlist/active/dubs'
-    // }, function (error, response, body) {
-    //   if (callback != undefined) callback(body.data);
-    // });
   }
 
   skip(roomid, songid, callback) {
@@ -81,13 +74,6 @@ class RoomQueueProtocol {
       .catch(e => {
         console.log(e);
       });
-
-    // this.request({
-    //   method: 'POST',
-    //   url: 'chat/skip/' + roomid + '/' + songid
-    // }, function (error, response, body) {
-    //   if (callback != undefined) callback(body);
-    // });
   }
 
 //TODO check from here

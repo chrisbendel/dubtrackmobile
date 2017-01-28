@@ -4,6 +4,7 @@ var base = 'https://api.dubtrack.fm/';
 
 class RoomUserQueueProtocol {
   constructor() {
+
   }
 
   list(roomid, callback) {
@@ -43,16 +44,6 @@ class RoomUserQueueProtocol {
       .catch(e => {
         console.log(e);
       });
-    // this.request({
-    //   method: 'POST',
-    //   url: 'room/' + roomid + '/playlist',
-    //   form: {
-    //     songType: type,
-    //     songId: fkid
-    //   }
-    // }, function (error, response, body) {
-    //   if (callback != undefined) callback(body);
-    // });
   }
 
   remove(roomid, songid, callback) {
@@ -75,13 +66,6 @@ class RoomUserQueueProtocol {
       .catch(e => {
         console.log(e);
       });
-
-    // this.request({
-    //   method: 'DELETE',
-    //   url: 'room/' + roomid + '/playlist/' + songid
-    // }, function (error, response, body) {
-    //   if (callback != undefined) callback(body);
-    // });
   }
 
   //TODO: finish functions from here down

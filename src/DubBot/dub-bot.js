@@ -1,11 +1,9 @@
 'use strict';
 
 import EventEmitter from 'event-emitter';
-const RoomList = require('./lib/roomlist.js');
-
 const User = require('./lib/user.js');
 const PMManager = require('./lib/conversationmanager.js');
-
+const Room = require('./lib/room.js');
 const roles = require('./lib/data/roles.js');
 
 class DubBot extends EventEmitter {
@@ -19,7 +17,7 @@ class DubBot extends EventEmitter {
     this.emitter = new EventEmitter();
     this.protocol = new Protocol();
     this.socket = null;
-    this.rooms = new RoomList(this);
+    this.room = new Room();
     this.pm = new PMManager(this);
     this.id = '';
 
@@ -56,12 +54,12 @@ class DubBot extends EventEmitter {
       });
   };
 
-  logout = function() {
+  logout = function () {
 
   };
 
   join = function (room) {
-    this.rooms.add(room);
+    // this.rooms.add(room);
   };
 
   postChat = function (message) {
