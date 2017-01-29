@@ -24,8 +24,8 @@ import {
   CardAction
 } from 'react-native-card-view';
 
-import Room from './Room';
 import app from './app';
+import {Actions} from 'react-native-router-flux'
 
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 
@@ -136,8 +136,7 @@ export default class Home extends Component {
 
   pressRow(rowData) {
     app.user.joinRoom(rowData._id);
-    this.props.goToPage(1, app.user);
-
+    {Actions.room}
     // this.props.goToPage(1);
   }
 }
@@ -145,7 +144,7 @@ export default class Home extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 22,
+    marginTop: 44,
   },
   roomList: {
     marginTop: 30,

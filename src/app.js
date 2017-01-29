@@ -7,12 +7,11 @@ import Home from './Home';
 import Room from './Room';
 import DubBot from './DubBot/dub-bot';
 import Settings from './Settings';
-import ScrollableTabView from 'react-native-scrollable-tab-view';
+import {Actions, Scene, Router} from 'react-native-router-flux';
 //TODO: use store to save user's login credentials/session
 import store from 'react-native-simple-store';
 
 export default class app extends Component {
-
   static user = new DubBot();
 
   constructor(props) {
@@ -33,11 +32,11 @@ export default class app extends Component {
 
   render() {
     return (
-      <ScrollableTabView style={styles.container} page={this.state.currentPage}>
-        <Home tabLabel="Home" user={this.user} goToPage={this.goToPage}/>
-        <Room tabLabel="Current Room" user={this.user} room={this.state.room}/>
-        <Settings tabLabel="Settings" user={this.user} goToPage={this.goToPage}/>
-      </ScrollableTabView>
+      <Router sceneStyle={{backgroundColor:'#F7F7F7'}}>
+        <Scene key="home" component={Home} title="Home"/>
+        <Scene key="room" component={Room} title="Room"/>
+        <Scene key="settings" component={Settings} title="Settings"/>
+      </Router>
     );
   }
 }
