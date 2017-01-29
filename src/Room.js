@@ -13,21 +13,33 @@ import {
 import Tabs from 'react-native-tabs';
 import app from './app';
 
+const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+
 export default class Room extends Component {
   constructor(props) {
     super(props);
-    console.log('props');
-    console.log(this.props);
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       dataSource: ds.cloneWithRows([]),
+      chat: app.user.room.chat
     };
+  }
+
+  componentDidMount() {
+    this.updateChat = setInterval(() => {
+      this.setState({
+        dataSource: ds.cloneWithRows(app.user.room.chat)
+      })
+    }, 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.updateChat);
   }
 
   renderRow(rowData) {
     return (
       <View>
-        <Text>Chat message</Text>
+        <Text>{rowData.message}</Text>
       </View>
     );
   }
@@ -36,15 +48,17 @@ export default class Room extends Component {
     return (
       //TODO: maybe put in icon before and after updub image
       <View style={styles.container}>
-        <Text style={styles.roomTitle}>{this.props.room.name} </Text>
+        <Text style={styles.roomTitle}>
+          {this.props.room.name}
+        </Text>
         <ListView
           enableEmptySections={true}
           dataSource={this.state.dataSource}
           renderRow={this.renderRow.bind(this)}/>
         <Tabs>
           <Text name="queue" onPress={() => {
-            app.user.join(this.props.roomId);
-          }}>join room</Text>
+            this.updateChat();
+          }}>update chat</Text>
           <Text name="heart" onPress={() => {
             app.user.protocol.account.logout();
           }}>logout</Text>
@@ -71,5 +85,6 @@ const styles = StyleSheet.create({
   roomTitle: {
     textAlign: 'center',
     fontWeight: 'bold',
+    color: 'black',
   }
 });

@@ -1,67 +1,43 @@
 'use strict';
 
 import EventEmitter from 'event-emitter';
-const RoomList = require('./lib/roomlist.js');
-
 const User = require('./lib/user.js');
 const PMManager = require('./lib/conversationmanager.js');
-
+const Room = require('./lib/room.js');
 const roles = require('./lib/data/roles.js');
 
-class DubBot extends EventEmitter {
-  constructor(username, password) {
-
+export default class DubBot extends EventEmitter {
+  constructor() {
     let Protocol = require('./lib/protocol/protocol.js');
 
     super();
 
-    this.username = username;
     this.emitter = new EventEmitter();
     this.protocol = new Protocol();
-    this.socket = null;
-    this.rooms = new RoomList(this);
+    this.room = null;
+    this.user = null;
     this.pm = new PMManager(this);
-    this.id = '';
-
-    this.connected = false;
-
-    if (username !== undefined && password !== undefined) {
-      this.login(username, password);
-    } else {
-      this.connected = true;
-      this.rooms._joinRooms();
-    }
   }
 
   login = function (username, password) {
-    var that = this;
-    this.protocol.account.login(username, password)
-      .then(res => res.json())
-      .then(() => {
-        return that.protocol.account.info();
-      })
-      .then(userData => {
-        let user = userData.data;
-        that.id = user._id;
-        that.emitter.emit('log-in');
-        that.connected = true;
-        that.rooms._joinRooms();
-        that.pm._checkPM();
-        that.pm.interval = setInterval(function () {
-          that.pm._checkPM();
-        }, that.pm.time);
-      })
-      .catch(e => {
-        console.log(e);
-      });
+    return this.user = new User(username, password);
   };
 
-  logout = function() {
-
+  joinRoom = function (id) {
+    return this.room = new Room(id);
   };
 
-  join = function (room) {
-    this.rooms.add(room);
+  leaveRoom = function (id) {
+    return this.room.leaveRoom(id);
+  };
+
+  //       that.pm._checkPM();
+  //       that.pm.interval = setInterval(function () {
+  //         that.pm._checkPM();
+  //       }, that.pm.time);
+
+  logout = function () {
+    this.user.logout();
   };
 
   postChat = function (message) {
@@ -108,5 +84,3 @@ class DubBot extends EventEmitter {
     return roles;
   }
 }
-
-module.exports = DubBot;

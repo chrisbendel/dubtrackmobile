@@ -3,41 +3,8 @@
 const base = 'https://api.dubtrack.fm/';
 
 class UserProtocol {
+
   constructor() {
-  }
-
-  info(user) {
-    return fetch(base + 'user/' + user)
-      .then(res => res.json())
-      .then(json => {
-        console.log('inside user.info');
-        console.log(json);
-        return json;
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
-
-  image(userid, large) {
-    if (large !== undefined) {
-      if (large.constructor === Function) {
-        large = false;
-      }
-    } else {
-      large = false;
-    }
-
-    return fetch(base + 'user/' + userid + '/image' + (large ? '/large' : ''))
-      .then(res => res.json())
-      .then(json => {
-        console.log('inside user.image()');
-        console.log(json);
-        return json;
-      })
-      .catch(e => {
-        console.log(e);
-      });
   }
 
   followers(userid) {

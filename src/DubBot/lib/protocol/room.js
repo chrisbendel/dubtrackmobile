@@ -7,19 +7,6 @@ class RoomProtocol {
     this.userQueue = new (require('./room/userqueue.js'));
   }
 
-  listPublic() {
-    return fetch(base + 'room')
-      .then(res => res.json())
-      .then(json => {
-        console.log('json inside room.listpublic()');
-        console.log(json);
-        return json;
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
-
   make(roomObject) {
     let obj = {
       method: 'POST',
@@ -70,32 +57,6 @@ class RoomProtocol {
       });
   }
 
-  info(room) {
-    return fetch(base + 'room/' + room)
-      .then(res => res.json())
-      .then(json => {
-        console.log('json inside room.info()');
-        console.log(json);
-        return json;
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
-
-  users(roomid) {
-    return fetch(base + 'room/' + roomid + '/users')
-      .then(res => res.json())
-      .then(json => {
-        console.log('json inside room.users()');
-        console.log(json);
-        return json;
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
-
   muted(roomid) {
     return fetch(base + 'room/' + roomid + '/users/mute')
       .then(res => res.json())
@@ -122,58 +83,10 @@ class RoomProtocol {
       });
   }
 
-  userInfo(roomid, userid) {
-    return fetch(base + 'room/' + roomid + '/users/' + userid)
-      .then(res => res.json())
-      .then(json => {
-        console.log('json inside room.userInfo()');
-        console.log(json);
-        return json;
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
-
-  send(roomid, message, realTimeChannel) {
-    let obj = {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Origin': '',
-      },
-      body: JSON.stringify({
-        'message': message,
-        'realTimeChannel': realTimeChannel,
-        'time': Date.now(),
-        'type': 'chat-message'
-      })
-    };
-
-    return fetch(base + 'chat/' + roomid, obj)
-      .then(res => res.json())
-      .then(json => {
-        console.log('json inside room.send()');
-        console.log(json);
-        return json;
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
-
   //TODO: rewrite all of these ****BORING*****
 
   // ***Need to do more tests but feels buggy / shot down. (gave me a wierd internal error)
-  // leave(roomid, callback) {
-  //   this.request({
-  //     method: 'REMOVE',
-  //     url: 'room/' + roomid + '/users'
-  //   }, function (error, response, body) {
-  //     if (callback != undefined) callback(respons);
-  //   });
-  // }
+
   // remove(roomid, msgid) {
   //   this.request({
   //     method: 'DELETE',

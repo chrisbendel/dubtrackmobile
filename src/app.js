@@ -7,7 +7,8 @@ import Home from './Home';
 import Room from './Room';
 import DubBot from './DubBot/dub-bot';
 import Settings from './Settings';
-import ScrollableTabView from 'react-native-scrollable-tab-view';
+import {Actions, Scene, Router} from 'react-native-router-flux';
+//TODO: use store to save user's login credentials/session
 import store from 'react-native-simple-store';
 
 export default class app extends Component {
@@ -15,33 +16,23 @@ export default class app extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      currentPage: 0,
-      currentRoom: {},
-    };
-    this.goToPage = this.goToPage.bind(this);
-    this.updateRoom = this.updateRoom.bind(this);
+    // this.state = {
+    //   currentPage: 0,
+    //   room: null
+    // };
+    // this.goToPage = this.goToPage.bind(this);
   }
 
-  updateRoom(room) {
-    this.setState({
-      currentRoom: room,
-    });
-  }
-
-  goToPage(index) {
-    this.setState({
-      currentPage: index,
-    });
-  };
 
   render() {
     return (
-      <ScrollableTabView style={styles.container} page={this.state.currentPage}>
-        <Home tabLabel="Home" user={this.user} goToPage={this.goToPage} updateRoom={this.updateRoom}/>
-        <Room tabLabel="Current Room" user={this.user} room={this.state.currentRoom}/>
-        <Settings tabLabel="Settings" user={this.user} goToPage={this.goToPage}/>
-      </ScrollableTabView>
+      <Router sceneStyle={{backgroundColor:'#F7F7F7'}}>
+        <Scene key="root">
+          <Scene key="home" initial={true} component={Home} hideNavBar={true} title="Home"/>
+          <Scene key="room" component={Room} user={app.user} title="Room"/>
+          <Scene key="settings" component={Settings} title="Settings"/>
+        </Scene>
+      </Router>
     );
   }
 }

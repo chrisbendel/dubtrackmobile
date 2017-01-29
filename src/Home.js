@@ -24,22 +24,21 @@ import {
   CardAction
 } from 'react-native-card-view';
 
-import Room from './Room';
 import app from './app';
+import {Actions} from 'react-native-router-flux'
 
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 export default class Home extends Component {
   constructor(props) {
     super(props);
-    console.log(this.props);
-    console.log(this);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       roomSearch: '',
       dataSource: ds.cloneWithRows([]),
       refreshing: false,
     };
+    app.user.login('dubtrackmobile', 'insecure');
     this.loadData();
   }
 
@@ -108,6 +107,7 @@ export default class Home extends Component {
   }
 
   renderRow(rowData) {
+    console.log(rowData);
     var {height, width} = Dimensions.get('window');
     var uri;
 
@@ -134,13 +134,13 @@ export default class Home extends Component {
   }
 
   pressRow(rowData) {
-    app.user.join(rowData._id);
-    app.user.protocol.room.info(rowData._id)
-      .then(room => {
-        this.props.updateRoom(room.data);
-      });
-    // this.props.updateRoom(room);
-    this.props.goToPage(1);
+    if (app.user.room) {
+      app.user.leaveRoom(app.user.room.info._id);
+    }
+    app.user.joinRoom(rowData._id);
+    {
+      Actions.room({room: rowData})
+    }
   }
 }
 
