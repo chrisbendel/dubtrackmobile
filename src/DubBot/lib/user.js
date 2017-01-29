@@ -1,32 +1,64 @@
 'use strict';
 
 const roles = require('./data/roles.js');
+const base = 'https://api.dubtrack.fm/';
 
 class User {
-  constructor(data, room, dubbot, queue_object) {
-    this.room = room;
-    this.dubbot = dubbot;
-
-    if (queue_object !== undefined) {
-      this.dubs = queue_object.dubs;
-      this.roleid = queue_object.roleid;
+  constructor(username = null, password = null) {
+    this.info = {};
+    if (username && password) {
+      this.login(username, password);
     }
-    this.username = data.username;
-    if (data.userInfo !== undefined) {
-      this.id = data.userInfo.userid;
-      if (this.name == undefined) {
-        this.name = "";
-      }
-    } else {
-      this.id = data._id;
-      this.name = "";
-    }
-    this.dubs = 0;
+  }
 
-    let that = this;
-    this.getDubs(function (dubs) {
-      that.dubs = dubs;
-    });
+  login(username, password) {
+    let login = {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Origin': '',
+      },
+      body: JSON.stringify({
+        'username': username,
+        'password': password
+      }),
+    };
+
+    return fetch('https://api.dubtrack.fm/auth/dubtrack', login)
+      .then(res => res.json())
+      .then(json => {
+        //TODO: event emitter and return out of login method
+        //TODO: handle failed login logic here based on HTTP response code ex: 401, 200 etc
+        // console.log('login response');
+        // console.log(json);
+        return this.getUserInfo(username);
+      })
+      .then(user => {
+        //TODO: add event emitter for logged in to set state
+        return this.info = user;
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
+
+  logout() {
+    return fetch(base + 'auth/logout')
+      .catch(e => {
+        console.log(e);
+      });
+  }
+
+  getUserInfo(user) {
+    return fetch(base + 'user/' + user)
+      .then(res => res.json())
+      .then(json => {
+        return json.data;
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 
   kick(msg) {

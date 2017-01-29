@@ -10,17 +10,33 @@ const GlobalCD = require('./globalcd.js');
 const base = 'https://api.dubtrack.fm/';
 
 class Room extends EventEmitter {
-  constructor(dubbot) {
+  constructor(id = null) {
     super();
 
-    this.dubbot = dubbot;
-    this.room = {};
+    this.info = {};
+    //this.currentSong = new Song();
     this.users = {};
-    this.emitter = new EventEmitter();
-
     this._globalCD = new GlobalCD();
+    this.socket = null;
+    this.emitter = new EventEmitter();
+    //TODO: add queue and userqueue to room model
+
+    if (id) {
+      this.getRoomInfo(id)
+        .then(room => {
+          return this.info = room;
+        })
+        .then(() => {
+          return this.joinRoom(this.info._id);
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    }
+
   }
 
+  //rewrite with this.room.id, this.room.realtimechannel
   send(room, message, realTimeChannel) {
     let obj = {
       method: 'POST',
@@ -53,7 +69,7 @@ class Room extends EventEmitter {
     return fetch(base + 'room/' + room)
       .then(res => res.json())
       .then(json => {
-        return this.room = json.data;
+        return this.info = json.data;
       })
       .catch(e => {
         console.log(e);
@@ -84,17 +100,14 @@ class Room extends EventEmitter {
       });
   }
 
-  joinRoom(id, realTimeChannel) {
-    this.id = id;
-    this.realTimeChannel = realTimeChannel;
-
+  joinRoom(id) {
     return fetch('https://api.dubtrack.fm/auth/token')
-      .then((res) => res.json())
-      .then((json) => {
+      .then(res => res.json())
+      .then(json => {
         return this.setSocket(json.data.token);
       })
       .then(() => {
-        return this.dubbot.socket.send(JSON.stringify({action: 10, channel: 'room:' + id}));
+        return this.socket.send(JSON.stringify({action: 10, channel: 'room:' + id}));
       })
       .then(() => {
         let obj = {
@@ -108,17 +121,16 @@ class Room extends EventEmitter {
         return fetch('https://api.dubtrack.fm/room/' + id + '/users', obj)
           .then(res => res.json())
           .then(json => {
-            console.log(json);
             return json;
           });
       })
-      .catch(() => {
-        console.log('error');
+      .catch(e => {
+        console.log(e);
       });
   }
 
   setSocket(token) {
-    this.dubbot.socket = new EngineIOClient({
+    this.socket = new EngineIOClient({
       hostname: 'ws.dubtrack.fm',
       secure: true,
       path: '/ws',
@@ -126,20 +138,20 @@ class Room extends EventEmitter {
       transports: ['websocket']
     });
     //socket listeners
-    this.dubbot.socket.on('open', function () {
+    this.socket.on('open', function () {
       console.log('socket open');
     });
-    this.dubbot.socket.on('message', function (msg) {
+    this.socket.on('message', function (msg) {
       console.log('socket message');
       console.log(JSON.parse(msg));
     });
-    this.dubbot.socket.on('close', function () {
+    this.socket.on('close', function () {
       console.log('socket closed');
     });
-    this.dubbot.socket.on('error', function () {
+    this.socket.on('error', function () {
       console.log('socket error');
     });
-    return this.dubbot.socket;
+    return this.socket;
   }
 
   setGlobalCD(o) {

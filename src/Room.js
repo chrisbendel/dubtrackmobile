@@ -16,7 +16,7 @@ import app from './app';
 export default class Room extends Component {
   constructor(props) {
     super(props);
-    console.log('props');
+    console.log('user');
     console.log(this.props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
@@ -36,7 +36,7 @@ export default class Room extends Component {
     return (
       //TODO: maybe put in icon before and after updub image
       <View style={styles.container}>
-        <Text style={styles.roomTitle}>{this.props.room.name} </Text>
+        <Text style={styles.roomTitle}> {this.props.room.info.name} </Text>
         <ListView
           enableEmptySections={true}
           dataSource={this.state.dataSource}
