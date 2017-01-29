@@ -65,7 +65,8 @@ class Room extends EventEmitter {
     return fetch(base + 'room/' + room)
       .then(res => res.json())
       .then(json => {
-        return this.info = json.data;
+        this.info = json.data;
+        return this.info;
       })
       .catch(e => {
         console.log(e);

@@ -27,7 +27,7 @@ class DubBot extends EventEmitter {
   joinRoom = function (id) {
     this.room = new Room(id)
   };
-
+  
   //       that.pm._checkPM();
   //       that.pm.interval = setInterval(function () {
   //         that.pm._checkPM();

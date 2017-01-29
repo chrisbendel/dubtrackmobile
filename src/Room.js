@@ -18,6 +18,7 @@ export default class Room extends Component {
     super(props);
     console.log('user');
     console.log(app.user);
+    app.user.room.getRoomInfo();
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       dataSource: ds.cloneWithRows([]),
