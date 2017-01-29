@@ -19,12 +19,14 @@ export default class app extends Component {
     super(props);
     this.state = {
       currentPage: 0,
+      room: null
     };
     this.goToPage = this.goToPage.bind(this);
   }
 
-  goToPage(index) {
+  goToPage(index, room = null) {
     this.setState({
+      room: room,
       currentPage: index,
     });
   };
@@ -33,7 +35,7 @@ export default class app extends Component {
     return (
       <ScrollableTabView style={styles.container} page={this.state.currentPage}>
         <Home tabLabel="Home" user={this.user} goToPage={this.goToPage}/>
-        <Room tabLabel="Current Room" user={this.user}/>
+        <Room tabLabel="Current Room" user={this.user} room={this.state.room}/>
         <Settings tabLabel="Settings" user={this.user} goToPage={this.goToPage}/>
       </ScrollableTabView>
     );

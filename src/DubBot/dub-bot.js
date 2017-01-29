@@ -6,7 +6,7 @@ const PMManager = require('./lib/conversationmanager.js');
 const Room = require('./lib/room.js');
 const roles = require('./lib/data/roles.js');
 
-class DubBot extends EventEmitter {
+export default class DubBot extends EventEmitter {
   constructor() {
 
     let Protocol = require('./lib/protocol/protocol.js');
@@ -25,9 +25,9 @@ class DubBot extends EventEmitter {
   };
 
   joinRoom = function (id) {
-    this.room = new Room(id)
+    this.room = new Room(id);
   };
-  
+
   //       that.pm._checkPM();
   //       that.pm.interval = setInterval(function () {
   //         that.pm._checkPM();
@@ -81,5 +81,3 @@ class DubBot extends EventEmitter {
     return roles;
   }
 }
-
-module.exports = DubBot;

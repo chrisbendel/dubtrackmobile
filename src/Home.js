@@ -136,7 +136,9 @@ export default class Home extends Component {
 
   pressRow(rowData) {
     app.user.joinRoom(rowData._id);
-    this.props.goToPage(1);
+    this.props.goToPage(1, app.user);
+
+    // this.props.goToPage(1);
   }
 }
 

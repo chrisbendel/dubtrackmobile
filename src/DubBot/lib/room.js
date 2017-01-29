@@ -13,7 +13,7 @@ class Room extends EventEmitter {
   constructor(id = null) {
     super();
 
-    this.info = {};
+    this.info = null;
     //this.currentSong = new Song();
     this.users = {};
     this._globalCD = new GlobalCD();
@@ -22,13 +22,7 @@ class Room extends EventEmitter {
     //TODO: add queue and userqueue to room model
 
     if (id) {
-      this.getRoomInfo(id)
-        .then(() => {
-          this.joinRoom(this.info._id);
-        })
-        .catch(e => {
-          console.log(e);
-        });
+      this.joinRoom(this.id);
     }
   }
 
@@ -101,7 +95,7 @@ class Room extends EventEmitter {
     return fetch('https://api.dubtrack.fm/auth/token')
       .then(res => res.json())
       .then(json => {
-        return this.setSocket(json.data.token);
+        this.setSocket(json.data.token);
       })
       .then(() => {
         return this.socket.send(JSON.stringify({action: 10, channel: 'room:' + id}));
@@ -120,6 +114,9 @@ class Room extends EventEmitter {
           .then(json => {
             return json;
           });
+      })
+      .then(() => {
+        return this.getRoomInfo(id);
       })
       .catch(e => {
         console.log(e);
@@ -148,7 +145,6 @@ class Room extends EventEmitter {
     this.socket.on('error', function () {
       console.log('socket error');
     });
-    return this.socket;
   }
 
   setGlobalCD(o) {
