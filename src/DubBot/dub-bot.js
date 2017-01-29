@@ -8,7 +8,6 @@ const roles = require('./lib/data/roles.js');
 
 export default class DubBot extends EventEmitter {
   constructor() {
-
     let Protocol = require('./lib/protocol/protocol.js');
 
     super();
@@ -26,6 +25,10 @@ export default class DubBot extends EventEmitter {
 
   joinRoom = function (id) {
     return this.room = new Room(id);
+  };
+
+  leaveRoom = function (id) {
+    return this.room.leaveRoom(id);
   };
 
   //       that.pm._checkPM();

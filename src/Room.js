@@ -22,17 +22,19 @@ export default class Room extends Component {
       dataSource: ds.cloneWithRows([]),
       chat: app.user.room.chat
     };
-    this.updateChat();
   }
 
-  updateChat() {
-    setInterval(() => {
+  componentDidMount() {
+    this.updateChat = setInterval(() => {
       this.setState({
         dataSource: ds.cloneWithRows(app.user.room.chat)
       })
     }, 1000);
   }
 
+  componentWillUnmount() {
+    clearInterval(this.updateChat);
+  }
 
   renderRow(rowData) {
     return (

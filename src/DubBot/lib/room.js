@@ -23,9 +23,7 @@ class Room extends EventEmitter {
     //TODO: add queue and userqueue to room model
 
     if (id) {
-      this.joinRoom(id).then(() => {
-        return;
-      });
+      this.joinRoom(id);
     }
   }
 
@@ -95,6 +93,22 @@ class Room extends EventEmitter {
       .catch(e => {
         console.log(e);
       });
+  }
+
+  leaveRoom(room) {
+    let obj = {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Origin': '',
+      },
+    };
+    return fetch(base + 'room/' + room + '/users', obj)
+      .catch(e => {
+        console.log(e);
+      });
+
   }
 
   getRoomUsers(room) {

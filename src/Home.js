@@ -134,6 +134,9 @@ export default class Home extends Component {
   }
 
   pressRow(rowData) {
+    if (app.user.room) {
+      app.user.leaveRoom(app.user.room.info._id);
+    }
     app.user.joinRoom(rowData._id);
     {
       Actions.room({room: rowData})

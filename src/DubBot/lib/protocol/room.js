@@ -86,14 +86,7 @@ class RoomProtocol {
   //TODO: rewrite all of these ****BORING*****
 
   // ***Need to do more tests but feels buggy / shot down. (gave me a wierd internal error)
-  // leave(roomid, callback) {
-  //   this.request({
-  //     method: 'REMOVE',
-  //     url: 'room/' + roomid + '/users'
-  //   }, function (error, response, body) {
-  //     if (callback != undefined) callback(respons);
-  //   });
-  // }
+
   // remove(roomid, msgid) {
   //   this.request({
   //     method: 'DELETE',
