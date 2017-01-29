@@ -25,7 +25,7 @@ export default class DubBot extends EventEmitter {
   };
 
   joinRoom = function (id) {
-    this.room = new Room(id);
+    return this.room = new Room(id);
   };
 
   //       that.pm._checkPM();

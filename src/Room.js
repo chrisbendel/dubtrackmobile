@@ -13,32 +13,41 @@ import {
 import Tabs from 'react-native-tabs';
 import app from './app';
 
+const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+
 export default class Room extends Component {
   constructor(props) {
     super(props);
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       dataSource: ds.cloneWithRows([]),
+      chat: app.user.room.chat
     };
+    this.updateChat();
   }
+
+  updateChat() {
+    setInterval(() => {
+      this.setState({
+        dataSource: ds.cloneWithRows(app.user.room.chat)
+      })
+    }, 1000);
+  }
+
 
   renderRow(rowData) {
     return (
       <View>
-        <Text>Chat message</Text>
+        <Text>{rowData.message}</Text>
       </View>
     );
   }
 
   render() {
-    let room = app.user.room.info;
-
     return (
       //TODO: maybe put in icon before and after updub image
       <View style={styles.container}>
         <Text style={styles.roomTitle}>
-          title
-          {room.name}
+          {this.props.room.name}
         </Text>
         <ListView
           enableEmptySections={true}
@@ -46,8 +55,8 @@ export default class Room extends Component {
           renderRow={this.renderRow.bind(this)}/>
         <Tabs>
           <Text name="queue" onPress={() => {
-            app.user.join(this.props.roomId);
-          }}>join room</Text>
+            this.updateChat();
+          }}>update chat</Text>
           <Text name="heart" onPress={() => {
             app.user.protocol.account.logout();
           }}>logout</Text>

@@ -40,8 +40,6 @@ export default class Home extends Component {
     };
     app.user.login('dubtrackmobile', 'insecure');
     this.loadData();
-    console.log('app.user');
-    console.log(app.user);
   }
 
   loadData(room) {
@@ -109,6 +107,7 @@ export default class Home extends Component {
   }
 
   renderRow(rowData) {
+    console.log(rowData);
     var {height, width} = Dimensions.get('window');
     var uri;
 
@@ -136,15 +135,16 @@ export default class Home extends Component {
 
   pressRow(rowData) {
     app.user.joinRoom(rowData._id);
-    {Actions.room}
-    // this.props.goToPage(1);
+    {
+      Actions.room({room: rowData})
+    }
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 44,
+    marginTop: 22,
   },
   roomList: {
     marginTop: 30,

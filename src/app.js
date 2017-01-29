@@ -16,26 +16,22 @@ export default class app extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      currentPage: 0,
-      room: null
-    };
-    this.goToPage = this.goToPage.bind(this);
+    // this.state = {
+    //   currentPage: 0,
+    //   room: null
+    // };
+    // this.goToPage = this.goToPage.bind(this);
   }
 
-  goToPage(index, room = null) {
-    this.setState({
-      room: room,
-      currentPage: index,
-    });
-  };
 
   render() {
     return (
       <Router sceneStyle={{backgroundColor:'#F7F7F7'}}>
-        <Scene key="home" component={Home} title="Home"/>
-        <Scene key="room" component={Room} title="Room"/>
-        <Scene key="settings" component={Settings} title="Settings"/>
+        <Scene key="root">
+          <Scene key="home" initial={true} component={Home} hideNavBar={true} title="Home"/>
+          <Scene key="room" component={Room} user={app.user} title="Room"/>
+          <Scene key="settings" component={Settings} title="Settings"/>
+        </Scene>
       </Router>
     );
   }

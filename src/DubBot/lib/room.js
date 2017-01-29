@@ -15,15 +15,46 @@ class Room extends EventEmitter {
 
     this.info = null;
     //this.currentSong = new Song();
-    this.users = {};
+    this.users = [];
+    this.chat = [];
     this._globalCD = new GlobalCD();
     this.socket = null;
     this.emitter = new EventEmitter();
     //TODO: add queue and userqueue to room model
 
     if (id) {
-      this.joinRoom(this.id);
+      this.joinRoom(id).then(() => {
+        return;
+      });
     }
+  }
+
+  joinRoom(id) {
+    return fetch('https://api.dubtrack.fm/auth/token')
+      .then(res => res.json())
+      .then(json => {
+        this.setSocket(json.data.token);
+      })
+      .then(() => {
+        return this.getRoomInfo(id);
+      })
+      .then(() => {
+        return this.socket.send(JSON.stringify({action: 10, channel: 'room:' + id}));
+      })
+      .then(() => {
+        let obj = {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Origin': '',
+          },
+        };
+        return fetch('https://api.dubtrack.fm/room/' + id + '/users', obj)
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 
   //rewrite with this.room.id, this.room.realtimechannel
@@ -59,8 +90,7 @@ class Room extends EventEmitter {
     return fetch(base + 'room/' + room)
       .then(res => res.json())
       .then(json => {
-        this.info = json.data;
-        return this.info;
+        return this.info = json.data;
       })
       .catch(e => {
         console.log(e);
@@ -91,39 +121,8 @@ class Room extends EventEmitter {
       });
   }
 
-  joinRoom(id) {
-    return fetch('https://api.dubtrack.fm/auth/token')
-      .then(res => res.json())
-      .then(json => {
-        this.setSocket(json.data.token);
-      })
-      .then(() => {
-        return this.socket.send(JSON.stringify({action: 10, channel: 'room:' + id}));
-      })
-      .then(() => {
-        let obj = {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Origin': '',
-          },
-        };
-        return fetch('https://api.dubtrack.fm/room/' + id + '/users', obj)
-          .then(res => res.json())
-          .then(json => {
-            return json;
-          });
-      })
-      .then(() => {
-        return this.getRoomInfo(id);
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
-
   setSocket(token) {
+    let that = this;
     this.socket = new EngineIOClient({
       hostname: 'ws.dubtrack.fm',
       secure: true,
@@ -136,8 +135,19 @@ class Room extends EventEmitter {
       console.log('socket open');
     });
     this.socket.on('message', function (msg) {
-      console.log('socket message');
-      console.log(JSON.parse(msg));
+      msg = JSON.parse(msg);
+      switch (msg.action) {
+        case 15:
+          if (msg.message.name == 'chat-message') {
+            that.chat.push(JSON.parse(msg.message.data));
+          }
+          break;
+        case 14:
+          that.users.push(msg);
+          break;
+        default:
+          console.log(msg);
+      }
     });
     this.socket.on('close', function () {
       console.log('socket closed');
