@@ -23,6 +23,11 @@ export default class DubBot extends EventEmitter {
     return this.user = new User(username, password);
   };
 
+  //       that.pm._checkPM();
+  //       that.pm.interval = setInterval(function () {
+  //         that.pm._checkPM();
+  //       }, that.pm.time);
+
   joinRoom = function (id) {
     return this.room = new Room(id);
   };
@@ -31,17 +36,13 @@ export default class DubBot extends EventEmitter {
     return this.room.leaveRoom(id);
   };
 
-  //       that.pm._checkPM();
-  //       that.pm.interval = setInterval(function () {
-  //         that.pm._checkPM();
-  //       }, that.pm.time);
 
   logout = function () {
     this.user.logout();
   };
 
-  postChat = function (message) {
-    this.protocol.room.send(message);
+  chat = function (message) {
+    this.room.send(this.room.info._id, message, this.room.info.realTimeChannel);
   };
 
   getUser(user, callback) {

@@ -8,10 +8,12 @@ import {
   Image,
   ListView,
   TouchableHighlight,
+  TextInput,
   AsyncStorage
 } from 'react-native';
 import Tabs from 'react-native-tabs';
 import app from './app';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
@@ -20,7 +22,8 @@ export default class Room extends Component {
     super(props);
     this.state = {
       dataSource: ds.cloneWithRows([]),
-      chat: app.user.room.chat
+      chat: app.user.room.chat,
+      message: '',
     };
   }
 
@@ -45,6 +48,7 @@ export default class Room extends Component {
   }
 
   render() {
+    let that = this;
     return (
       //TODO: maybe put in icon before and after updub image
       <View style={styles.container}>
@@ -55,21 +59,35 @@ export default class Room extends Component {
           enableEmptySections={true}
           dataSource={this.state.dataSource}
           renderRow={this.renderRow.bind(this)}/>
-        <Tabs>
-          <Text name="queue" onPress={() => {
-            this.updateChat();
-          }}>update chat</Text>
-          <Text name="heart" onPress={() => {
-            app.user.protocol.account.logout();
-          }}>logout</Text>
-          <Text name="send" onPress={() => {
-            app.user.postChat('hello');
-          }}>send chat</Text>
-          <Text name="down">down</Text>
-          <Text name="userinfo" onPress={() => {
-            console.log(app.user);
-          }}>User</Text>
-        </Tabs>
+        <TextInput
+          ref={'chat'}
+          style={styles.searchBar}
+          autoCorrect={false}
+          placeholder="Send chat message"
+          returnKeyType='send'
+          returnKeyLabel='send'
+          onChangeText={(message) => this.setState({message})}
+          onSubmitEditing={() => {
+            app.user.chat(this.state.message);
+            that.refs['chat'].clear();
+            this.setState({message: ''});
+          }}/>
+        <KeyboardSpacer/>
+        {/*<Tabs>*/}
+        {/*<Text name="queue" onPress={() => {*/}
+        {/*this.updateChat();*/}
+        {/*}}>update chat</Text>*/}
+        {/*<Text name="heart" onPress={() => {*/}
+        {/*app.user.protocol.account.logout();*/}
+        {/*}}>logout</Text>*/}
+        {/*<Text name="send" onPress={() => {*/}
+        {/*app.user.postChat('hello');*/}
+        {/*}}>send chat</Text>*/}
+        {/*<Text name="down">down</Text>*/}
+        {/*<Text name="userinfo" onPress={() => {*/}
+        {/*console.log(app.user);*/}
+        {/*}}>User</Text>*/}
+        {/*</Tabs>*/}
       </View>
     );
   }
@@ -86,5 +104,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     color: 'black',
-  }
+  },
+  searchBar: {
+    height: 30,
+    borderColor: 'black',
+    bottom: 30,
+    left: 0,
+    right: 0,
+    textAlign: 'center',
+    margin: 10,
+  },
 });
