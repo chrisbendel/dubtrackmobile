@@ -17,10 +17,11 @@ export default class Room extends Component {
   constructor(props) {
     super(props);
     console.log('user');
-    console.log(this.props);
+    console.log(app.user);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       dataSource: ds.cloneWithRows([]),
+      room: {}
     };
   }
 
@@ -36,7 +37,9 @@ export default class Room extends Component {
     return (
       //TODO: maybe put in icon before and after updub image
       <View style={styles.container}>
-        <Text style={styles.roomTitle}> {this.props.room.info.name} </Text>
+        <Text style={styles.roomTitle}>
+          {this.state.room.name}
+        </Text>
         <ListView
           enableEmptySections={true}
           dataSource={this.state.dataSource}
@@ -71,5 +74,6 @@ const styles = StyleSheet.create({
   roomTitle: {
     textAlign: 'center',
     fontWeight: 'bold',
+    color: 'black',
   }
 });

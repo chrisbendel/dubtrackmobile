@@ -12,13 +12,13 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 import store from 'react-native-simple-store';
 
 export default class app extends Component {
+
   static user = new DubBot();
 
   constructor(props) {
     super(props);
     this.state = {
       currentPage: 0,
-      // currentRoom: {},
     };
     this.goToPage = this.goToPage.bind(this);
   }

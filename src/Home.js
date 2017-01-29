@@ -38,10 +38,10 @@ export default class Home extends Component {
       dataSource: ds.cloneWithRows([]),
       refreshing: false,
     };
-    app.user.login('ph1ve', 'topher1');
+    app.user.login('dubtrackmobile', 'insecure');
     this.loadData();
     console.log('app.user');
-    console.log(app.user);
+    console.log(user);
   }
 
   loadData(room) {
@@ -136,6 +136,7 @@ export default class Home extends Component {
 
   pressRow(rowData) {
     app.user.joinRoom(rowData._id);
+    Room.setState({room: app.user.room.info})
 
     this.props.goToPage(1);
   }

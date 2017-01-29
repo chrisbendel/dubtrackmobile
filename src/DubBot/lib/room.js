@@ -23,17 +23,13 @@ class Room extends EventEmitter {
 
     if (id) {
       this.getRoomInfo(id)
-        .then(room => {
-          return this.info = room;
-        })
         .then(() => {
-          return this.joinRoom(this.info._id);
+          this.joinRoom(this.info._id);
         })
         .catch(e => {
           console.log(e);
         });
     }
-
   }
 
   //rewrite with this.room.id, this.room.realtimechannel

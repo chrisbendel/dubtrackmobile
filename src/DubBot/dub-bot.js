@@ -15,7 +15,6 @@ class DubBot extends EventEmitter {
 
     this.emitter = new EventEmitter();
     this.protocol = new Protocol();
-    // this.socket = null;
     this.room = null;
     this.user = null;
     this.pm = new PMManager(this);
@@ -26,7 +25,7 @@ class DubBot extends EventEmitter {
   };
 
   joinRoom = function (id) {
-    return this.room = new Room(id);
+    this.room = new Room(id)
   };
 
   //       that.pm._checkPM();
