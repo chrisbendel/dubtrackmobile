@@ -73,12 +73,6 @@ class Room extends EventEmitter {
     };
 
     return fetch(base + 'chat/' + room, obj)
-      .then(res => res.json())
-      .then(json => {
-        console.log('json inside room.send()');
-        console.log(json);
-        return json;
-      })
       .catch(e => {
         console.log(e);
       });

@@ -9,13 +9,15 @@ import {
   ListView,
   TouchableHighlight,
   TextInput,
-  AsyncStorage
+  AsyncStorage,
+  Dimensions
 } from 'react-native';
 import Tabs from 'react-native-tabs';
 import app from './app';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+let {height, width} = Dimensions.get('window');
 
 export default class Room extends Component {
   constructor(props) {
@@ -40,8 +42,12 @@ export default class Room extends Component {
   }
 
   renderRow(rowData) {
+    console.log(rowData);
     return (
-      <View>
+      <View style={styles.message}>
+        <View>
+          <Text style={{fontSize: 14, fontWeight: 'bold'}}>{rowData.user.username}</Text>
+        </View>
         <Text>{rowData.message}</Text>
       </View>
     );
@@ -56,6 +62,7 @@ export default class Room extends Component {
           {this.props.room.name}
         </Text>
         <ListView
+          style={styles.chat}
           enableEmptySections={true}
           dataSource={this.state.dataSource}
           renderRow={this.renderRow.bind(this)}/>
@@ -73,21 +80,6 @@ export default class Room extends Component {
             this.setState({message: ''});
           }}/>
         <KeyboardSpacer/>
-        {/*<Tabs>*/}
-        {/*<Text name="queue" onPress={() => {*/}
-        {/*this.updateChat();*/}
-        {/*}}>update chat</Text>*/}
-        {/*<Text name="heart" onPress={() => {*/}
-        {/*app.user.protocol.account.logout();*/}
-        {/*}}>logout</Text>*/}
-        {/*<Text name="send" onPress={() => {*/}
-        {/*app.user.postChat('hello');*/}
-        {/*}}>send chat</Text>*/}
-        {/*<Text name="down">down</Text>*/}
-        {/*<Text name="userinfo" onPress={() => {*/}
-        {/*console.log(app.user);*/}
-        {/*}}>User</Text>*/}
-        {/*</Tabs>*/}
       </View>
     );
   }
@@ -99,11 +91,17 @@ const styles = StyleSheet.create({
     marginTop: 40,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#A6A6A8',
   },
   roomTitle: {
     textAlign: 'center',
     fontWeight: 'bold',
     color: 'black',
+  },
+  message: {
+    width: width,
+    borderWidth: 1,
+    borderColor: 'black'
   },
   searchBar: {
     height: 30,
