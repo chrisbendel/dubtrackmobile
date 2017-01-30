@@ -24,6 +24,7 @@ class Room extends EventEmitter {
 
     if (id) {
       this.joinRoom(id);
+      this.getRoomUsers(id);
     }
   }
 
