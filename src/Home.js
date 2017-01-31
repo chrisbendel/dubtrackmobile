@@ -140,7 +140,7 @@ export default class Home extends Component {
 
     if (currentRoom) {
       if (currentRoom.info._id == roomToJoin) {
-        Actions.room();
+        Actions.room({room: rowData});
         return;
       } else {
         app.user.leaveRoom(currentRoom.info._id);
@@ -152,13 +152,6 @@ export default class Home extends Component {
       app.user.joinRoom(roomToJoin);
       Actions.room({room: rowData});
     }
-    // if (currentRoom) {
-    //   app.user.leaveRoom(app.user.room.info._id);
-    // }
-    // app.user.joinRoom(rowData._id);
-    // {
-    //   Actions.room({room: rowData})
-    // }
   }
 }
 

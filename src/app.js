@@ -5,22 +5,17 @@ import {View, StyleSheet, Navigator} from 'react-native';
 
 import Home from './Home';
 import Room from './Room';
-import DubBot from './DubBot/dub-bot';
+import Client from './DubBot/client';
 import Settings from './Settings';
 import {Actions, Scene, Router} from 'react-native-router-flux';
 //TODO: use store to save user's login credentials/session
 import store from 'react-native-simple-store';
 
 export default class app extends Component {
-  static user = new DubBot();
+  static user = new Client();
 
   constructor(props) {
     super(props);
-    // this.state = {
-    //   currentPage: 0,
-    //   room: null
-    // };
-    // this.goToPage = this.goToPage.bind(this);
   }
 
 
@@ -30,7 +25,10 @@ export default class app extends Component {
         <Scene key="root">
           <Scene key="home" initial={true} component={Home} hideNavBar={true} title="Home"/>
           <Scene key="room" component={Room} user={app.user} title="Room"/>
-          <Scene key="settings" component={Settings} title="Settings"/>
+          <Scene key="settings" component={Settings} title="Settings">
+            {/*<Scene key="login" component={Login}/>*/}
+            {/*<Scene key="signup" component={Signup}/>*/}
+          </Scene>
         </Scene>
       </Router>
     );
