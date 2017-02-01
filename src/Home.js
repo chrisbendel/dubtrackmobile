@@ -10,7 +10,6 @@ import {
   Image,
   Dimensions,
   Navigator,
-  Button,
   TextInput,
   RefreshControl,
   Menu
@@ -26,6 +25,7 @@ import {
 
 import app from './app';
 import {Actions} from 'react-native-router-flux'
+import {Container, Header, Title, Button, Icon} from 'native-base';
 
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 
@@ -79,31 +79,42 @@ export default class Home extends Component {
   //use command+shift+k to enable keyboard hardware on ios emulator to test search bar
   render() {
     return (
-      <View style={styles.container}>
-        <ListView
-          enableEmptySections={true}
-          dataSource={this.state.dataSource}
-          renderRow={this.renderRow.bind(this)}
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={this._onRefresh.bind(this)}
-            />
-          }
-        />
-        <TextInput
-          style={styles.searchBar}
-          autoCorrect={false}
-          autoCapitalize="none"
-          placeholder="Search for a room"
-          returnKeyType='search'
-          returnKeyLabel='search'
-          onChangeText={(roomSearch) => this.setState({roomSearch})}
-          onSubmitEditing={() => {
-            this.loadData(this.state.roomSearch)
-          }}/>
-        <KeyboardSpacer/>
-      </View>
+      <Container>
+        <Header>
+          <Button transparent>
+            <Icon size={30} color={'#fff'} name={'ios-menu'}/>
+          </Button>
+          <Title>Lobby</Title>
+          <Button transparent>
+            <Icon size={30} color={'#fff'} name={'ios-mail'}/>
+          </Button>
+        </Header>
+      </Container>
+      // <View style={styles.container}>
+      //   <ListView
+      //     enableEmptySections={true}
+      //     dataSource={this.state.dataSource}
+      //     renderRow={this.renderRow.bind(this)}
+      //     refreshControl={
+      //       <RefreshControl
+      //         refreshing={this.state.refreshing}
+      //         onRefresh={this._onRefresh.bind(this)}
+      //       />
+      //     }
+      //   />
+      //   <TextInput
+      //     style={styles.searchBar}
+      //     autoCorrect={false}
+      //     autoCapitalize="none"
+      //     placeholder="Search for a room"
+      //     returnKeyType='search'
+      //     returnKeyLabel='search'
+      //     onChangeText={(roomSearch) => this.setState({roomSearch})}
+      //     onSubmitEditing={() => {
+      //       this.loadData(this.state.roomSearch)
+      //     }}/>
+      //   <KeyboardSpacer/>
+      // </View>
     );
   }
 
@@ -140,7 +151,7 @@ export default class Home extends Component {
 
     if (currentRoom) {
       if (currentRoom.info._id == roomToJoin) {
-        Actions.room();
+        Actions.room({room: rowData});
         return;
       } else {
         app.user.leaveRoom(currentRoom.info._id);
@@ -152,13 +163,6 @@ export default class Home extends Component {
       app.user.joinRoom(roomToJoin);
       Actions.room({room: rowData});
     }
-    // if (currentRoom) {
-    //   app.user.leaveRoom(app.user.room.info._id);
-    // }
-    // app.user.joinRoom(rowData._id);
-    // {
-    //   Actions.room({room: rowData})
-    // }
   }
 }
 

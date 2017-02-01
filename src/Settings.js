@@ -10,7 +10,6 @@ import {
   Button,
   TextInput
 } from 'react-native';
-import DubBot from './DubBot/dub-bot';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import app from './app';
 
@@ -62,7 +61,6 @@ export default class Settings extends Component {
             onChangeText={(password) => this.setState({password: password})}/>
           <Button
             onPress={() => {
-              app.user = new DubBot(this.state.username, this.state.password);
               this.setState({loggedIn: true});
             }}
             backgroundColor="#272635"

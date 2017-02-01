@@ -6,7 +6,7 @@ const PMManager = require('./lib/conversationmanager.js');
 const Room = require('./lib/room.js');
 const roles = require('./lib/data/roles.js');
 
-export default class DubBot extends EventEmitter {
+export default class Client extends EventEmitter {
   constructor() {
     let Protocol = require('./lib/protocol/protocol.js');
 
