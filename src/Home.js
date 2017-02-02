@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#B1E5F2',
   },
   searchBar: {
-    height: 30,
+    height: 40,
     textAlign: 'center',
   },
   center: {
