@@ -13,6 +13,7 @@ import {
   TextInput,
   RefreshControl,
   ActivityIndicator,
+  KeyboardAvoidingView,
   Menu
 } from 'react-native';
 
@@ -26,8 +27,9 @@ import {
 
 import app from './app';
 import {Actions} from 'react-native-router-flux'
-import {Container, Header, Title, Button, Icon, Content} from 'native-base';
+import {Container, Header, Footer, InputGroup, Input, Title, Button, Icon, Content, FooterTab} from 'native-base';
 import Spinner from 'react-native-loading-spinner-overlay';
+let {height, width} = Dimensions.get('window');
 
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 
@@ -105,47 +107,34 @@ export default class Home extends Component {
               onRefresh={this._onRefresh.bind(this)}
             />
           }>
-
           <Spinner visible={this.state.loading}/>
-
           <ListView
             enableEmptySections={true}
             dataSource={this.state.dataSource}
             renderRow={this.renderRow.bind(this)}
           />
 
+          <View style={styles.searchFooter}>
+            <TextInput
+              style={styles.searchBar}
+              placeholder='Search'
+              placeholderTextColor={'black'}
+              multiline={true}
+              returnKeyType="search"
+              returnKeyLabel="search"
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={(roomSearch) => this.setState({roomSearch})}
+              onSubmitEditing={() => {
+                this.loadData(this.state.roomSearch)
+              }}/>
+          </View>
         </Content>
       </Container>
-      // <View style={styles.container}>
-      //   <ListView
-      //     enableEmptySections={true}
-      //     dataSource={this.state.dataSource}
-      //     renderRow={this.renderRow.bind(this)}
-      //     refreshControl={
-      //       <RefreshControl
-      //         refreshing={this.state.refreshing}
-      //         onRefresh={this._onRefresh.bind(this)}
-      //       />
-      //     }
-      //   />
-      //   <TextInput
-      //     style={styles.searchBar}
-      //     autoCorrect={false}
-      //     autoCapitalize="none"
-      //     placeholder="Search for a room"
-      //     returnKeyType='search'
-      //     returnKeyLabel='search'
-      //     onChangeText={(roomSearch) => this.setState({roomSearch})}
-      //     onSubmitEditing={() => {
-      //       this.loadData(this.state.roomSearch)
-      //     }}/>
-      //   <KeyboardSpacer/>
-      // </View>
     );
   }
 
   renderRow(rowData) {
-    let {height, width} = Dimensions.get('window');
     let uri;
 
     if (rowData.background) {
@@ -201,14 +190,20 @@ const styles = StyleSheet.create({
   roomList: {
     marginTop: 30,
   },
-  searchBar: {
-    height: 30,
-    borderColor: 'black',
+  searchFooter: {
+    backgroundColor: 'red',
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
     bottom: 0,
     left: 0,
     right: 0,
+    position: 'relative',
+  },
+  searchBar: {
+    height: 30,
+    fontSize: 14,
     textAlign: 'center',
-    margin: 10,
   },
   center: {
     zIndex: 2,

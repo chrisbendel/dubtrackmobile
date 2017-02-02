@@ -38,9 +38,3 @@ export default class app extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 22,
-  },
-});
