@@ -113,13 +113,13 @@ export default class Home extends Component {
             dataSource={this.state.dataSource}
             renderRow={this.renderRow.bind(this)}
           />
-
-          <View style={styles.searchFooter}>
-            <TextInput
+        </Content>
+        <Footer>
+          <InputGroup borderType="underline">
+            <Input
               style={styles.searchBar}
               placeholder='Search'
               placeholderTextColor={'black'}
-              multiline={true}
               returnKeyType="search"
               returnKeyLabel="search"
               autoCapitalize="none"
@@ -128,8 +128,8 @@ export default class Home extends Component {
               onSubmitEditing={() => {
                 this.loadData(this.state.roomSearch)
               }}/>
-          </View>
-        </Content>
+          </InputGroup>
+        </Footer>
       </Container>
     );
   }
@@ -190,19 +190,7 @@ const styles = StyleSheet.create({
   roomList: {
     marginTop: 30,
   },
-  searchFooter: {
-    backgroundColor: 'red',
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    position: 'relative',
-  },
   searchBar: {
-    height: 30,
-    fontSize: 14,
     textAlign: 'center',
   },
   center: {
