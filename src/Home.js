@@ -11,7 +11,10 @@ import {
   Dimensions,
   Navigator,
   TextInput,
+  ScrollView,
   RefreshControl,
+  ActivityIndicator,
+  KeyboardAvoidingView,
   Menu
 } from 'react-native';
 
@@ -25,7 +28,10 @@ import {
 
 import app from './app';
 import {Actions} from 'react-native-router-flux'
-import {Container, Header, Title, Button, Icon} from 'native-base';
+import {Container, Header, Footer, InputGroup, Input, Title, Button, Icon, Content, FooterTab} from 'native-base';
+import Spinner from 'react-native-loading-spinner-overlay';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
+let {height, width} = Dimensions.get('window');
 
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 
@@ -38,12 +44,17 @@ export default class Home extends Component {
       roomSearch: '',
       dataSource: ds.cloneWithRows([]),
       refreshing: false,
+      loading: false,
     };
     app.user.login('dubtrackmobile', 'insecure');
+  }
+
+  componentDidMount() {
     this.loadData();
   }
 
   loadData(room) {
+    this.setState({loading: true});
     if (room) {
       return fetch('https://api.dubtrack.fm/room/term/' + room)
         .then((res) => res.json())
@@ -51,6 +62,7 @@ export default class Home extends Component {
           this.setState({
             dataSource: this.state.dataSource.cloneWithRows(json.data)
           });
+          this.setState({loading: false});
         })
         .catch(e => {
           console.log(e);
@@ -63,6 +75,7 @@ export default class Home extends Component {
             dataSource: this.state.dataSource.cloneWithRows(json.data),
             refreshing: false,
           });
+          this.setState({loading: false});
         })
         .catch(e => {
           console.log(e);
@@ -71,55 +84,64 @@ export default class Home extends Component {
   }
 
   _onRefresh() {
-    this.setState({refreshing: true});
+    this.setState({refreshing: true, loading: true});
     this.loadData();
   }
 
 
   //use command+shift+k to enable keyboard hardware on ios emulator to test search bar
   render() {
+    let that = this;
     return (
-      <Container>
-        <Header>
-          <Button transparent>
-            <Icon size={30} color={'#fff'} name={'ios-menu'}/>
-          </Button>
-          <Title>Lobby</Title>
-          <Button transparent>
-            <Icon size={30} color={'#fff'} name={'ios-mail'}/>
-          </Button>
-        </Header>
-      </Container>
-      // <View style={styles.container}>
-      //   <ListView
-      //     enableEmptySections={true}
-      //     dataSource={this.state.dataSource}
-      //     renderRow={this.renderRow.bind(this)}
-      //     refreshControl={
-      //       <RefreshControl
-      //         refreshing={this.state.refreshing}
-      //         onRefresh={this._onRefresh.bind(this)}
-      //       />
-      //     }
-      //   />
-      //   <TextInput
-      //     style={styles.searchBar}
-      //     autoCorrect={false}
-      //     autoCapitalize="none"
-      //     placeholder="Search for a room"
-      //     returnKeyType='search'
-      //     returnKeyLabel='search'
-      //     onChangeText={(roomSearch) => this.setState({roomSearch})}
-      //     onSubmitEditing={() => {
-      //       this.loadData(this.state.roomSearch)
-      //     }}/>
-      //   <KeyboardSpacer/>
-      // </View>
+      <View style={{flex: 1}}>
+        <Container>
+          <Header>
+            <Button transparent>
+              <Icon size={30} color={'#fff'} name={'ios-menu'}/>
+            </Button>
+            <Title>Lobby</Title>
+            <Button transparent>
+              <Icon size={30} color={'#fff'} name={'ios-mail'}/>
+            </Button>
+          </Header>
+          <Content
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this._onRefresh.bind(this)}
+              />
+            }>
+            <Spinner visible={this.state.loading}/>
+            <ListView
+              enableEmptySections={true}
+              dataSource={this.state.dataSource}
+              renderRow={this.renderRow.bind(this)}
+            />
+          </Content>
+        </Container>
+        <View style={styles.searchContainer}>
+          <TextInput
+            ref={'search'}
+            style={styles.searchBar}
+            inlineLabel
+            placeholder='Search'
+            placeholderTextColor={'black'}
+            returnKeyType="search"
+            returnKeyLabel="search"
+            autoCapitalize="none"
+            autoCorrect={false}
+            onChangeText={(roomSearch) => this.setState({roomSearch})}
+            onSubmitEditing={() => {
+              this.loadData(this.state.roomSearch);
+              that.refs['search'].clear();
+            }}/>
+          <KeyboardSpacer/>
+        </View>
+      </View>
     );
   }
 
   renderRow(rowData) {
-    let {height, width} = Dimensions.get('window');
     let uri;
 
     if (rowData.background) {
@@ -127,6 +149,7 @@ export default class Home extends Component {
     } else {
       uri = 'https://res.cloudinary.com/hhberclba/image/upload/c_fill,fl_lossy,f_auto,w_320,h_180/default.png';
     }
+
     return (
       <Card>
         <CardImage>
@@ -174,14 +197,30 @@ const styles = StyleSheet.create({
   roomList: {
     marginTop: 30,
   },
+  searchContainer: {
+    bottom: 0,
+    right: 0,
+    left: 0,
+    position: 'absolute',
+    borderWidth: 3,
+    borderColor: '#B1E5F2',
+    borderStyle: 'solid',
+    backgroundColor: '#B1E5F2',
+  },
   searchBar: {
     height: 30,
-    borderColor: 'black',
+    textAlign: 'center',
+  },
+  center: {
+    zIndex: 2,
+    top: 200,
     bottom: 0,
     left: 0,
     right: 0,
-    textAlign: 'center',
-    margin: 10,
+    position: 'absolute',
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   rowContainer: {
     paddingTop: 10,
