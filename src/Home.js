@@ -11,6 +11,7 @@ import {
   Dimensions,
   Navigator,
   TextInput,
+  ScrollView,
   RefreshControl,
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -29,6 +30,7 @@ import app from './app';
 import {Actions} from 'react-native-router-flux'
 import {Container, Header, Footer, InputGroup, Input, Title, Button, Icon, Content, FooterTab} from 'native-base';
 import Spinner from 'react-native-loading-spinner-overlay';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 let {height, width} = Dimensions.get('window');
 
 import KeyboardSpacer from 'react-native-keyboard-spacer';
@@ -89,48 +91,53 @@ export default class Home extends Component {
 
   //use command+shift+k to enable keyboard hardware on ios emulator to test search bar
   render() {
+    let that = this;
     return (
-      <Container>
-        <Header>
-          <Button transparent>
-            <Icon size={30} color={'#fff'} name={'ios-menu'}/>
-          </Button>
-          <Title>Lobby</Title>
-          <Button transparent>
-            <Icon size={30} color={'#fff'} name={'ios-mail'}/>
-          </Button>
-        </Header>
-        <Content
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={this._onRefresh.bind(this)}
+      <View style={{flex: 1}}>
+        <Container>
+          <Header>
+            <Button transparent>
+              <Icon size={30} color={'#fff'} name={'ios-menu'}/>
+            </Button>
+            <Title>Lobby</Title>
+            <Button transparent>
+              <Icon size={30} color={'#fff'} name={'ios-mail'}/>
+            </Button>
+          </Header>
+          <Content
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this._onRefresh.bind(this)}
+              />
+            }>
+            <Spinner visible={this.state.loading}/>
+            <ListView
+              enableEmptySections={true}
+              dataSource={this.state.dataSource}
+              renderRow={this.renderRow.bind(this)}
             />
-          }>
-          <Spinner visible={this.state.loading}/>
-          <ListView
-            enableEmptySections={true}
-            dataSource={this.state.dataSource}
-            renderRow={this.renderRow.bind(this)}
-          />
-        </Content>
-        <Footer>
-          <InputGroup borderType="underline">
-            <Input
-              style={styles.searchBar}
-              placeholder='Search'
-              placeholderTextColor={'black'}
-              returnKeyType="search"
-              returnKeyLabel="search"
-              autoCapitalize="none"
-              autoCorrect={false}
-              onChangeText={(roomSearch) => this.setState({roomSearch})}
-              onSubmitEditing={() => {
-                this.loadData(this.state.roomSearch)
-              }}/>
-          </InputGroup>
-        </Footer>
-      </Container>
+          </Content>
+        </Container>
+        <View style={styles.searchContainer}>
+          <TextInput
+            ref={'search'}
+            style={styles.searchBar}
+            inlineLabel
+            placeholder='Search'
+            placeholderTextColor={'black'}
+            returnKeyType="search"
+            returnKeyLabel="search"
+            autoCapitalize="none"
+            autoCorrect={false}
+            onChangeText={(roomSearch) => this.setState({roomSearch})}
+            onSubmitEditing={() => {
+              this.loadData(this.state.roomSearch);
+              that.refs['search'].clear();
+            }}/>
+          <KeyboardSpacer/>
+        </View>
+      </View>
     );
   }
 
@@ -190,7 +197,18 @@ const styles = StyleSheet.create({
   roomList: {
     marginTop: 30,
   },
+  searchContainer: {
+    bottom: 0,
+    right: 0,
+    left: 0,
+    position: 'absolute',
+    borderWidth: 3,
+    borderColor: '#B1E5F2',
+    borderStyle: 'solid',
+    backgroundColor: '#B1E5F2',
+  },
   searchBar: {
+    height: 30,
     textAlign: 'center',
   },
   center: {
