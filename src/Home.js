@@ -12,6 +12,7 @@ import {
   Navigator,
   TextInput,
   RefreshControl,
+  ActivityIndicator,
   Menu
 } from 'react-native';
 
@@ -25,7 +26,8 @@ import {
 
 import app from './app';
 import {Actions} from 'react-native-router-flux'
-import {Container, Header, Title, Button, Icon} from 'native-base';
+import {Container, Header, Title, Button, Icon, Content} from 'native-base';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 
@@ -38,12 +40,17 @@ export default class Home extends Component {
       roomSearch: '',
       dataSource: ds.cloneWithRows([]),
       refreshing: false,
+      loading: false,
     };
     app.user.login('dubtrackmobile', 'insecure');
+  }
+
+  componentDidMount() {
     this.loadData();
   }
 
   loadData(room) {
+    this.setState({loading: true});
     if (room) {
       return fetch('https://api.dubtrack.fm/room/term/' + room)
         .then((res) => res.json())
@@ -51,6 +58,7 @@ export default class Home extends Component {
           this.setState({
             dataSource: this.state.dataSource.cloneWithRows(json.data)
           });
+          this.setState({loading: false});
         })
         .catch(e => {
           console.log(e);
@@ -63,6 +71,7 @@ export default class Home extends Component {
             dataSource: this.state.dataSource.cloneWithRows(json.data),
             refreshing: false,
           });
+          this.setState({loading: false});
         })
         .catch(e => {
           console.log(e);
@@ -71,7 +80,7 @@ export default class Home extends Component {
   }
 
   _onRefresh() {
-    this.setState({refreshing: true});
+    this.setState({refreshing: true, loading: true});
     this.loadData();
   }
 
@@ -89,6 +98,23 @@ export default class Home extends Component {
             <Icon size={30} color={'#fff'} name={'ios-mail'}/>
           </Button>
         </Header>
+        <Content
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh.bind(this)}
+            />
+          }>
+
+          <Spinner visible={this.state.loading}/>
+
+          <ListView
+            enableEmptySections={true}
+            dataSource={this.state.dataSource}
+            renderRow={this.renderRow.bind(this)}
+          />
+
+        </Content>
       </Container>
       // <View style={styles.container}>
       //   <ListView
@@ -127,6 +153,7 @@ export default class Home extends Component {
     } else {
       uri = 'https://res.cloudinary.com/hhberclba/image/upload/c_fill,fl_lossy,f_auto,w_320,h_180/default.png';
     }
+
     return (
       <Card>
         <CardImage>
@@ -182,6 +209,17 @@ const styles = StyleSheet.create({
     right: 0,
     textAlign: 'center',
     margin: 10,
+  },
+  center: {
+    zIndex: 2,
+    top: 200,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    position: 'absolute',
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   rowContainer: {
     paddingTop: 10,

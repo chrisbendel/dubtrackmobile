@@ -10,7 +10,6 @@ import Settings from './Settings';
 import {Actions, Scene, Router} from 'react-native-router-flux';
 //TODO: use store to save user's login credentials/session
 import store from 'react-native-simple-store';
-import Bars from './icons/bars.png'
 
 export default class app extends Component {
   static user = new Client();
