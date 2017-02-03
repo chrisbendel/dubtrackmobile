@@ -92,7 +92,7 @@ export default class Home extends Component {
       <View style={{flex: 1}}>
         <Container>
           <Header>
-            <Button transparent onPress={() => Actions.drawer()}>
+            <Button transparent onPress={() => Actions.refresh({key: 'drawer', open: value => !value })}>
               <Icon size={30} name={'ios-menu'}/>
             </Button>
             <Title>Lobby</Title>

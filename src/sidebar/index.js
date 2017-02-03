@@ -3,7 +3,8 @@ import {Image, StyleSheet} from 'react-native';
 import {Content, Text, List, ListItem, Icon, View} from 'native-base';
 
 import sidebarTheme from './sidebar-theme';
-
+import Drawer from 'react-native-drawer'
+import Settings from './../Settings';
 export default class SideBar extends Component {
 
   constructor(props) {
@@ -16,29 +17,20 @@ export default class SideBar extends Component {
 
   render() {
     return (
-      <Content
-        theme={sidebarTheme}
-        style={styles.sidebar}
+      <Drawer
+        type="static"
+        content={<Settings />}
+        tapToClose={true}
+        panThreshold={.35}
+        openDrawerOffset={0.2}
+        panCloseMask={0.2}
+        closedDrawerOffset={-3}
+        tweenHandler={(ratio) => ({ main: { opacity: (2 - ratio) / 2 } })}
       >
-        <Image source={'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'}
-               style={styles.drawerCover}>
-          <Image
-            square
-            style={styles.drawerImage}
-            source={'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'}
-          />
-        </Image>
-        <List>
-          <ListItem button iconLeft>
-            <View style={styles.listItemContainer}>
-              <View style={[styles.iconContainer, { backgroundColor: '#0209D8', paddingLeft: 14 }]}>
-                <Icon name="ios-phone-portrait-outline" style={styles.sidebarIcon}/>
-              </View>
-              <Text style={styles.text}>Anatomy</Text>
-            </View>
-          </ListItem>
-        </List>
-      </Content>
+        {React.Children.map(this.props.children, c => React.cloneElement(c, {
+          route: this.props.route
+        }))}
+      </Drawer>
     );
   }
 }
