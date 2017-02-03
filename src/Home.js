@@ -13,8 +13,6 @@ import {
   TextInput,
   ScrollView,
   RefreshControl,
-  ActivityIndicator,
-  KeyboardAvoidingView,
   Menu
 } from 'react-native';
 
@@ -27,13 +25,12 @@ import {
 } from 'react-native-card-view';
 
 import app from './app';
+import Settings from './Settings';
 import {Actions} from 'react-native-router-flux'
-import {Container, Header, Footer, InputGroup, Input, Title, Button, Icon, Content, FooterTab} from 'native-base';
+import {Container, Header, InputGroup, Input, Title, Button, Drawer, Icon, Content} from 'native-base';
 import Spinner from 'react-native-loading-spinner-overlay';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-let {height, width} = Dimensions.get('window');
-
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+let {height, width} = Dimensions.get('window');
 
 export default class Home extends Component {
   constructor(props) {
@@ -46,7 +43,7 @@ export default class Home extends Component {
       refreshing: false,
       loading: false,
     };
-    app.user.login('dubtrackmobile', 'insecure');
+    // app.user.login('dubtrackmobile', 'insecure');
   }
 
   componentDidMount() {
@@ -88,7 +85,6 @@ export default class Home extends Component {
     this.loadData();
   }
 
-
   //use command+shift+k to enable keyboard hardware on ios emulator to test search bar
   render() {
     let that = this;
@@ -96,12 +92,12 @@ export default class Home extends Component {
       <View style={{flex: 1}}>
         <Container>
           <Header>
-            <Button transparent>
-              <Icon size={30} color={'#fff'} name={'ios-menu'}/>
+            <Button transparent onPress={() => Actions.drawer()}>
+              <Icon size={30} name={'ios-menu'}/>
             </Button>
             <Title>Lobby</Title>
             <Button transparent>
-              <Icon size={30} color={'#fff'} name={'ios-mail'}/>
+              <Icon size={30} name={'ios-mail-open'}/>
             </Button>
           </Header>
           <Content
@@ -155,7 +151,7 @@ export default class Home extends Component {
         <CardImage>
           <TouchableHighlight onPress={ () => this.pressRow(rowData)}>
             <Image
-              style={{width: width, height: 150}}
+              style={{width: width * .97, height: 150}}
               source={{uri: uri}}
             />
           </TouchableHighlight>
@@ -190,45 +186,19 @@ export default class Home extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: 22,
-  },
-  roomList: {
-    marginTop: 30,
-  },
   searchContainer: {
     bottom: 0,
     right: 0,
     left: 0,
     position: 'absolute',
     borderWidth: 3,
-    borderColor: '#B1E5F2',
+    borderColor: '#4a8bfc',
     borderStyle: 'solid',
-    backgroundColor: '#B1E5F2',
+    backgroundColor: '#4a8bfc',
   },
   searchBar: {
     height: 40,
     textAlign: 'center',
-  },
-  center: {
-    zIndex: 2,
-    top: 200,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    position: 'absolute',
-    backgroundColor: 'transparent',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  rowContainer: {
-    paddingTop: 10,
-    paddingBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#333333',
-    paddingLeft: 10,
-    paddingRight: 10,
   },
   rowTitle: {
     color: '#333333',
