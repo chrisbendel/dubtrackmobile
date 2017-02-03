@@ -77,7 +77,6 @@ export default class Settings extends Component {
     //     </Button>
     //   </View>
     // );
-
   }
 }
 
