@@ -107,7 +107,7 @@ export default class Home extends Component {
                 onRefresh={this._onRefresh.bind(this)}
               />
             }>
-            <Spinner visible={this.state.loading}/>
+            <Spinner overlayColor='rgba(0,0,0)' color="#4a8bfc" visible={this.state.loading}/>
             <ListView
               enableEmptySections={true}
               dataSource={this.state.dataSource}
