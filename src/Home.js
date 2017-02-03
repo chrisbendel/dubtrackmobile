@@ -164,19 +164,17 @@ export default class Home extends Component {
   }
 
   pressRow(rowData) {
-    console.log(app.user.room);
+    console.log(app.user);
     let currentRoom = app.user.room;
     let roomToJoin = rowData._id;
 
     if (currentRoom) {
       if (currentRoom.info._id == roomToJoin) {
-        Actions.room({room: rowData});
-        return;
+        return Actions.room({room: rowData});
       } else {
         app.user.leaveRoom(currentRoom.info._id);
         app.user.joinRoom(roomToJoin);
-        Actions.room({room: rowData});
-        return;
+        return Actions.room({room: rowData});
       }
     } else {
       app.user.joinRoom(roomToJoin);

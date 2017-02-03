@@ -14,11 +14,18 @@ export default class MessageView extends Component {
 
   render() {
     return (
-      <View>
+      <View style={styles.container}>
         <Text>Message view goes here</Text>
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
