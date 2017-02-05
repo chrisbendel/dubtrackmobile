@@ -25,7 +25,6 @@ import {
 } from 'react-native-card-view';
 
 import app from './app';
-import Settings from './Settings';
 import {Actions} from 'react-native-router-flux'
 import {Container, Header, InputGroup, Input, Title, Button, Drawer, Icon, Content} from 'native-base';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -43,7 +42,7 @@ export default class Home extends Component {
       refreshing: false,
       loading: false,
     };
-    // app.user.login('dubtrackmobile', 'insecure');
+    app.user.login('dubtrackmobile', 'insecure');
   }
 
   componentDidMount() {
@@ -107,7 +106,7 @@ export default class Home extends Component {
                 onRefresh={this._onRefresh.bind(this)}
               />
             }>
-            <Spinner overlayColor='rgba(0,0,0)' color="#4a8bfc" visible={this.state.loading}/>
+            <Spinner overlayColor='rgba(0,0,0,0.2)' color="#4a8bfc" visible={this.state.loading}/>
             <ListView
               enableEmptySections={true}
               dataSource={this.state.dataSource}
