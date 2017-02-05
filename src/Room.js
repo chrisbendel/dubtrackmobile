@@ -9,17 +9,17 @@ import {
   ListView,
   TouchableHighlight,
   TextInput,
+  ScrollView,
   AsyncStorage,
   Dimensions
 } from 'react-native';
-import {GiftedChat} from 'react-native-gifted-chat';
+import InvertibleScrollView from 'react-native-invertible-scroll-view';
 import app from './app';
-import {Container, Header, Content, Title, List, ListItem, Thumbnail} from 'native-base';
+import {Container, Button, Header, Footer, FooterTab, Content, Title, List, ListItem, Thumbnail} from 'native-base';
 var EngineIOClient = require('react-native-engine.io-client');
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-
+var _scrollView: ScrollView;
 let {height, width} = Dimensions.get('window');
-
 export default class Room extends Component {
   constructor(props) {
     super(props);
@@ -28,8 +28,10 @@ export default class Room extends Component {
       messages: [],
       message: '',
       users: [],
+      listViewPaddingTop: 0
     };
     this.setSocket = this.setSocket.bind(this);
+    this.updateListViewPaddingTop = this.updateListViewPaddingTop.bind(this);
   }
 
   componentWillMount() {
@@ -46,6 +48,11 @@ export default class Room extends Component {
   componentWillUnmount() {
     this.socket.close();
     app.user.leaveRoom(this.props.room._id);
+  }
+
+
+  updateListViewPaddingTop(listViewContentHeight) {
+    this.messageList.scrollTo({y: 100});
   }
 
   setSocket() {
@@ -103,8 +110,10 @@ export default class Room extends Component {
       });
   }
 
+  //todo figure chatbar style out
   render() {
     let that = this;
+    let totalHeight = 0;
     return (
       <View style={{flex: 1}}>
         <Container>
@@ -112,15 +121,25 @@ export default class Room extends Component {
             <Title>{this.props.room.name}</Title>
           </Header>
           <Content>
-            <List dataArray={this.state.messages}
-                  renderRow={(message) =>
-                    <ListItem style={{borderBottomWidth: 0}}>
-                      <Thumbnail circle size={30} source={{uri: message.avatar}}/>
-                      <Text style={{fontWeight: 'bold'}}>{message.user.username}</Text>
-                      <Text>{message.message}</Text>
-                    </ListItem>
-              }>
-            </List>
+            <View style={{height: height * .75}}>
+              <InvertibleScrollView inverted
+                                    onContentSizeChange={ (contentWidth, contentHeight) => {
+                                      this.messageList.scrollTo({y: 0})
+                                    }}
+                                    ref={(messageList) => {this.messageList = messageList}}>
+                <List dataArray={this.state.messages}
+                      renderRow={(message) =>
+              <ListItem
+                style={{borderBottomWidth: 0}}
+              >
+                <Thumbnail circle size={30} source={{uri: message.avatar}}/>
+                <Text style={{fontWeight: 'bold'}}>{message.user.username}</Text>
+                <Text>{message.message}</Text>
+              </ListItem>
+            }>
+                </List>
+              </InvertibleScrollView>
+            </View>
           </Content>
         </Container>
         <View style={styles.searchContainer}>
@@ -137,7 +156,6 @@ export default class Room extends Component {
             that.refs['chat'].clear();
             this.setState({message: ''});
           }}/>
-          <KeyboardSpacer/>
           <KeyboardSpacer/>
         </View>
       </View>
