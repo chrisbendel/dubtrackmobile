@@ -39,7 +39,6 @@ export default class Client extends EventEmitter {
     return this.room.getUserInfo(room, id);
   };
 
-
   logout = function () {
     this.user.logout();
   };

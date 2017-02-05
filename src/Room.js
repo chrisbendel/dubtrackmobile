@@ -12,27 +12,23 @@ import {
   AsyncStorage,
   Dimensions
 } from 'react-native';
-import {Container, Content} from 'native-base';
 import {GiftedChat} from 'react-native-gifted-chat';
 import app from './app';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
+import {Container, Header, Content, Title, List, ListItem, Thumbnail} from 'native-base';
 var EngineIOClient = require('react-native-engine.io-client');
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
-const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 let {height, width} = Dimensions.get('window');
 
 export default class Room extends Component {
   constructor(props) {
     super(props);
-    console.log(this.props);
+    this.socket = null;
     this.state = {
-      dataSource: ds.cloneWithRows([]),
       messages: [],
-      filteredMessages: [],
       message: '',
       users: [],
     };
-    this.onSend = this.onSend.bind(this);
     this.setSocket = this.setSocket.bind(this);
   }
 
@@ -47,49 +43,40 @@ export default class Room extends Component {
       });
   }
 
-  // componentDidMount() {
-  //   this.updateChat = setInterval(() => {
-  //     this.setState({
-  // messages: app.user.room.chat,
-  // dataSource: ds.cloneWithRows(app.user.room.chat)
-  // })
-  // }, 1000);
-  // }
-
-  // componentWillUnmount() {
-  //   clearInterval(this.updateChat);
-  // }
+  componentWillUnmount() {
+    this.socket.close();
+    app.user.leaveRoom(this.props.room._id);
+  }
 
   setSocket() {
     let that = this;
     return fetch('https://api.dubtrack.fm/auth/token')
       .then(res => res.json())
       .then(json => {
-        this.socket = new EngineIOClient({
+        that.socket = new EngineIOClient({
           hostname: 'ws.dubtrack.fm',
           secure: true,
           path: '/ws',
           query: {access_token: json.data.token},
           transports: ['websocket']
         });
-
-
-        this.socket.on('message', function (msg) {
+        that.socket.on('message', function (msg) {
           msg = JSON.parse(msg);
           switch (msg.action) {
             case 15:
               if (msg.message.name == 'chat-message') {
                 msg = JSON.parse(msg.message.data);
-                let userInfo;
                 app.user.getRoomUser(that.props.room._id, msg.user._id)
                   .then(user => {
-                    return that.filterMessage(msg, user.data);
+                    msg['avatar'] = user._user.profileImage.secure_url;
+                    console.log(msg);
+                    return that.setState(previousState => ({
+                      messages: [...previousState.messages, msg]
+                    }));
                   })
                   .catch(e => {
                     console.log(e);
-                    return userInfo = null;
                   });
-
               }
               break;
             case 14:
@@ -98,95 +85,62 @@ export default class Room extends Component {
             default:
           }
         });
-        this.socket.on('open', function () {
+        that.socket.on('open', function () {
           console.log('socket open');
         });
-        this.socket.on('close', function () {
+        that.socket.on('close', function () {
           console.log('socket closed');
         });
-        this.socket.on('error', function () {
+        that.socket.on('error', function () {
           console.log('socket error');
         });
       })
       .then(() => {
-        return this.socket.send(JSON.stringify({action: 10, channel: 'room:' + this.props.room._id}));
+        return that.socket.send(JSON.stringify({action: 10, channel: 'room:' + this.props.room._id}));
       })
       .catch(e => {
         console.log(e);
       });
   }
 
-  filterMessage(msg, user) {
-    console.log(msg, user);
-    this.setState((previousState) => {
-      return {
-        messages: GiftedChat.append(previousState.messages, {
-          _id: Math.round(Math.random() * 1000000),
-          text: msg.message,
-          createdAt: new Date(),
-          user: {
-            _id: msg.user._id,
-            name: msg.user.username,
-            avatar: 'https://facebook.github.io/react/img/logo_og.png',
-          },
-        }),
-      };
-    });
-  }
-
-
-  renderRow(rowData) {
-    console.log(rowData);
-    return (
-      <View style={styles.message}>
-        <View>
-          <Text style={{fontSize: 14, fontWeight: 'bold'}}>{rowData.user.username}</Text>
-        </View>
-        <Text>{rowData.message}</Text>
-      </View>
-    );
-  }
-
-  onSend(messages = []) {
-    this.setState((previousState) => {
-      return {
-        messages: GiftedChat.append(previousState.messages, messages),
-      };
-    });
-  }
-
   render() {
     let that = this;
     return (
-      <GiftedChat
-        messages={this.state.messages}
-        onSend={this.onSend}
-        user={{_id: 1}}
-      />
-      // <View style={styles.container}>
-      //   <Text style={styles.roomTitle}>
-      //     {this.props.room.name}
-      //   </Text>
-      //   <ListView
-      //     style={styles.chat}
-      //     enableEmptySections={true}
-      //     dataSource={this.state.dataSource}
-      //     renderRow={this.renderRow.bind(this)}/>
-      //   <TextInput
-      //     ref={'chat'}
-      //     style={styles.searchBar}
-      //     autoCorrect={false}
-      //     placeholder="Send chat message"
-      //     returnKeyType='send'
-      //     returnKeyLabel='send'
-      //     onChangeText={(message) => this.setState({message})}
-      //     onSubmitEditing={() => {
-      //       app.user.chat(this.state.message);
-      //       that.refs['chat'].clear();
-      //       this.setState({message: ''});
-      //     }}/>
-      //   <KeyboardSpacer/>
-      // </View>
+      <View style={{flex: 1}}>
+        <Container>
+          <Header>
+            <Title>{this.props.room.name}</Title>
+          </Header>
+          <Content>
+            <List dataArray={this.state.messages}
+                  renderRow={(message) =>
+                    <ListItem style={{borderBottomWidth: 0}}>
+                      <Thumbnail circle size={30} source={{uri: message.avatar}}/>
+                      <Text style={{fontWeight: 'bold'}}>{message.user.username}</Text>
+                      <Text>{message.message}</Text>
+                    </ListItem>
+              }>
+            </List>
+          </Content>
+        </Container>
+        <View style={styles.searchContainer}>
+          <TextInput
+            ref={'chat'}
+            style={styles.searchBar}
+            autoCorrect={false}
+            placeholder="Send chat message"
+            returnKeyType='send'
+            returnKeyLabel='send'
+            onChangeText={(message) => this.setState({message})}
+            onSubmitEditing={() => {
+            app.user.chat(this.state.message);
+            that.refs['chat'].clear();
+            this.setState({message: ''});
+          }}/>
+          <KeyboardSpacer/>
+          <KeyboardSpacer/>
+        </View>
+      </View>
     );
   }
 }

@@ -26,7 +26,7 @@ import {
 
 import app from './app';
 import {Actions} from 'react-native-router-flux'
-import {Container, Header, InputGroup, Input, Title, Button, Drawer, Icon, Content} from 'native-base';
+import {Container, Header, Title, Button, Icon, Content} from 'native-base';
 import Spinner from 'react-native-loading-spinner-overlay';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 let {height, width} = Dimensions.get('window');
@@ -163,22 +163,8 @@ export default class Home extends Component {
   }
 
   pressRow(rowData) {
-    console.log(app.user);
-    let currentRoom = app.user.room;
-    let roomToJoin = rowData._id;
-
-    if (currentRoom) {
-      if (currentRoom.info._id == roomToJoin) {
-        return Actions.room({room: rowData});
-      } else {
-        app.user.leaveRoom(currentRoom.info._id);
-        app.user.joinRoom(roomToJoin);
-        return Actions.room({room: rowData});
-      }
-    } else {
-      app.user.joinRoom(roomToJoin);
-      Actions.room({room: rowData});
-    }
+    app.user.joinRoom(rowData._id);
+    Actions.room({room: rowData});
   }
 }
 
