@@ -13,8 +13,6 @@ import {
   TextInput,
   ScrollView,
   RefreshControl,
-  ActivityIndicator,
-  KeyboardAvoidingView,
   Menu
 } from 'react-native';
 
@@ -28,12 +26,10 @@ import {
 
 import app from './app';
 import {Actions} from 'react-native-router-flux'
-import {Container, Header, Footer, InputGroup, Input, Title, Button, Icon, Content, FooterTab} from 'native-base';
+import {Container, Header, InputGroup, Input, Title, Button, Drawer, Icon, Content} from 'native-base';
 import Spinner from 'react-native-loading-spinner-overlay';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-let {height, width} = Dimensions.get('window');
-
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+let {height, width} = Dimensions.get('window');
 
 export default class Home extends Component {
   constructor(props) {
@@ -88,7 +84,6 @@ export default class Home extends Component {
     this.loadData();
   }
 
-
   //use command+shift+k to enable keyboard hardware on ios emulator to test search bar
   render() {
     let that = this;
@@ -96,12 +91,12 @@ export default class Home extends Component {
       <View style={{flex: 1}}>
         <Container>
           <Header>
-            <Button transparent>
-              <Icon size={30} color={'#fff'} name={'ios-menu'}/>
+            <Button transparent onPress={() => Actions.refresh({key: 'menu', open: value => !value })}>
+              <Icon size={30} name={'ios-menu'}/>
             </Button>
             <Title>Lobby</Title>
-            <Button transparent>
-              <Icon size={30} color={'#fff'} name={'ios-mail'}/>
+            <Button transparent onPress={() => Actions.refresh({key: 'messages', open: value => !value })}>
+              <Icon size={30} name={'ios-mail-open'}/>
             </Button>
           </Header>
           <Content
@@ -111,7 +106,7 @@ export default class Home extends Component {
                 onRefresh={this._onRefresh.bind(this)}
               />
             }>
-            <Spinner visible={this.state.loading}/>
+            <Spinner overlayColor='rgba(0,0,0,0.2)' color="#4a8bfc" visible={this.state.loading}/>
             <ListView
               enableEmptySections={true}
               dataSource={this.state.dataSource}
@@ -155,7 +150,7 @@ export default class Home extends Component {
         <CardImage>
           <TouchableHighlight onPress={ () => this.pressRow(rowData)}>
             <Image
-              style={{width: width, height: 150}}
+              style={{width: width * .97, height: 150}}
               source={{uri: uri}}
             />
           </TouchableHighlight>
@@ -168,19 +163,17 @@ export default class Home extends Component {
   }
 
   pressRow(rowData) {
-    console.log(app.user.room);
+    console.log(app.user);
     let currentRoom = app.user.room;
     let roomToJoin = rowData._id;
 
     if (currentRoom) {
       if (currentRoom.info._id == roomToJoin) {
-        Actions.room({room: rowData});
-        return;
+        return Actions.room({room: rowData});
       } else {
         app.user.leaveRoom(currentRoom.info._id);
         app.user.joinRoom(roomToJoin);
-        Actions.room({room: rowData});
-        return;
+        return Actions.room({room: rowData});
       }
     } else {
       app.user.joinRoom(roomToJoin);
@@ -190,45 +183,19 @@ export default class Home extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: 22,
-  },
-  roomList: {
-    marginTop: 30,
-  },
   searchContainer: {
     bottom: 0,
     right: 0,
     left: 0,
     position: 'absolute',
     borderWidth: 3,
-    borderColor: '#B1E5F2',
+    borderColor: '#4a8bfc',
     borderStyle: 'solid',
-    backgroundColor: '#B1E5F2',
+    backgroundColor: '#4a8bfc',
   },
   searchBar: {
     height: 40,
     textAlign: 'center',
-  },
-  center: {
-    zIndex: 2,
-    top: 200,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    position: 'absolute',
-    backgroundColor: 'transparent',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  rowContainer: {
-    paddingTop: 10,
-    paddingBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#333333',
-    paddingLeft: 10,
-    paddingRight: 10,
   },
   rowTitle: {
     color: '#333333',

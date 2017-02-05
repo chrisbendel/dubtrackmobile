@@ -23,17 +23,20 @@ export default class Client extends EventEmitter {
     return this.user = new User(username, password);
   };
 
-  //       that.pm._checkPM();
-  //       that.pm.interval = setInterval(function () {
-  //         that.pm._checkPM();
-  //       }, that.pm.time);
-
   joinRoom = function (id) {
     return this.room = new Room(id);
   };
 
   leaveRoom = function (id) {
     return this.room.leaveRoom(id);
+  };
+
+  getRoomUsers = function (id) {
+    return this.room.getRoomUsers(id);
+  };
+
+  getRoomUser = function (room, id) {
+    return this.room.getUserInfo(room, id);
   };
 
 
@@ -44,13 +47,6 @@ export default class Client extends EventEmitter {
   chat = function (message) {
     this.room.send(this.room.info._id, message, this.room.info.realTimeChannel);
   };
-
-  getUser(user, callback) {
-    let that = this;
-    this.protocol.user.info(user, function (data) {
-      callback(new User(data, undefined, that));
-    });
-  }
 
   sendPM(users, message) {
     this.getConversation(users, function (conver) {
