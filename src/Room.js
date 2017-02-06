@@ -15,7 +15,19 @@ import {
 } from 'react-native';
 import InvertibleScrollView from 'react-native-invertible-scroll-view';
 import app from './app';
-import {Container, Button, Header, Footer, FooterTab, Content, Title, List, ListItem, Thumbnail} from 'native-base';
+import {
+  Container,
+  Button,
+  Header,
+  Icon,
+  Footer,
+  FooterTab,
+  Content,
+  Title,
+  List,
+  ListItem,
+  Thumbnail
+} from 'native-base';
 var EngineIOClient = require('react-native-engine.io-client');
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 let {height, width} = Dimensions.get('window');
@@ -142,6 +154,22 @@ export default class Room extends Component {
               </InvertibleScrollView>
             </View>
           </Content>
+          <Footer>
+            <FooterTab>
+              <Button>
+                <Icon name='ios-list'/>
+              </Button>
+              <Button>
+                <Icon name='ios-heart'/>
+              </Button>
+              <Button>
+                <Icon name='ios-arrow-up'/>
+              </Button>
+              <Button>
+                <Icon name='ios-arrow-down'/>
+              </Button>
+            </FooterTab>
+          </Footer>
         </Container>
         <View style={styles.chatContainer}>
           <TextInput
@@ -179,13 +207,10 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   chatContainer: {
-    bottom: 0,
+    bottom: 55,
     right: 0,
     left: 0,
     position: 'absolute',
-    borderWidth: 3,
-    borderColor: '#4a8bfc',
-    borderStyle: 'solid',
     backgroundColor: '#4a8bfc',
   },
   message: {
@@ -194,7 +219,7 @@ const styles = StyleSheet.create({
     borderColor: 'black'
   },
   chatBar: {
-    height: 40,
+    height: 30,
     textAlign: 'center'
   },
 });
