@@ -4,7 +4,7 @@ import EventEmitter from 'event-emitter';
 const User = require('./lib/user.js');
 const PMManager = require('./lib/conversationmanager.js');
 const Room = require('./lib/room.js');
-const roles = require('./lib/data/roles.js');
+const roles = require('./lib/roles.js');
 
 export default class Client extends EventEmitter {
   constructor() {

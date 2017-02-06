@@ -1,6 +1,6 @@
 'use strict';
 
-const roles = require('./data/roles.js');
+const roles = require('./roles.js');
 const base = 'https://api.dubtrack.fm/';
 
 class User {
