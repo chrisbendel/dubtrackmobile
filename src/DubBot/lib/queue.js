@@ -2,7 +2,7 @@
 
 var base = 'https://api.dubtrack.fm/';
 
-class RoomQueueProtocol {
+class Queue {
   constructor() {
   }
 
