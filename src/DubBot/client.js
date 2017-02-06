@@ -8,12 +8,9 @@ const roles = require('./lib/data/roles.js');
 
 export default class Client extends EventEmitter {
   constructor() {
-    let Protocol = require('./lib/protocol/protocol.js');
-
     super();
 
     this.emitter = new EventEmitter();
-    this.protocol = new Protocol();
     this.room = null;
     this.user = null;
     this.pm = new PMManager(this);
@@ -75,7 +72,6 @@ export default class Client extends EventEmitter {
     return this.username;
   }
 
-  //DubBot.roles is a thing, now
   static get roles() {
     return roles;
   }

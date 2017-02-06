@@ -5,7 +5,6 @@ const User = require('./user.js');
 class Song {
   constructor(data, room) {
     this.room = room;
-    this.dubbot = room.dubbot;
 
     this.id = data.song._id;
     this.songid = data.songInfo._id;
@@ -42,6 +41,53 @@ class Song {
     } else if (this.type = 'soundcloud') {
       this.dubbot.protocol.song.link(this.songid, callback);
     }
+  }
+
+  search(type, name, nextPageToken) {
+    if (nextPageToken !== undefined) {
+      if (nextPageToken.constructor === Function) {
+        nextPageToken = '';
+      }
+    } else {
+      nextPageToken = '';
+    }
+
+    return fetch(base + 'song?name=' + name + '&type=' + type + '&details=1&nextPageToken=' + nextPageToken)
+      .then(res => res.json())
+      .then(json => {
+        console.log('json inside song.search()');
+        console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
+
+  info(song) {
+    return fetch(base + 'song/' + song)
+      .then(res => res.json())
+      .then(json => {
+        console.log('json inside song.info()');
+        console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
+
+  link(songId) {
+    return fetch(base + 'song/' + songId + '/redirect')
+      .then(res => res.json())
+      .then(json => {
+        console.log('json inside song.link()');
+        console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 }
 

@@ -79,7 +79,11 @@ export default class Room extends Component {
           transports: ['websocket']
         });
         that.socket.on('message', function (msg) {
+          //New messages are sent over socket
+          //TODO: Need to connect to the base socket on app open
+          //TODO: but only connect to the room here
           msg = JSON.parse(msg);
+          console.log(msg);
           switch (msg.action) {
             case 15:
               if (msg.message.name == 'chat-message') {

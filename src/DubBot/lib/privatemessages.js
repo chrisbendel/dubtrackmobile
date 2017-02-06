@@ -1,9 +1,8 @@
-'use strict';
-
 var base = 'https://api.dubtrack.fm/';
 
-class PMProtocol {
+class PrivateMessages {
   constructor() {
+
   }
 
   list() {
@@ -23,8 +22,6 @@ class PMProtocol {
     return fetch(base + 'message/new')
       .then(res => res.json())
       .then(json => {
-        // console.log('json inside pm.checkNew()');
-        // console.log(json);
         return json;
       })
       .catch(e => {
@@ -37,40 +34,6 @@ class PMProtocol {
       .then(res => res.json())
       .then(json => {
         console.log('json inside pm.messages()');
-        console.log(json);
-        return json;
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
-
-  get(usersid) {
-    if (usersid.constructor === String) {
-      usersid = [usersid];
-    }
-
-    if (usersid.length > 10) {
-      console.log("[Protocol] pm.get conversations are up to 10 people.");
-      return;
-    }
-
-    let obj = {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Origin': '',
-      },
-      body: JSON.stringify({
-        'usersid': usersid
-      })
-    };
-
-    return fetch(base + 'message', obj)
-      .then(res => res.json())
-      .then(json => {
-        console.log('json inside pm.get()');
         console.log(json);
         return json;
       })
@@ -105,6 +68,36 @@ class PMProtocol {
       });
   }
 
+  get(usersid) {
+    if (usersid.length > 10) {
+      console.log("conversations are up to 10 people.");
+      return;
+    }
+
+    let obj = {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Origin': '',
+      },
+      body: JSON.stringify({
+        'usersid': usersid
+      })
+    };
+
+    return fetch(base + 'message', obj)
+      .then(res => res.json())
+      .then(json => {
+        console.log('json inside pm.get()');
+        console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
+
   read(converid) {
     let obj = {
       method: 'POST',
@@ -127,5 +120,3 @@ class PMProtocol {
       });
   }
 }
-
-module.exports = PMProtocol;
