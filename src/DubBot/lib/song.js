@@ -5,7 +5,6 @@ const User = require('./user.js');
 class Song {
   constructor(data, room) {
     this.room = room;
-    this.dubbot = room.dubbot;
 
     this.id = data.song._id;
     this.songid = data.songInfo._id;
