@@ -18,7 +18,6 @@ import app from './app';
 import {Container, Button, Header, Footer, FooterTab, Content, Title, List, ListItem, Thumbnail} from 'native-base';
 var EngineIOClient = require('react-native-engine.io-client');
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-var _scrollView: ScrollView;
 let {height, width} = Dimensions.get('window');
 export default class Room extends Component {
   constructor(props) {
@@ -126,36 +125,39 @@ export default class Room extends Component {
                                     onContentSizeChange={ (contentWidth, contentHeight) => {
                                       this.messageList.scrollTo({y: 0})
                                     }}
-                                    ref={(messageList) => {this.messageList = messageList}}>
+                                    ref={(messageList) => {
+                                      this.messageList = messageList
+                                    }}>
                 <List dataArray={this.state.messages}
                       renderRow={(message) =>
-              <ListItem
-                style={{borderBottomWidth: 0}}
-              >
-                <Thumbnail circle size={30} source={{uri: message.avatar}}/>
-                <Text style={{fontWeight: 'bold'}}>{message.user.username}</Text>
-                <Text>{message.message}</Text>
-              </ListItem>
-            }>
+                        <ListItem
+                          style={{borderBottomWidth: 0}}
+                        >
+                          <Thumbnail circle size={30} source={{uri: message.avatar}}/>
+                          <Text style={{fontWeight: 'bold'}}>{message.user.username}</Text>
+                          <Text>{message.message}</Text>
+                        </ListItem>
+                      }>
                 </List>
               </InvertibleScrollView>
             </View>
           </Content>
         </Container>
-        <View style={styles.searchContainer}>
+        <View style={styles.chatContainer}>
           <TextInput
             ref={'chat'}
-            style={styles.searchBar}
+            style={styles.chatBar}
             autoCorrect={false}
+            placeholderTextColor={'black'}
             placeholder="Send chat message"
             returnKeyType='send'
             returnKeyLabel='send'
             onChangeText={(message) => this.setState({message})}
             onSubmitEditing={() => {
-            app.user.chat(this.state.message);
-            that.refs['chat'].clear();
-            this.setState({message: ''});
-          }}/>
+              app.user.chat(this.state.message);
+              that.refs['chat'].clear();
+              this.setState({message: ''});
+            }}/>
           <KeyboardSpacer/>
         </View>
       </View>
@@ -176,18 +178,23 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'black',
   },
+  chatContainer: {
+    bottom: 0,
+    right: 0,
+    left: 0,
+    position: 'absolute',
+    borderWidth: 3,
+    borderColor: '#4a8bfc',
+    borderStyle: 'solid',
+    backgroundColor: '#4a8bfc',
+  },
   message: {
     width: width,
     borderWidth: 1,
     borderColor: 'black'
   },
-  searchBar: {
-    height: 30,
-    borderColor: 'black',
-    bottom: 30,
-    left: 0,
-    right: 0,
-    textAlign: 'center',
-    margin: 10,
+  chatBar: {
+    height: 40,
+    textAlign: 'center'
   },
 });
