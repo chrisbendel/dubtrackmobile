@@ -6,6 +6,8 @@ const base = 'https://api.dubtrack.fm/';
 class User {
   constructor(username = null, password = null) {
     this.info = {};
+    //TODO: attach users playlist to the user object
+    this.playlist = [];
     if (username && password) {
       this.login(username, password);
     }

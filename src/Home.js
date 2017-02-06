@@ -26,7 +26,7 @@ import {
 
 import app from './app';
 import {Actions} from 'react-native-router-flux'
-import {Container, Header, Title, Button, Icon, Content} from 'native-base';
+import {Container, Header, Title, Badge, Button, Icon, Content} from 'native-base';
 import Spinner from 'react-native-loading-spinner-overlay';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 let {height, width} = Dimensions.get('window');
@@ -91,11 +91,12 @@ export default class Home extends Component {
       <View style={{flex: 1}}>
         <Container>
           <Header>
-            <Button transparent onPress={() => Actions.refresh({key: 'menu', open: value => !value })}>
-              <Icon size={30} name={'ios-menu'}/>
+            <Button transparent onPress={() => Actions.refresh({key: 'menu', open: value => !value})}>
+              <Icon size={30} name={'ios-menu'}>
+              </Icon>
             </Button>
             <Title>Lobby</Title>
-            <Button transparent onPress={() => Actions.refresh({key: 'messages', open: value => !value })}>
+            <Button transparent onPress={() => Actions.refresh({key: 'messages', open: value => !value})}>
               <Icon size={30} name={'ios-mail-open'}/>
             </Button>
           </Header>

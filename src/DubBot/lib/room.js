@@ -1,14 +1,10 @@
 'use strict';
 
-var EngineIOClient = require('react-native-engine.io-client');
 import EventEmitter from 'EventEmitter';
-
 const User = require('./user.js');
 const Song = require('./song.js');
-const Message = require('./message.js');
-const GlobalCD = require('./globalcd.js');
-const base = 'https://api.dubtrack.fm/';
 
+const base = 'https://api.dubtrack.fm/';
 class Room extends EventEmitter {
   constructor(id = null) {
     super();
@@ -17,8 +13,6 @@ class Room extends EventEmitter {
     //this.currentSong = new Song();
     this.users = [];
     this.chat = [];
-    this._globalCD = new GlobalCD();
-    this.socket = null;
     this.emitter = new EventEmitter();
     //TODO: add queue and userqueue to room model
 
@@ -121,6 +115,65 @@ class Room extends EventEmitter {
         console.log(e);
       });
   }
+
+  //<----- Room admin methods ----->
+
+
+  //Room muted/banned users
+  //Not sure if server side logic will prevent
+  //a banned user from joining or need to use these
+  muted(roomid) {
+    return fetch(base + 'room/' + roomid + '/users/mute')
+      .then(res => res.json())
+      .then(json => {
+        console.log('json inside room.muted()');
+        console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
+
+  banned(roomid) {
+    return fetch(base + 'room/' + roomid + '/users/ban')
+      .then(res => res.json())
+      .then(json => {
+        console.log('json inside room.banned()');
+        console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
+
+  //<----- Room creation methods - Create room, update room info, delete room, etc ----->
+  makeRoom(roomObject) {
+    let obj = {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Origin': '',
+      },
+      body: JSON.stringify({
+        'roomObject': roomObject
+      })
+    };
+
+    return fetch(base + 'room', obj)
+      .then(res => res.json())
+      .then(json => {
+        console.log('json inside room.make()');
+        console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e)
+      });
+  }
+
 }
 
 module.exports = Room;
