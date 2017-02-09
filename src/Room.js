@@ -26,7 +26,8 @@ import {
   Title,
   List,
   ListItem,
-  Thumbnail
+  Thumbnail,
+  Tabs
 } from 'native-base';
 var EngineIOClient = require('react-native-engine.io-client');
 import KeyboardSpacer from 'react-native-keyboard-spacer';
@@ -41,12 +42,12 @@ export default class Room extends Component {
       users: [],
       listViewPaddingTop: 0
     };
-    this.setSocket = this.setSocket.bind(this);
-    this.updateListViewPaddingTop = this.updateListViewPaddingTop.bind(this);
+    console.log(app.user.socket);
+    this.setChatListener();
   }
 
   componentWillMount() {
-    this.setSocket();
+    // this.setSocket();
     app.user.getRoomUsers(this.props.room._id)
       .then(users => {
         this.setState({users: users});
@@ -57,78 +58,104 @@ export default class Room extends Component {
   }
 
   componentWillUnmount() {
-    this.socket.close();
+    app.user.socket.close();
     app.user.leaveRoom(this.props.room._id);
   }
 
-
-  updateListViewPaddingTop(listViewContentHeight) {
-    this.messageList.scrollTo({y: 100});
-  }
-
-  setSocket() {
+  setChatListener() {
     let that = this;
-    return fetch('https://api.dubtrack.fm/auth/token')
-      .then(res => res.json())
-      .then(json => {
-        that.socket = new EngineIOClient({
-          hostname: 'ws.dubtrack.fm',
-          secure: true,
-          path: '/ws',
-          query: {access_token: json.data.token},
-          transports: ['websocket']
-        });
-        that.socket.on('message', function (msg) {
-          //New messages are sent over socket
-          //TODO: Need to connect to the base socket on app open
-          //TODO: but only connect to the room here
-          msg = JSON.parse(msg);
-          console.log(msg);
-          switch (msg.action) {
-            case 15:
-              if (msg.message.name == 'chat-message') {
-                msg = JSON.parse(msg.message.data);
-                app.user.getRoomUser(that.props.room._id, msg.user._id)
-                  .then(user => {
-                    msg['avatar'] = user._user.profileImage.secure_url;
-                    console.log(msg);
-                    return that.setState(previousState => ({
-                      messages: [...previousState.messages, msg]
-                    }));
-                  })
-                  .catch(e => {
-                    console.log(e);
-                  });
-              }
-              break;
-            case 14:
-
-              break;
-            default:
+    app.user.socket.on('message', function (msg) {
+      //New messages are sent over socket
+      //TODO: Need to connect to the base socket on app open
+      //TODO: but only connect to the room here
+      msg = JSON.parse(msg);
+      console.log(msg);
+      switch (msg.action) {
+        case 15:
+          if (msg.message.name == 'chat-message') {
+            msg = JSON.parse(msg.message.data);
+            app.user.getRoomUser(that.props.room._id, msg.user._id)
+              .then(user => {
+                msg['avatar'] = user._user.profileImage.secure_url;
+                console.log(msg);
+                return that.setState(previousState => ({
+                  messages: [...previousState.messages, msg]
+                }));
+              })
+              .catch(e => {
+                console.log(e);
+              });
           }
-        });
-        that.socket.on('open', function () {
-          console.log('socket open');
-        });
-        that.socket.on('close', function () {
-          console.log('socket closed');
-        });
-        that.socket.on('error', function () {
-          console.log('socket error');
-        });
-      })
-      .then(() => {
-        return that.socket.send(JSON.stringify({action: 10, channel: 'room:' + this.props.room._id}));
-      })
-      .catch(e => {
-        console.log(e);
-      });
+          break;
+        case 14:
+
+          break;
+        default:
+      }
+    });
   }
 
-  //todo figure chatbar style out
+  // setSocket() {
+  //   let that = this;
+  //   return fetch('https://api.dubtrack.fm/auth/token')
+  //     .then(res => res.json())
+  //     .then(json => {
+  //       that.socket = new EngineIOClient({
+  //         hostname: 'ws.dubtrack.fm',
+  //         secure: true,
+  //         path: '/ws',
+  //         query: {access_token: json.data.token},
+  //         transports: ['websocket']
+  //       });
+  //       that.socket.on('message', function (msg) {
+  //         //New messages are sent over socket
+  //         //TODO: Need to connect to the base socket on app open
+  //         //TODO: but only connect to the room here
+  //         msg = JSON.parse(msg);
+  //         console.log(msg);
+  //         switch (msg.action) {
+  //           case 15:
+  //             if (msg.message.name == 'chat-message') {
+  //               msg = JSON.parse(msg.message.data);
+  //               app.user.getRoomUser(that.props.room._id, msg.user._id)
+  //                 .then(user => {
+  //                   msg['avatar'] = user._user.profileImage.secure_url;
+  //                   console.log(msg);
+  //                   return that.setState(previousState => ({
+  //                     messages: [...previousState.messages, msg]
+  //                   }));
+  //                 })
+  //                 .catch(e => {
+  //                   console.log(e);
+  //                 });
+  //             }
+  //             break;
+  //           case 14:
+  //
+  //             break;
+  //           default:
+  //         }
+  //       });
+  //       that.socket.on('open', function () {
+  //         console.log('socket open');
+  //       });
+  //       that.socket.on('close', function () {
+  //         console.log('socket closed');
+  //       });
+  //       that.socket.on('error', function () {
+  //         console.log('socket error');
+  //       });
+  //     })
+  //     .then(() => {
+  //       return that.socket.send(JSON.stringify({action: 10, channel: 'room:' + this.props.room._id}));
+  //     })
+  //     .catch(e => {
+  //       console.log(e);
+  //     });
+  // }
+
   render() {
     let that = this;
-    let totalHeight = 0;
     return (
       <View style={{flex: 1}}>
         <Container>
@@ -136,9 +163,13 @@ export default class Room extends Component {
             <Title>{this.props.room.name}</Title>
           </Header>
           <Content>
-            <View style={{height: height * .75}}>
+            <Tabs>
+              <Text tabLabel='Chat'/>
+              <Text tabLabel='Player'/>
+            </Tabs>
+            <View style={{height: height * .7}}>
               <InvertibleScrollView inverted
-                                    onContentSizeChange={ (contentWidth, contentHeight) => {
+                                    onContentSizeChange={ () => {
                                       this.messageList.scrollTo({y: 0})
                                     }}
                                     ref={(messageList) => {

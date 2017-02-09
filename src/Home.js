@@ -43,10 +43,14 @@ export default class Home extends Component {
       loading: false,
     };
     app.user.login('dubtrackmobile', 'insecure');
+    app.user.setSocket();
   }
 
   componentDidMount() {
     this.loadData();
+  }
+
+  componentWillMount() {
   }
 
   loadData(room) {
