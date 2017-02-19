@@ -10,7 +10,7 @@
   "dependencies": {
     "EventEmitter": "^1.0.0",
     "install": "^0.8.4",
-    "native-base": "^0.5.22",
+    "native-base": "^2.0.7",
     "npm": "^4.0.5",
     "react": "15.4.2",
     "react-native": "^0.40.0",
