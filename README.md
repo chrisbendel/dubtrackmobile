@@ -9,9 +9,9 @@
 ```git clone https://github.com/chrissbendel/dubtrackmobile```  
 ```cd dubtrackmobile```  
 ```npm install```  
-```react-native unlink react-native-vector-icons```
-```react-native link react-native-vector-icons```
-```react-native upgrade``` - Select yes for all options to update xcode's build settings
+```react-native unlink react-native-vector-icons```  
+```react-native link react-native-vector-icons```  
+```react-native upgrade``` - Select yes for all options to update xcode's build settings  
 
 #####Finally  
 ```react-native run-ios```
