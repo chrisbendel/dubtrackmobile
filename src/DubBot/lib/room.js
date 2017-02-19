@@ -13,7 +13,6 @@ class Room extends EventEmitter {
     this.info = null;
     //this.currentSong = new Song();
     this.users = [];
-    this.chat = [];
     this.emitter = new EventEmitter();
     //TODO: add queue and userqueue to room model
 
@@ -99,6 +98,7 @@ class Room extends EventEmitter {
     return fetch(base + 'room/' + room + '/users')
       .then(res => res.json())
       .then(json => {
+        this.users = json.data;
         return json.data;
       })
       .catch(e => {

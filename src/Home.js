@@ -26,7 +26,7 @@ import {
 
 import app from './app';
 import {Actions} from 'react-native-router-flux'
-import {Container, Header, Title, Badge, Button, Icon, Content} from 'native-base';
+import {Container, Header, Title, Left, Right, Body, Button, Icon, Content} from 'native-base';
 import Spinner from 'react-native-loading-spinner-overlay';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 let {height, width} = Dimensions.get('window');
@@ -43,14 +43,25 @@ export default class Home extends Component {
       loading: false,
     };
     app.user.login('dubtrackmobile', 'insecure');
-    app.user.setSocket();
+    app.user.setSocket()
+      .then(() => {
+        app.user.socket.on('message', function (msg) {
+          msg = JSON.parse(msg);
+          console.log(msg);
+        })
+      });
   }
 
   componentDidMount() {
     this.loadData();
+    // app.user.socket.on('message', function (msg) {
+    //   msg = JSON.parse(msg);
+    //   console.log(msg);
+    // })
   }
 
   componentWillMount() {
+
   }
 
   loadData(room) {
@@ -95,14 +106,20 @@ export default class Home extends Component {
       <View style={{flex: 1}}>
         <Container>
           <Header>
-            <Button transparent onPress={() => Actions.refresh({key: 'menu', open: value => !value})}>
-              <Icon size={30} name={'ios-menu'}>
-              </Icon>
-            </Button>
-            <Title>Lobby</Title>
-            <Button transparent onPress={() => Actions.refresh({key: 'messages', open: value => !value})}>
-              <Icon size={30} name={'ios-mail-open'}/>
-            </Button>
+            <Left>
+              <Button transparent onPress={() => Actions.refresh({key: 'menu', open: value => !value})}>
+                <Icon size={30} name={'ios-menu'}>
+                </Icon>
+              </Button>
+            </Left>
+            <Body>
+              <Title>Lobby</Title>
+            </Body>
+            <Right>
+              <Button transparent onPress={() => Actions.refresh({key: 'messages', open: value => !value})}>
+                <Icon size={30} name={'ios-mail-open'}/>
+              </Button>
+            </Right>
           </Header>
           <Content
             refreshControl={
