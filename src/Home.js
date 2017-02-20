@@ -51,41 +51,56 @@ export default class Home extends Component {
       dataSource: ds.cloneWithRows([]),
       refreshing: false,
     };
-
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.loadData();
   }
 
   loadData(room) {
-    this.props.toggleSpinner();
     if (room) {
-      return fetch('https://api.dubtrack.fm/room/term/' + room)
-        .then((res) => res.json())
-        .then((json) => {
+      app.user.filterRooms(room)
+        .then(rooms => {
           this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(json.data)
-          });
-          this.props.toggleSpinner();
-        })
-        .catch(e => {
-          console.log(e);
+            dataSource: this.state.dataSource.cloneWithRows(rooms)
+          })
         });
     } else {
-      return fetch('https://api.dubtrack.fm/room')
-        .then((res) => res.json())
-        .then((json) => {
+      app.user.listRooms()
+        .then(rooms => {
           this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(json.data),
-            refreshing: false,
-          });
-          this.props.toggleSpinner();
-        })
-        .catch(e => {
-          console.log(e);
+            dataSource: this.state.dataSource.cloneWithRows(rooms)
+          })
         });
     }
+
+    // this.props.toggleSpinner();
+    // if (room) {
+    //   return fetch('https://api.dubtrack.fm/room/term/' + room)
+    //     .then((res) => res.json())
+    //     .then((json) => {
+    //       this.setState({
+    //         dataSource: this.state.dataSource.cloneWithRows(json.data)
+    //       });
+    //       this.props.toggleSpinner();
+    //     })
+    //     .catch(e => {
+    //       console.log(e);
+    //     });
+    // } else {
+    //   return fetch('https://api.dubtrack.fm/room')
+    //     .then((res) => res.json())
+    //     .then((json) => {
+    //       this.setState({
+    //         dataSource: this.state.dataSource.cloneWithRows(json.data),
+    //         refreshing: false,
+    //       });
+    //       this.props.toggleSpinner();
+    //     })
+    //     .catch(e => {
+    //       console.log(e);
+    //     });
+    // }
   }
 
   _onRefresh() {
