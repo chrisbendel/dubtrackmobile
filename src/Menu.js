@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Drawer from 'react-native-drawer';
-import Settings from './Settings';
+import Settings from './Views/SettingsView';
 import {Actions, DefaultRenderer} from 'react-native-router-flux';
 
 export default class Menu extends Component {
@@ -20,7 +20,7 @@ export default class Menu extends Component {
         type="displace"
         content={<Settings />}
         tapToClose={true}
-        openDrawerOffset={0.2}
+        openDrawerOffset={0.1}
         panCloseMask={0.2}
         negotiatePan={true}
         tweenHandler={(ratio) => ({

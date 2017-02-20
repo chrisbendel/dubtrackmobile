@@ -19,7 +19,7 @@ import {
 import Client from './DubBot/client';
 import Home from './Home';
 import Room from './Room';
-import Settings from './Settings';
+import Settings from './Views/SettingsView';
 import Messages from './MessageView';
 import {Actions, Scene, Router} from 'react-native-router-flux';
 import Menu from './Menu';

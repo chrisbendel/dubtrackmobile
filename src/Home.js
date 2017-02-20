@@ -25,7 +25,6 @@ import {
 } from 'react-native-card-view';
 
 import app from './app';
-import Settings from './Settings';
 import {Actions} from 'react-native-router-flux'
 import {
   Container,
