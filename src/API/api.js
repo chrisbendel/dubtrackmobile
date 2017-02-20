@@ -1,5 +1,3 @@
-'use strict';
-
 import EventEmitter from 'event-emitter';
 const User = require('./lib/user.js');
 const PMManager = require('./lib/conversationmanager.js');

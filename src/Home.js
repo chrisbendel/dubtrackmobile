@@ -41,7 +41,6 @@ import {
   Icon,
   Content
 } from 'native-base';
-import Spinner from 'react-native-loading-spinner-overlay';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 let {height, width} = Dimensions.get('window');
 
@@ -64,13 +63,6 @@ export default class Home extends Component {
   }
 
   componentWillMount() {
-  }
-
-  setPMListener() {
-    app.user.socket.on('message', function (msg) {
-      msg = JSON.parse(msg);
-      console.log(msg);
-    })
   }
 
   loadData(room) {
@@ -136,7 +128,6 @@ export default class Home extends Component {
                 onRefresh={this._onRefresh.bind(this)}
               />
             }>
-          <Spinner overlayColor='rgba(0,0,0,0.2)' color="#4a8bfc" visible={this.state.loading}/>
           <ListView
             enableEmptySections={true}
             dataSource={this.state.dataSource}
@@ -174,10 +165,11 @@ export default class Home extends Component {
   }
 
   pressRow(rowData) {
+    this.props.toggleSpinner();
     app.user.joinRoom(rowData._id)
       .then(() => {
+        this.props.toggleSpinner();
         this.props.showPage('room');
-
       });
   }
 }

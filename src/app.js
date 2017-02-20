@@ -21,7 +21,8 @@ import Home from './Home';
 import Room from './Room';
 import Settings from './Views/SettingsView';
 import Messages from './MessageView';
-import {Actions, Scene, Router} from 'react-native-router-flux';
+import Spinner from 'react-native-loading-spinner-overlay';
+
 //TODO: use store to save user's login credentials/session
 import store from 'react-native-simple-store';
 
@@ -31,17 +32,13 @@ export default class app extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentRoom: 'home'
+      currentRoom: 'home',
+      loading: false,
     };
     this.showPage = this.showPage.bind(this);
+    this.toggleSpinner = this.toggleSpinner.bind(this);
     app.user.login('dubtrackmobile', 'insecure');
-    app.user.setSocket()
-      .then(() => {
-        this.setPMListener();
-      });
-  }
-
-  componentDidUpdate() {
+    app.user.setSocket();
   }
 
   showPage(title) {
@@ -52,11 +49,18 @@ export default class app extends Component {
     }
   }
 
+  toggleSpinner() {
+    this.setState({
+      loading: !this.state.loading
+    });
+  }
+
   render() {
     return (
       <Container>
+        <Spinner overlayColor='rgba(0,0,0,0.2)' color="#4a8bfc" visible={this.state.loading}/>
         {this.state.currentRoom == 'home' ?
-          <Home showPage={this.showPage}/> : null
+          <Home showPage={this.showPage} toggleSpinner={this.toggleSpinner}/> : null
         }
         {this.state.currentRoom == 'room' ?
           <Room /> : null
