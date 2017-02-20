@@ -31,10 +31,6 @@ let {height, width} = Dimensions.get('window');
 export default class Room extends Component {
   constructor(props) {
     super(props);
-    console.log('user');
-    console.log(app.user);
-    console.log('props');
-    console.log(this.props);
     this.state = {
       messages: [],
       message: '',
@@ -59,37 +55,6 @@ export default class Room extends Component {
     // app.user.leaveRoom(this.props.room._id);
     app.user.setSocket();
   }
-
-  // setChatListener() {
-  //   app.user.socket.on('message', (msg) => {
-  //     //New messages are sent over socket
-  //     //TODO: Need to connect to the base socket on app open
-  //     //TODO: but only connect to the room here
-  //     msg = JSON.parse(msg);
-  //     switch (msg.action) {
-  //       case 15:
-  //         console.log(msg);
-  //         if (msg.message.name == 'chat-message') {
-  //           msg = JSON.parse(msg.message.data);
-  //           app.user.getRoomUser(this.props.room._id, msg.user._id)
-  //             .then(user => {
-  //               msg['avatar'] = user._user.profileImage.secure_url;
-  //               return this.setState(previousState => ({
-  //                 messages: [...previousState.messages, msg]
-  //               }));
-  //             })
-  //             .catch(e => {
-  //               console.log(e);
-  //             });
-  //         }
-  //         break;
-  //       case 14:
-  //
-  //         break;
-  //       default:
-  //     }
-  //   });
-  // }
 
   render() {
     return (

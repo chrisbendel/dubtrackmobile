@@ -16,26 +16,29 @@ import {
   Content
 } from 'native-base';
 
-import Client from './DubBot/client';
+import api from './API/api';
 import Home from './Home';
 import Room from './Room';
 import Settings from './Views/SettingsView';
 import Messages from './MessageView';
 import {Actions, Scene, Router} from 'react-native-router-flux';
-import Menu from './Menu';
 //TODO: use store to save user's login credentials/session
 import store from 'react-native-simple-store';
 
 export default class app extends Component {
-  static user = new Client();
+  static user = new api();
 
   constructor(props) {
     super(props);
-    this.views = ['home', 'room', 'settings', 'messages'];
     this.state = {
-      currentRoom: 'home',
+      currentRoom: 'home'
     };
     this.showPage = this.showPage.bind(this);
+    app.user.login('dubtrackmobile', 'insecure');
+    app.user.setSocket()
+      .then(() => {
+        this.setPMListener();
+      });
   }
 
   componentDidUpdate() {
@@ -89,19 +92,6 @@ export default class app extends Component {
           </FooterTab>
         </Footer>
       </Container>
-      // <Router sceneStyle={{backgroundColor:'#F7F7F7'}} hideNavBar={true}>
-      //   <Scene key="menu" component={Menu} open={false}>
-      //     <Scene key="messages" component={Messages} open={false} tabs={true}>
-      //       <Scene key="root">
-      //         <Scene key="home"
-      //                initial
-      //                component={Home}
-      //                title="Home"/>
-      //         <Scene key="room" component={Room} user={app.user} title="Room"/>
-      //       </Scene>
-      //     </Scene>
-      //   </Scene>
-      // </Router>
     );
   }
 }

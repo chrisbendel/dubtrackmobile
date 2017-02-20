@@ -56,11 +56,7 @@ export default class Home extends Component {
       loading: false,
       settingsHidden: false,
     };
-    app.user.login('dubtrackmobile', 'insecure');
-    app.user.setSocket()
-      .then(() => {
-        this.setPMListener();
-      });
+
   }
 
   componentDidMount() {
