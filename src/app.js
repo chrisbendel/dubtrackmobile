@@ -33,7 +33,7 @@ export default class app extends Component {
     super(props);
     this.state = {
       currentRoom: 'home',
-      loading: false,
+      loading: false
     };
     this.showPage = this.showPage.bind(this);
     this.toggleSpinner = this.toggleSpinner.bind(this);

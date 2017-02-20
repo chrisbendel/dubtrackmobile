@@ -52,8 +52,6 @@ export default class Home extends Component {
       roomSearch: '',
       dataSource: ds.cloneWithRows([]),
       refreshing: false,
-      loading: false,
-      settingsHidden: false,
     };
 
   }
@@ -66,7 +64,7 @@ export default class Home extends Component {
   }
 
   loadData(room) {
-    this.setState({loading: true});
+    this.props.toggleSpinner();
     if (room) {
       return fetch('https://api.dubtrack.fm/room/term/' + room)
         .then((res) => res.json())
@@ -74,7 +72,7 @@ export default class Home extends Component {
           this.setState({
             dataSource: this.state.dataSource.cloneWithRows(json.data)
           });
-          this.setState({loading: false});
+          this.props.toggleSpinner();
         })
         .catch(e => {
           console.log(e);
@@ -87,7 +85,7 @@ export default class Home extends Component {
             dataSource: this.state.dataSource.cloneWithRows(json.data),
             refreshing: false,
           });
-          this.setState({loading: false});
+          this.props.toggleSpinner();
         })
         .catch(e => {
           console.log(e);
@@ -96,7 +94,6 @@ export default class Home extends Component {
   }
 
   _onRefresh() {
-    this.setState({refreshing: true, loading: true});
     this.loadData();
   }
 
