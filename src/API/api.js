@@ -36,6 +36,28 @@ export default class Client extends EventEmitter {
     return this.room.joinRoom(id);
   };
 
+  listRooms = function () {
+    return fetch('https://api.dubtrack.fm/room')
+      .then(res => res.json())
+      .then(json => {
+        return json.data;
+      })
+      .catch(e => {
+        console.log(e);
+      })
+  };
+
+  filterRooms = function (q) {
+    return fetch('https://api.dubtrack.fm/room/term/' + q)
+      .then(res => res.json())
+      .then((json) => {
+        return json.data;
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
+
   // leaveRoom = function (id) {
   //   return this.room.leaveRoom(id);
   // };
