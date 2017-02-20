@@ -94,7 +94,7 @@ export default class RoomView extends Component {
           messages={this.state.messages}
           onSend={this.onSend.bind(this)}
           user={{
-            _id: 2,
+            _id: app.user.user.info._id,
           }}
         />
       </Container>
