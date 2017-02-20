@@ -89,19 +89,6 @@ export default class app extends Component {
           </FooterTab>
         </Footer>
       </Container>
-      // <Router sceneStyle={{backgroundColor:'#F7F7F7'}} hideNavBar={true}>
-      //   <Scene key="menu" component={Menu} open={false}>
-      //     <Scene key="messages" component={Messages} open={false} tabs={true}>
-      //       <Scene key="root">
-      //         <Scene key="home"
-      //                initial
-      //                component={Home}
-      //                title="Home"/>
-      //         <Scene key="room" component={Room} user={app.user} title="Room"/>
-      //       </Scene>
-      //     </Scene>
-      //   </Scene>
-      // </Router>
     );
   }
 }
