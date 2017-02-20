@@ -4,6 +4,9 @@ import {
   Text,
   View
 } from 'react-native';
+import {
+  Content,
+} from 'native-base';
 
 import app from '../app';
 import GiftedChat from 'react-native-gifted-chat';
@@ -11,6 +14,7 @@ import GiftedChat from 'react-native-gifted-chat';
 //TODO This is just from example in docs
 //TODO https://github.com/FaridSafi/react-native-gifted-chat
 //TODO Need to work this out with sending/receiving private messages and incorporate that to gifted chat
+// figure out how to get modals working with gifted chat (its a bug kinda)
 export default class MessageView extends Component {
 
   constructor(props) {
@@ -46,13 +50,15 @@ export default class MessageView extends Component {
 
   render() {
     return (
-      <GiftedChat
-        messages={this.state.messages}
-        onSend={this.onSend}
-        user={{
-          _id: 1
-        }}
-      />
+      <View>
+        <GiftedChat
+          messages={this.state.messages}
+          onSend={this.onSend}
+          user={{
+        _id: 1
+      }}/>
+      </View>
+
     );
   }
 }

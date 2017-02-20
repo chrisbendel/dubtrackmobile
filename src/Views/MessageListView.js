@@ -3,6 +3,7 @@ import {
   StyleSheet,
   View,
   TouchableHighlight,
+  Modal,
 } from 'react-native';
 import {
   Container,
@@ -19,14 +20,20 @@ import {
 } from 'native-base';
 
 import app from '../app';
+import MessageView from './MessageView';
 
-//TODO: This file needs to hold the list view of each message
+//TODO: This file holds the list view of messages with each person
 export default class MessageListView extends Component {
   constructor(props) {
     super(props);
     this.state = {
       conversations: [],
+      modalVisible: false,
     };
+  }
+
+  setModalVisible(visible) {
+    this.setState({modalVisible: visible});
   }
 
   componentWillMount() {
@@ -48,10 +55,18 @@ export default class MessageListView extends Component {
           </Body>
         </Header>
         <Content>
+          <Modal
+            animationType={"fade"}
+            transparent={false}
+            visible={this.state.modalVisible}
+          >
+            <MessageView/>
+          </Modal>
           <List
             dataArray={this.state.conversations}
             renderRow={(item) =>
               <ListItem thumbnail button onPress={() => {
+                this.setModalVisible(true);
                 console.log(item);
               }} >
                 <Left>
