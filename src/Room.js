@@ -1,5 +1,3 @@
-GLOBAL = require('../src/Globals');
-
 import React, {Component} from 'react';
 import {
   StyleSheet,

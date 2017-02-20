@@ -1,5 +1,3 @@
-GLOBAL = require('../src/Globals');
-
 import React, {Component} from 'react';
 import {
   ListView,
@@ -58,9 +56,6 @@ export default class Home extends Component {
 
   componentDidMount() {
     this.loadData();
-  }
-
-  componentWillMount() {
   }
 
   loadData(room) {
