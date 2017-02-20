@@ -2,7 +2,7 @@
 
 var base = 'https://api.dubtrack.fm/';
 
-class PlaylistProtocol {
+export default class Playlist {
   constructor() {
   }
 
@@ -112,5 +112,3 @@ class PlaylistProtocol {
       });
   }
 }
-
-module.exports = PlaylistProtocol;

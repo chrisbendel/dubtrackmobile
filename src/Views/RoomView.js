@@ -75,7 +75,6 @@ export default class RoomView extends Component {
     return (
         <Container>
           <Content>
-            <Text>{app.user.room.info.name}</Text>
             <View style={{height: height * .7}}>
               <InvertibleScrollView inverted
                                     onContentSizeChange={ () => {

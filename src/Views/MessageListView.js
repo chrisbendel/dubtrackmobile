@@ -63,7 +63,6 @@ export default class MessageListView extends Component {
                 </Body>
               </ListItem>
         }>
-
           </List>
         </Content>
       </Container>

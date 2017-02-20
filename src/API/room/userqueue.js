@@ -2,7 +2,7 @@
 
 var base = 'https://api.dubtrack.fm/';
 
-class UserQueue {
+export default class UserQueue {
   constructor() {
 
   }
@@ -111,4 +111,3 @@ class UserQueue {
   // }
 }
 
-module.exports = RoomUserQueueProtocol;

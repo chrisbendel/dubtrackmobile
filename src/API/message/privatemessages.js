@@ -9,8 +9,6 @@ export default class PrivateMessages {
     return fetch(base + 'message')
       .then(res => res.json())
       .then(json => {
-        console.log('json inside pm.list()');
-        console.log(json);
         return json.data;
       })
       .catch(e => {
