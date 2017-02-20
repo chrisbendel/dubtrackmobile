@@ -5,7 +5,7 @@ const User = require('./lib/user.js');
 const PMManager = require('./lib/conversationmanager.js');
 const Room = require('./lib/room.js');
 const roles = require('./lib/roles.js');
-var EngineIOClient = require('react-native-engine.io-client');
+let EngineIOClient = require('react-native-engine.io-client');
 
 export default class Client extends EventEmitter {
   constructor() {
@@ -72,7 +72,6 @@ export default class Client extends EventEmitter {
       .catch(e => {
         console.log(e);
       });
-
   };
 
   sendPM(users, message) {
