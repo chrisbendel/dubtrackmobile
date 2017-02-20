@@ -51,11 +51,6 @@ export default class Settings extends Component {
         <Login updateUser = {this.updateUser} />
       }
       </Container>
-    // if (app.user.user) {
-    //   return(<Logout updateUser = {this.updateUser} />)
-    // } else {
-    //   return(<Login updateUser = {this.updateUser} />);
-    // }
     );
   }
 }
