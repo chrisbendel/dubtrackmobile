@@ -1,48 +1,24 @@
+'use strict';
+
 var base = 'https://api.dubtrack.fm/';
 
-class PrivateMessages {
+export default class Playlist {
   constructor() {
-
   }
 
   list() {
-    return fetch(base + 'message')
+    return fetch(base + 'playlist')
       .then(res => res.json())
       .then(json => {
-        console.log('json inside pm.list()');
         console.log(json);
-        return json;
       })
       .catch(e => {
         console.log(e);
+        Promise.reject();
       });
   }
 
-  checkNew() {
-    return fetch(base + 'message/new')
-      .then(res => res.json())
-      .then(json => {
-        return json;
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
-
-  messages(converid) {
-    return fetch(base + 'message/' + converid)
-      .then(res => res.json())
-      .then(json => {
-        console.log('json inside pm.messages()');
-        console.log(json);
-        return json;
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
-
-  send(converid, message) {
+  make(name) {
     let obj = {
       method: 'POST',
       headers: {
@@ -51,29 +27,48 @@ class PrivateMessages {
         'Origin': '',
       },
       body: JSON.stringify({
-        'message': message,
-        'time': Date.now()
+        'name': name
       })
     };
 
-    return fetch(base + 'message/' + converid, obj)
+    return fetch(base + 'playlist', obj)
       .then(res => res.json())
       .then(json => {
-        console.log('json inside pm.send()');
         console.log(json);
-        return json;
       })
       .catch(e => {
         console.log(e);
       });
   }
 
-  get(usersid) {
-    if (usersid.length > 10) {
-      console.log("conversations are up to 10 people.");
-      return;
-    }
+  remove(playlistid) {
+    let obj = {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Origin': '',
+      }
+    };
+    return fetch(base + 'playlist/' + playlistid, obj)
+      .catch(e => {
+        console.log(e);
+      })
+  }
 
+  //TODO: might need pages to acces larger playlists
+  songs(playlistid, page, name) {
+    return fetch(base + 'playlist/' + playlistid + '/songs')
+      .then(res => res.json())
+      .then(json => {
+        console.log(json);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
+
+  addSong(playlistid, type, fkid, callback) {
     let obj = {
       method: 'POST',
       headers: {
@@ -82,25 +77,24 @@ class PrivateMessages {
         'Origin': '',
       },
       body: JSON.stringify({
-        'usersid': usersid
+        'type': type,
+        'fkid': fkid,
       })
     };
 
-    return fetch(base + 'message', obj)
+    return fetch(base + 'playlist/' + playlistid + '/songs', obj)
       .then(res => res.json())
       .then(json => {
-        console.log('json inside pm.get()');
-        console.log(json);
-        return json;
+        console.log(json)
       })
       .catch(e => {
         console.log(e);
       });
   }
 
-  read(converid) {
+  removeSong(playlistid, songid, callback) {
     let obj = {
-      method: 'POST',
+      method: 'DELETE',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -108,15 +102,13 @@ class PrivateMessages {
       }
     };
 
-    return fetch(base + 'message/' + converid + '/read', obj)
+    return fetch(base + 'playlist/' + playlistid + '/songs/' + songid)
       .then(res => res.json())
       .then(json => {
-        console.log('json inside pm.read()');
         console.log(json);
-        return json;
       })
       .catch(e => {
-        console.log(e);
+        console.log(e)
       });
   }
 }

@@ -1,8 +1,8 @@
 'use strict';
 
-const User = require('./user.js');
+import User from './../user/user';
 
-class Song {
+export default class Song {
   constructor(data, room) {
     this.room = room;
 
@@ -90,5 +90,3 @@ class Song {
       });
   }
 }
-
-module.exports = Song;

@@ -3,7 +3,7 @@
 const roles = require('./roles.js');
 const base = 'https://api.dubtrack.fm/';
 
-class User {
+export default class User {
   constructor(username = null, password = null) {
     this.info = {};
     //TODO: attach users playlist to the user object
@@ -188,5 +188,3 @@ class User {
     return this.username;
   }
 }
-
-module.exports = User;

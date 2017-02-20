@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Actions, DefaultRenderer} from 'react-native-router-flux';
 import Drawer from 'react-native-drawer';
 
-import MessageView from './MessageView';
+import MessageView from './Views/MessageView';
 export default class Messages extends Component {
   constructor(props) {
     super(props);

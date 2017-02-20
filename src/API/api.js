@@ -1,10 +1,12 @@
-'use strict';
-
 import EventEmitter from 'event-emitter';
-const User = require('./lib/user.js');
-const PMManager = require('./lib/conversationmanager.js');
-const Room = require('./lib/room.js');
-const roles = require('./lib/roles.js');
+// const User = require('./user/user.js');
+// const Room = require('./room/room.js');
+// const roles = require('./user/roles.js');
+
+import User from './user/user';
+import Room from './room/room';
+import roles from './user/roles';
+import PM from './message/privatemessages';
 let EngineIOClient = require('react-native-engine.io-client');
 
 export default class Client extends EventEmitter {
@@ -14,7 +16,7 @@ export default class Client extends EventEmitter {
     this.emitter = new EventEmitter();
     this.room = null;
     this.user = null;
-    this.pm = new PMManager(this);
+    this.pm = new PM();
     this.socket = null;
   }
 

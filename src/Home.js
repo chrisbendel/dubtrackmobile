@@ -41,7 +41,6 @@ import {
   Icon,
   Content
 } from 'native-base';
-import Spinner from 'react-native-loading-spinner-overlay';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 let {height, width} = Dimensions.get('window');
 
@@ -53,8 +52,6 @@ export default class Home extends Component {
       roomSearch: '',
       dataSource: ds.cloneWithRows([]),
       refreshing: false,
-      loading: false,
-      settingsHidden: false,
     };
 
   }
@@ -66,15 +63,8 @@ export default class Home extends Component {
   componentWillMount() {
   }
 
-  setPMListener() {
-    app.user.socket.on('message', function (msg) {
-      msg = JSON.parse(msg);
-      console.log(msg);
-    })
-  }
-
   loadData(room) {
-    this.setState({loading: true});
+    this.props.toggleSpinner();
     if (room) {
       return fetch('https://api.dubtrack.fm/room/term/' + room)
         .then((res) => res.json())
@@ -82,7 +72,7 @@ export default class Home extends Component {
           this.setState({
             dataSource: this.state.dataSource.cloneWithRows(json.data)
           });
-          this.setState({loading: false});
+          this.props.toggleSpinner();
         })
         .catch(e => {
           console.log(e);
@@ -95,7 +85,7 @@ export default class Home extends Component {
             dataSource: this.state.dataSource.cloneWithRows(json.data),
             refreshing: false,
           });
-          this.setState({loading: false});
+          this.props.toggleSpinner();
         })
         .catch(e => {
           console.log(e);
@@ -104,7 +94,6 @@ export default class Home extends Component {
   }
 
   _onRefresh() {
-    this.setState({refreshing: true, loading: true});
     this.loadData();
   }
 
@@ -117,7 +106,7 @@ export default class Home extends Component {
             <Icon name="search"/>
             <Input
               ref={'search'}
-              placeholder='Search'
+              placeholder='Search For a Room'
               placeholderTextColor={'black'}
               returnKeyType="search"
               returnKeyLabel="search"
@@ -136,7 +125,6 @@ export default class Home extends Component {
                 onRefresh={this._onRefresh.bind(this)}
               />
             }>
-          <Spinner overlayColor='rgba(0,0,0,0.2)' color="#4a8bfc" visible={this.state.loading}/>
           <ListView
             enableEmptySections={true}
             dataSource={this.state.dataSource}
@@ -174,10 +162,11 @@ export default class Home extends Component {
   }
 
   pressRow(rowData) {
+    this.props.toggleSpinner();
     app.user.joinRoom(rowData._id)
       .then(() => {
+        this.props.toggleSpinner();
         this.props.showPage('room');
-
       });
   }
 }

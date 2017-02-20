@@ -20,8 +20,9 @@ import api from './API/api';
 import Home from './Home';
 import Room from './Room';
 import Settings from './Views/SettingsView';
-import Messages from './MessageView';
-import {Actions, Scene, Router} from 'react-native-router-flux';
+import Messages from './Views/MessageListView';
+import Spinner from 'react-native-loading-spinner-overlay';
+
 //TODO: use store to save user's login credentials/session
 import store from 'react-native-simple-store';
 
@@ -31,17 +32,24 @@ export default class app extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentRoom: 'home'
+      currentRoom: 'home',
+      newMessages: 0,
+      loading: false
     };
     this.showPage = this.showPage.bind(this);
+    this.toggleSpinner = this.toggleSpinner.bind(this);
     app.user.login('dubtrackmobile', 'insecure');
-    app.user.setSocket()
-      .then(() => {
-        this.setPMListener();
-      });
+    app.user.setSocket();
+    this.checkNewPms();
   }
 
-  componentDidUpdate() {
+  checkNewPms() {
+    app.user.pm.checkNew()
+      .then(count => {
+        this.setState({
+          newMessages: count,
+        })
+      })
   }
 
   showPage(title) {
@@ -52,20 +60,27 @@ export default class app extends Component {
     }
   }
 
+  toggleSpinner() {
+    this.setState({
+      loading: !this.state.loading
+    });
+  }
+
   render() {
     return (
       <Container>
+        <Spinner overlayColor='rgba(0,0,0,0.2)' color="#4a8bfc" visible={this.state.loading}/>
         {this.state.currentRoom == 'home' ?
-          <Home showPage={this.showPage}/> : null
+          <Home showPage={this.showPage} toggleSpinner={this.toggleSpinner}/> : null
         }
         {this.state.currentRoom == 'room' ?
           <Room /> : null
         }
-        {this.state.currentRoom == 'settings' ?
-          <Settings /> : null
-        }
         {this.state.currentRoom == 'messages' ?
           <Messages /> : null
+        }
+        {this.state.currentRoom == 'settings' ?
+          <Settings /> : null
         }
         <Footer>
           <FooterTab>
@@ -79,15 +94,20 @@ export default class app extends Component {
             }}>
               <Icon size={30} name={'ios-musical-notes'}/>
             </Button>
+            <Button badgeValue={this.state.newMessages} onPress={() => {
+              this.toggleSpinner();
+              app.user.pm.listMessages()
+              .then(() => {
+                this.toggleSpinner();
+                this.showPage('messages');
+              });
+            }}>
+              <Icon size={30} name={'ios-mail'}/>
+            </Button>
             <Button onPress={() => {
               this.showPage('settings');
             }}>
               <Icon size={30} name={'ios-settings'}/>
-            </Button>
-            <Button badgeValue={1} onPress={() => {
-              this.showPage('messages');
-            }}>
-              <Icon size={30} name={'ios-mail'}/>
             </Button>
           </FooterTab>
         </Footer>

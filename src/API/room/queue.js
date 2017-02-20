@@ -1,22 +1,11 @@
-'use strict';
-
 var base = 'https://api.dubtrack.fm/';
 
-class Queue {
+export default class Queue {
   constructor() {
   }
 
-  info(roomid, detailed, callback) {
-    if (detailed !== undefined) {
-      if (detailed.constructor === Function) {
-        callback = detailed;
-        detailed = false;
-      }
-    } else {
-      detailed = false;
-    }
-
-    return fetch(base + 'room/' + roomid + '/playlist' + (details ? '/details' : ''))
+  info(roomid) {
+    return fetch(base + 'room/' + roomid + '/playlist')
       .then(res => res.json())
       .then(json => {
         console.log('json in queue.info()');
@@ -67,7 +56,7 @@ class Queue {
     return fetch(base + 'chat/skip/' + roomid + '/' + songid, obj)
       .then(res => res.json())
       .then(json => {
-        console.log('json from skip post')
+        console.log('json from skip post');
         console.log(json);
         return json;
       })
@@ -161,5 +150,3 @@ class Queue {
     lockState(roomid, false, callback);
   }
 }
-
-module.exports = RoomQueueProtocol;
