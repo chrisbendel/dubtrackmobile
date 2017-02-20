@@ -6,7 +6,7 @@ import User from './../user/user';
 import Song from './song';
 
 const base = 'https://api.dubtrack.fm/';
-class Room {
+export default class Room {
   constructor() {
     // this.queue = new (require('./room/queue.js'));
     // this.userQueue = new (require('./room/userqueue.js'));
@@ -270,5 +270,3 @@ class Room {
   //   });
   // }
 }
-
-module.exports = Room;

@@ -33,12 +33,23 @@ export default class app extends Component {
     super(props);
     this.state = {
       currentRoom: 'home',
+      newMessages: 0,
       loading: false
     };
     this.showPage = this.showPage.bind(this);
     this.toggleSpinner = this.toggleSpinner.bind(this);
     app.user.login('dubtrackmobile', 'insecure');
     app.user.setSocket();
+    this.checkNewPms();
+  }
+
+  checkNewPms() {
+    app.user.pm.checkNew()
+      .then(count => {
+        this.setState({
+          newMessages: count,
+        })
+      })
   }
 
   showPage(title) {
@@ -88,7 +99,7 @@ export default class app extends Component {
             }}>
               <Icon size={30} name={'ios-settings'}/>
             </Button>
-            <Button badgeValue={1} onPress={() => {
+            <Button badgeValue={this.state.newMessages} onPress={() => {
               this.showPage('messages');
             }}>
               <Icon size={30} name={'ios-mail'}/>

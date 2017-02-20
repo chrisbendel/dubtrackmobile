@@ -1,6 +1,6 @@
 var base = 'https://api.dubtrack.fm/';
 
-class PrivateMessages {
+export default class PrivateMessages {
   constructor() {
 
   }
@@ -22,7 +22,7 @@ class PrivateMessages {
     return fetch(base + 'message/new')
       .then(res => res.json())
       .then(json => {
-        return json;
+        return json.data;
       })
       .catch(e => {
         console.log(e);

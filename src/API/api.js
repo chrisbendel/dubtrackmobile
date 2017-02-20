@@ -6,6 +6,7 @@ import EventEmitter from 'event-emitter';
 import User from './user/user';
 import Room from './room/room';
 import roles from './user/roles';
+import PM from './message/privatemessages';
 let EngineIOClient = require('react-native-engine.io-client');
 
 export default class Client extends EventEmitter {
@@ -15,7 +16,7 @@ export default class Client extends EventEmitter {
     this.emitter = new EventEmitter();
     this.room = null;
     this.user = null;
-    this.pm = null;
+    this.pm = new PM();
     this.socket = null;
   }
 
