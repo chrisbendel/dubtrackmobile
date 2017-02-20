@@ -7,13 +7,13 @@ import {
   ListView,
   TouchableHighlight,
   TouchableOpacity,
-  Button,
+  // Button,
   TextInput
 } from 'react-native';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import {Drawer} from 'native-base';
 import {Actions} from 'react-native-router-flux'
-
+import {Container, Header, Title, Left, Right, Body, Button, Footer, FooterTab, Icon, Content} from 'native-base';
 import app from './app';
 
 export default class Settings extends Component {
@@ -35,19 +35,44 @@ export default class Settings extends Component {
   }
 
   render() {
-    return (
-      <View style={styles.container}>
-        <Button
-          backgroundColor="#272635"
-          color="#B1E5F2"
-          title="Logout"
-          onPress={() => {
-              app.user.protocol.account.logout();
-              this.setState({loggedIn: false});
-            }}
-        />
-      </View>
+    return(
+      <Container style={styles.container}>
+        <Header>
+            <Left>
+                <Button transparent>
+                    <Icon name='menu' />
+                </Button>
+            </Left>
+            <Body>
+                <Title>Header</Title>
+            </Body>
+            <Right />
+        </Header>
+
+        <Content>
+            <Button bordered onPress={() => {
+              console.log('pressed!!')
+                // app.user.protocol.account.logout();
+                // this.setState({loggedIn: false});
+              }}>
+              <Text>Logout</Text>
+            </Button>
+        </Content>
+      </Container>
     );
+    // return (
+      // <View style={styles.container}>
+      //   <Button
+      //     backgroundColor="#272635"
+      //     color="#B1E5F2"
+      //     title="Logout"
+      //     onPress={() => {
+      //         app.user.protocol.account.logout();
+      //         this.setState({loggedIn: false});
+      //       }}
+      //   />
+      // </View>
+    // );
     // return (
     //   <View style={styles.container}>
     //     <TextInput
@@ -80,12 +105,12 @@ export default class Settings extends Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1,
-    marginTop: 22,
-    alignItems: 'center',
-    justifyContent: 'center',
+    // marginTop: 22,
+    // alignItems: 'center',
+    // justifyContent: 'center',
   },
   input: {
     height: 30,
@@ -98,4 +123,4 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'transparent'
   },
-});
+}
