@@ -25,14 +25,20 @@ export default class Client extends EventEmitter {
   };
 
   joinRoom = function (id) {
+    if (this.room) {
+      if (this.room.info._id != id) {
+        this.room.leaveRoom(this.room.info._id);
+      }
+    }
     this.socket.send(JSON.stringify({action: 10, channel: 'room:' + id}));
     this.room = new Room(id);
+    this.room.getRoomUsers(id);
     return this.room.joinRoom(id);
   };
 
-  leaveRoom = function (id) {
-    return this.room.leaveRoom(id);
-  };
+  // leaveRoom = function (id) {
+  //   return this.room.leaveRoom(id);
+  // };
 
   getRoomUsers = function (id) {
     return this.room.getRoomUsers(id);

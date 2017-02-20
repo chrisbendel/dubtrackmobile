@@ -23,7 +23,7 @@ export default class Settings extends Component {
 
     this.state = {
       loggedIn: false
-    }
+    };
     this.updateUser = this.updateUser.bind(this);
   }
 
@@ -44,16 +44,21 @@ export default class Settings extends Component {
   }
 
   render() {
-    if (app.user.user) {
-      return(<Logout updateUser = {this.updateUser} />)
-    } else {
-      return(<Login updateUser = {this.updateUser} />);
-    }
+    return (
+    <Container>
+      {app.user.user ?
+        <Logout updateUser = {this.updateUser} /> :
+        <Login updateUser = {this.updateUser} />
+      }
+      </Container>
+    // if (app.user.user) {
+    //   return(<Logout updateUser = {this.updateUser} />)
+    // } else {
+    //   return(<Login updateUser = {this.updateUser} />);
+    // }
+    );
   }
 }
-
-
-
 
 const styles = {
   Body: {

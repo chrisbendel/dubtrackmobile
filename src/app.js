@@ -30,7 +30,7 @@ export default class app extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentRoom: 'home',
+      currentPage: 'home',
       newMessages: 0,
       loading: false
     };
@@ -51,9 +51,9 @@ export default class app extends Component {
   }
 
   showPage(title) {
-    if (!(this.state.currentRoom == title)) {
+    if (!(this.state.currentPage == title)) {
       this.setState({
-        currentRoom: title,
+        currentPage: title,
       });
     }
   }
@@ -68,16 +68,16 @@ export default class app extends Component {
     return (
       <Container>
         <Spinner overlayColor='rgba(0,0,0,0.2)' color="#4a8bfc" visible={this.state.loading}/>
-        {this.state.currentRoom == 'home' ?
+        {this.state.currentPage == 'home' ?
           <Home showPage={this.showPage} toggleSpinner={this.toggleSpinner}/> : null
         }
-        {this.state.currentRoom == 'room' ?
+        {this.state.currentPage == 'room' ?
           <Room /> : null
         }
-        {this.state.currentRoom == 'messages' ?
+        {this.state.currentPage == 'messages' ?
           <Messages /> : null
         }
-        {this.state.currentRoom == 'settings' ?
+        {this.state.currentPage == 'settings' ?
           <Settings /> : null
         }
         <Footer>
@@ -103,6 +103,7 @@ export default class app extends Component {
               <Icon size={30} name={'ios-mail'}/>
             </Button>
             <Button onPress={() => {
+
               this.showPage('settings');
             }}>
               <Icon size={30} name={'ios-settings'}/>

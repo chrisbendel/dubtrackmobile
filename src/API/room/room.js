@@ -1,7 +1,3 @@
-
-// const User = require('./user.js');
-// const Song = require('./song.js');
-
 import User from './../user/user';
 import Song from './song';
 
@@ -91,8 +87,8 @@ export default class Room {
     return fetch(base + 'room/' + room + '/users')
       .then(res => res.json())
       .then(json => {
-        this.users = json.data;
-        return json.data;
+        return this.users = json.data;
+        // return json.data;
       })
       .catch(e => {
         console.log(e);

@@ -109,17 +109,17 @@ export default class Home extends Component {
               autoCorrect={false}
               onChangeText={(roomSearch) => this.setState({roomSearch})}
               onSubmitEditing={() => {
-                  this.loadData(this.state.roomSearch);
-            }}/>
+                this.loadData(this.state.roomSearch);
+              }}/>
           </Item>
         </Header>
         <Content
           refreshControl={
-              <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this._onRefresh.bind(this)}
-              />
-            }>
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh.bind(this)}
+            />
+          }>
           <ListView
             enableEmptySections={true}
             dataSource={this.state.dataSource}
