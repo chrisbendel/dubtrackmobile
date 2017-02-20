@@ -51,7 +51,7 @@ export default class Settings extends Component {
 
         <Content>
             <Button bordered onPress={() => {
-              console.log('pressed!')
+              console.log('pressed!!')
                 // app.user.protocol.account.logout();
                 // this.setState({loggedIn: false});
               }}>
