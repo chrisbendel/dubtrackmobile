@@ -106,7 +106,7 @@ export default class Home extends Component {
             <Icon name="search"/>
             <Input
               ref={'search'}
-              placeholder='Search'
+              placeholder='Search For a Room'
               placeholderTextColor={'black'}
               returnKeyType="search"
               returnKeyLabel="search"

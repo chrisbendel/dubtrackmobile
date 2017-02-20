@@ -20,7 +20,7 @@ import api from './API/api';
 import Home from './Home';
 import Room from './Room';
 import Settings from './Views/SettingsView';
-import Messages from './Views/MessageView';
+import Messages from './Views/MessageListView';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 //TODO: use store to save user's login credentials/session
@@ -95,7 +95,12 @@ export default class app extends Component {
               <Icon size={30} name={'ios-musical-notes'}/>
             </Button>
             <Button badgeValue={this.state.newMessages} onPress={() => {
-              this.showPage('messages');
+              this.toggleSpinner();
+              app.user.pm.listMessages()
+              .then(() => {
+                this.toggleSpinner();
+                this.showPage('messages');
+              });
             }}>
               <Icon size={30} name={'ios-mail'}/>
             </Button>
