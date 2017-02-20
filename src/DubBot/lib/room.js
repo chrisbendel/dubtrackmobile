@@ -6,20 +6,19 @@ const Song = require('./song.js');
 
 const base = 'https://api.dubtrack.fm/';
 class Room extends EventEmitter {
-  constructor(id = null) {
+  constructor() {
     super();
     // this.queue = new (require('./room/queue.js'));
     // this.userQueue = new (require('./room/userqueue.js'));
+    // this.currentSong = new Song();
     this.info = null;
-    //this.currentSong = new Song();
     this.users = [];
-    this.emitter = new EventEmitter();
     //TODO: add queue and userqueue to room model
 
-    if (id) {
-      this.joinRoom(id);
-      this.getRoomUsers(id);
-    }
+    // if (id) {
+    //   this.joinRoom(id);
+    //   this.getRoomUsers(id);
+    // }
   }
 
   joinRoom(id) {

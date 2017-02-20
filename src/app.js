@@ -20,7 +20,7 @@ import Client from './DubBot/client';
 import Home from './Home';
 import Room from './Room';
 import Settings from './Settings';
-import Messages from './Messages';
+import Messages from './MessageView';
 import {Actions, Scene, Router} from 'react-native-router-flux';
 import Menu from './Menu';
 //TODO: use store to save user's login credentials/session
@@ -42,10 +42,11 @@ export default class app extends Component {
   }
 
   showPage(title) {
-    console.log('in show page');
-    this.setState({
-      currentRoom: title,
-    });
+    if (!(this.state.currentRoom == title)) {
+      this.setState({
+        currentRoom: title,
+      });
+    }
   }
 
   render() {
@@ -59,6 +60,9 @@ export default class app extends Component {
         }
         {this.state.currentRoom == 'settings' ?
           <Settings /> : null
+        }
+        {this.state.currentRoom == 'messages' ?
+          <Messages /> : null
         }
         <Footer>
           <FooterTab>
@@ -77,7 +81,9 @@ export default class app extends Component {
             }}>
               <Icon size={30} name={'ios-settings'}/>
             </Button>
-            <Button badgeValue={1}>
+            <Button badgeValue={1} onPress={() => {
+              this.showPage('messages');
+            }}>
               <Icon size={30} name={'ios-mail'}/>
             </Button>
           </FooterTab>
