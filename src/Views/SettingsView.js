@@ -5,112 +5,75 @@ import {
   View,
   Image,
   ListView,
-  TouchableHighlight,
-  TouchableOpacity,
-  // Button,
   TextInput
 } from 'react-native';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-import {Drawer} from 'native-base';
-import {Actions} from 'react-native-router-flux'
-import {Container, Header, Title, Left, Right, Body, Button, Footer, FooterTab, Icon, Content} from 'native-base';
+// import {Drawer} from 'native-base';
+// import {Actions} from 'react-native-router-flux'
+import Logout from './LogoutView';
+import Login from './LoginView';
+import {Container, Header, Title, Left, Right, Body, Button, Footer, FooterTab, Icon, Content, Thumbnail} from 'native-base';
 import app from '../app';
 
 export default class Settings extends Component {
   constructor(props) {
     super(props);
     console.log(app.user);
+    // console.log(app.user.user.info.profileImage.url);
 
     this.state = {
-      loggedIn: false,
-      username: '',
-      password: '',
+      loggedIn: false
+    }
+    this.updateUser = this.updateUser.bind(this);
+  }
+
+  updateUser(e) {
+    //called by child to update the state
+    e && e.preventDefault();
+    if (app.user.user) {
+      this.setState({loggedIn: true})
+    } else {
+      this.setState({loggedIn: false})
     }
   }
 
   componentWillMount() {
-    if (app.user) {
+    if (app.user.user) {
       this.setState({loggedIn: true})
     }
   }
 
   render() {
-    return(
-      <Container style={styles.container}>
-        <Header>
-            <Left>
-                <Button transparent>
-                    <Icon name='menu' />
-                </Button>
-            </Left>
-            <Body>
-                <Title>Header</Title>
-            </Body>
-            <Right />
-        </Header>
-
-        <Content>
-            <Button bordered onPress={() => {
-              console.log('pressed!!')
-                // app.user.protocol.account.logout();
-                // this.setState({loggedIn: false});
-              }}>
-              <Text>Logout</Text>
-            </Button>
-        </Content>
-      </Container>
-    );
-    // return (
-      // <View style={styles.container}>
-      //   <Button
-      //     backgroundColor="#272635"
-      //     color="#B1E5F2"
-      //     title="Logout"
-      //     onPress={() => {
-      //         app.user.protocol.account.logout();
-      //         this.setState({loggedIn: false});
-      //       }}
-      //   />
-      // </View>
-    // );
-    // return (
-    //   <View style={styles.container}>
-    //     <TextInput
-    //       style={styles.input}
-    //       autoCorrect={false}
-    //       autoCapitalize="none"
-    //       placeholder="Username"
-    //       returnKeyType='done'
-    //       returnKeyLabel='done'
-    //       onChangeText={(username) => this.setState({username: username})}/>
-    //     <TextInput
-    //       style={styles.input}
-    //       autoCorrect={false}
-    //       secureTextEntry={true}
-    //       autoCapitalize="none"
-    //       placeholder="Password"
-    //       returnKeyType='done'
-    //       returnKeyLabel='done'
-    //       onChangeText={(password) => this.setState({password: password})}/>
-    //     <Button
-    //       onPress={() => {
-    //         this.setState({loggedIn: true});
-    //       }}
-    //       backgroundColor="#272635"
-    //       color="#B1E5F2"
-    //       title="Login">
-    //     </Button>
-    //   </View>
-    // );
+    if (app.user.user) {
+      return(<Logout updateUser = {this.updateUser} />)
+    } else {
+      return(<Login updateUser = {this.updateUser} />);
+    }
   }
 }
 
+
+
+
 const styles = {
-  container: {
+  Body: {
     flex: 1,
-    // marginTop: 22,
-    // alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20
+  },
+
+  Logout: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  Name: {
+    fontWeight: 'bold',
     // justifyContent: 'center',
+    // textAlign: 'center'
+
   },
   input: {
     height: 30,
