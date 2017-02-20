@@ -24,7 +24,8 @@ export default class Client extends EventEmitter {
 
   joinRoom = function (id) {
     this.socket.send(JSON.stringify({action: 10, channel: 'room:' + id}));
-    return this.room = new Room(id);
+    this.room = new Room(id);
+    return this.room.joinRoom(id);
   };
 
   leaveRoom = function (id) {

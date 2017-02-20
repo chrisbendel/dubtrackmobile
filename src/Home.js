@@ -116,39 +116,39 @@ export default class Home extends Component {
   //use command+shift+k to enable keyboard hardware on ios emulator to test search bar
   render() {
     return (
-        <Container>
-          <Header searchBar rounded>
-            <Item>
-              <Icon name="search"/>
-              <Input
-                ref={'search'}
-                placeholder='Search'
-                placeholderTextColor={'black'}
-                returnKeyType="search"
-                returnKeyLabel="search"
-                autoCapitalize="none"
-                autoCorrect={false}
-                onChangeText={(roomSearch) => this.setState({roomSearch})}
-                onSubmitEditing={() => {
+      <Container>
+        <Header searchBar rounded>
+          <Item>
+            <Icon name="search"/>
+            <Input
+              ref={'search'}
+              placeholder='Search'
+              placeholderTextColor={'black'}
+              returnKeyType="search"
+              returnKeyLabel="search"
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={(roomSearch) => this.setState({roomSearch})}
+              onSubmitEditing={() => {
                   this.loadData(this.state.roomSearch);
             }}/>
-            </Item>
-          </Header>
-          <Content
-            refreshControl={
+          </Item>
+        </Header>
+        <Content
+          refreshControl={
               <RefreshControl
                 refreshing={this.state.refreshing}
                 onRefresh={this._onRefresh.bind(this)}
               />
             }>
-            <Spinner overlayColor='rgba(0,0,0,0.2)' color="#4a8bfc" visible={this.state.loading}/>
-            <ListView
-              enableEmptySections={true}
-              dataSource={this.state.dataSource}
-              renderRow={this.renderRow.bind(this)}
-            />
-          </Content>
-        </Container>
+          <Spinner overlayColor='rgba(0,0,0,0.2)' color="#4a8bfc" visible={this.state.loading}/>
+          <ListView
+            enableEmptySections={true}
+            dataSource={this.state.dataSource}
+            renderRow={this.renderRow.bind(this)}
+          />
+        </Content>
+      </Container>
     );
   }
 
@@ -179,8 +179,11 @@ export default class Home extends Component {
   }
 
   pressRow(rowData) {
-    app.user.joinRoom(rowData._id);
-    this.props.showPage('room');
+    app.user.joinRoom(rowData._id)
+      .then(() => {
+        this.props.showPage('room');
+
+      });
   }
 }
 
