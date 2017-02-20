@@ -20,8 +20,10 @@ import app from '../app';
 export default class Login extends Component {
   constructor(props) {
     super(props);
-    // console.log(app.user);
-    console.log('MADE IT');
+    this.state = {
+      username: '',
+      password: ''
+    }
   }
 
 
@@ -29,34 +31,38 @@ export default class Login extends Component {
     return(
       <Container>
         <Content>
-          <Form style={styles.Body}>
-            <Item>
-              <Input placeholder="Username" />
-            </Item>
-            <Item last>
-              <Input placeholder="Password" />
-            </Item>
-          </Form>
-          {
-            // <TextInput
-            // style={styles.input}
-            // autoCorrect={false}
-            // autoCapitalize="none"
-            // placeholder="Username"
-            // returnKeyType='done'
-            // returnKeyLabel='done'
-            // onChangeText={(username) => this.setState({username: username})}/>
-            // <TextInput
-            // style={styles.input}
-            // autoCorrect={false}
-            // secureTextEntry={true}
-            // autoCapitalize="none"
-            // placeholder="Password"
-            // returnKeyType='done'
-            // returnKeyLabel='done'
-            // onChangeText={(password) => this.setState({password: password})}/>
-
-          }
+          <Body style={styles.Body}>
+            <Form style={styles.Form}>
+              <Item style={styles.Box}>
+                <Input
+                autoCorrect={false}
+                autoCapitalize="none"
+                returnKeyType='done'
+                returnKeyLabel='done'
+                onChangeText={(username) => this.setState({username})}
+                style={styles.pholder}
+                placeholder="Username" />
+              </Item>
+              <Item last style={styles.Box}>
+                <Input
+                autoCorrect={false}
+                autoCapitalize="none"
+                returnKeyType='done'
+                returnKeyLabel='done'
+                secureTextEntry={true}
+                onChangeText={(password) => this.setState({password})}
+                style={styles.pholder}
+                placeholder="Password" />
+              </Item>
+              <Button block bordered onPress={() => {
+                console.log('pressed!!')
+                app.user.login(this.state.username, this.state.password);
+                this.props.updateUser();
+                }}>
+                <Text>Login</Text>
+              </Button>
+            </Form>
+          </Body>
         </Content>
       </Container>
     );
@@ -68,10 +74,15 @@ const styles = {
     flex: 1,
     height: screenHeight,
     justifyContent: 'center',
+    // alignItems: 'center',
   },
 
-  Logout: {
-    justifyContent: 'center',
+  Form: {
+    width: 200
+  },
+
+  Box: {
+    // justifyContent: 'center',
     alignItems: 'center',
   },
 
@@ -79,6 +90,10 @@ const styles = {
     fontWeight: 'bold',
     // justifyContent: 'center',
     // textAlign: 'center'
+  },
+
+  pholder: {
+    textAlign: 'center'
 
   },
   input: {

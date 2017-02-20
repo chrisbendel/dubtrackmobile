@@ -24,9 +24,7 @@ export default class Logout extends Component {
     // console.log(app.user.user.info.profileImage.url);
 
     this.state = {
-      imageLoaded: false,
-      username: '',
-      password: '',
+      imageLoaded: false
     }
   }
 
@@ -46,6 +44,7 @@ export default class Logout extends Component {
   }
 
   componentWillUnmount() {
+    //make sure the interval is killed
     clearInterval(this.interval);
   }
 
@@ -62,9 +61,8 @@ export default class Logout extends Component {
             <Button block bordered onPress={() => {
               console.log('pressed!!')
                 app.user.logout();
-                app.user = null;
+                app.user.user = null;
                 this.props.updateUser();
-                // this.setState({loggedIn: false});
               }}>
               <Text>Logout</Text>
             </Button>
@@ -72,48 +70,6 @@ export default class Logout extends Component {
         </Content>
       </Container>
     );
-    // return (
-      // <View style={styles.container}>
-      //   <Button
-      //     backgroundColor="#272635"
-      //     color="#B1E5F2"
-      //     title="Logout"
-      //     onPress={() => {
-      //         app.user.protocol.account.logout();
-      //         this.setState({loggedIn: false});
-      //       }}
-      //   />
-      // </View>
-    // );
-    // return (
-    //   <View style={styles.container}>
-    //     <TextInput
-    //       style={styles.input}
-    //       autoCorrect={false}
-    //       autoCapitalize="none"
-    //       placeholder="Username"
-    //       returnKeyType='done'
-    //       returnKeyLabel='done'
-    //       onChangeText={(username) => this.setState({username: username})}/>
-    //     <TextInput
-    //       style={styles.input}
-    //       autoCorrect={false}
-    //       secureTextEntry={true}
-    //       autoCapitalize="none"
-    //       placeholder="Password"
-    //       returnKeyType='done'
-    //       returnKeyLabel='done'
-    //       onChangeText={(password) => this.setState({password: password})}/>
-    //     <Button
-    //       onPress={() => {
-    //         this.setState({loggedIn: true});
-    //       }}
-    //       backgroundColor="#272635"
-    //       color="#B1E5F2"
-    //       title="Login">
-    //     </Button>
-    //   </View>
-    // );
   }
 }
 const {height: screenHeight} = Dimensions.get('window');
@@ -131,9 +87,7 @@ const styles = {
 
   Name: {
     fontWeight: 'bold',
-    // justifyContent: 'center',
-    // textAlign: 'center'
-
+    padding: 10
   },
   input: {
     height: 30,

@@ -22,9 +22,7 @@ export default class Settings extends Component {
     // console.log(app.user.user.info.profileImage.url);
 
     this.state = {
-      loggedIn: false,
-      username: '',
-      password: '',
+      loggedIn: false
     }
     this.updateUser = this.updateUser.bind(this);
   }
@@ -32,7 +30,7 @@ export default class Settings extends Component {
   updateUser(e) {
     //called by child to update the state
     e && e.preventDefault();
-    if (app.user) {
+    if (app.user.user) {
       this.setState({loggedIn: true})
     } else {
       this.setState({loggedIn: false})
@@ -40,15 +38,13 @@ export default class Settings extends Component {
   }
 
   componentWillMount() {
-    if (app.user) {
-      // console.log(app.user.user.info.profileImage);
+    if (app.user.user) {
       this.setState({loggedIn: true})
     }
-    // this.state.loggedIn.addEventLister('change', this.checkUser, false);
   }
 
   render() {
-    if (app.user) {
+    if (app.user.user) {
       return(<Logout updateUser = {this.updateUser} />)
     } else {
       return(<Login updateUser = {this.updateUser} />);
@@ -60,11 +56,6 @@ export default class Settings extends Component {
 
 
 const styles = {
-  // content: {
-  //   width: 100%,
-  //   height: 100%
-  // }
-
   Body: {
     flex: 1,
     flexDirection: 'column',
