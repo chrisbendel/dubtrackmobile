@@ -20,7 +20,7 @@ import api from './API/api';
 import Home from './Home';
 import Room from './Room';
 import Settings from './Views/SettingsView';
-import Messages from './MessageView';
+import Messages from './Views/MessageView';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 //TODO: use store to save user's login credentials/session
@@ -76,11 +76,11 @@ export default class app extends Component {
         {this.state.currentRoom == 'room' ?
           <Room /> : null
         }
-        {this.state.currentRoom == 'settings' ?
-          <Settings /> : null
-        }
         {this.state.currentRoom == 'messages' ?
           <Messages /> : null
+        }
+        {this.state.currentRoom == 'settings' ?
+          <Settings /> : null
         }
         <Footer>
           <FooterTab>
@@ -94,15 +94,15 @@ export default class app extends Component {
             }}>
               <Icon size={30} name={'ios-musical-notes'}/>
             </Button>
-            <Button onPress={() => {
-              this.showPage('settings');
-            }}>
-              <Icon size={30} name={'ios-settings'}/>
-            </Button>
             <Button badgeValue={this.state.newMessages} onPress={() => {
               this.showPage('messages');
             }}>
               <Icon size={30} name={'ios-mail'}/>
+            </Button>
+            <Button onPress={() => {
+              this.showPage('settings');
+            }}>
+              <Icon size={30} name={'ios-settings'}/>
             </Button>
           </FooterTab>
         </Footer>

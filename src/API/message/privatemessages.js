@@ -5,13 +5,13 @@ export default class PrivateMessages {
 
   }
 
-  list() {
+  listMessages() {
     return fetch(base + 'message')
       .then(res => res.json())
       .then(json => {
         console.log('json inside pm.list()');
         console.log(json);
-        return json;
+        return json.data;
       })
       .catch(e => {
         console.log(e);
@@ -29,8 +29,8 @@ export default class PrivateMessages {
       });
   }
 
-  messages(converid) {
-    return fetch(base + 'message/' + converid)
+  getConversation(id) {
+    return fetch(base + 'message/' + id)
       .then(res => res.json())
       .then(json => {
         console.log('json inside pm.messages()');
@@ -42,7 +42,7 @@ export default class PrivateMessages {
       });
   }
 
-  send(converid, message) {
+  send(id, message) {
     let obj = {
       method: 'POST',
       headers: {
@@ -56,7 +56,7 @@ export default class PrivateMessages {
       })
     };
 
-    return fetch(base + 'message/' + converid, obj)
+    return fetch(base + 'message/' + id, obj)
       .then(res => res.json())
       .then(json => {
         console.log('json inside pm.send()');
@@ -98,7 +98,7 @@ export default class PrivateMessages {
       });
   }
 
-  read(converid) {
+  markAsRead(id) {
     let obj = {
       method: 'POST',
       headers: {
@@ -108,7 +108,7 @@ export default class PrivateMessages {
       }
     };
 
-    return fetch(base + 'message/' + converid + '/read', obj)
+    return fetch(base + 'message/' + id + '/read', obj)
       .then(res => res.json())
       .then(json => {
         console.log('json inside pm.read()');

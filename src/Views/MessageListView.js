@@ -5,9 +5,10 @@ import {
   View
 } from 'react-native';
 
-import app from './app';
+import app from '../app';
 
-export default class MessageView extends Component {
+//TODO: This file needs to hold the list view of each message
+export default class MessageListView extends Component {
   constructor(props) {
     super(props);
   }
