@@ -1,24 +1,18 @@
-'use strict';
 
-import EventEmitter from 'EventEmitter';
-const User = require('./user.js');
-const Song = require('./song.js');
+// const User = require('./user.js');
+// const Song = require('./song.js');
+
+import User from './../user/user';
+import Song from './song';
 
 const base = 'https://api.dubtrack.fm/';
-class Room extends EventEmitter {
+class Room {
   constructor() {
-    super();
     // this.queue = new (require('./room/queue.js'));
     // this.userQueue = new (require('./room/userqueue.js'));
     // this.currentSong = new Song();
     this.info = null;
     this.users = [];
-    //TODO: add queue and userqueue to room model
-
-    // if (id) {
-    //   this.joinRoom(id);
-    //   this.getRoomUsers(id);
-    // }
   }
 
   joinRoom(id) {
@@ -117,7 +111,6 @@ class Room extends EventEmitter {
   }
 
   //<----- Room admin methods ----->
-
 
   //Room muted/banned users
   //Not sure if server side logic will prevent

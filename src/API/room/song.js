@@ -1,6 +1,6 @@
 'use strict';
 
-const User = require('./user.js');
+import User from './../user/user';
 
 class Song {
   constructor(data, room) {
