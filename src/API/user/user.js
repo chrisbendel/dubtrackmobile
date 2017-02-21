@@ -8,9 +8,9 @@ export default class User {
     this.info = {};
     //TODO: attach users playlist to the user object
     this.playlist = [];
-    if (username && password) {
-      this.login(username, password);
-    }
+    // if (username && password) {
+    //   this.login(username, password);
+    // }
   }
 
   login(username, password) {
@@ -33,7 +33,7 @@ export default class User {
         //TODO: event emitter and return out of login method
         //TODO: handle failed login logic here based on HTTP response code ex: 401, 200 etc
         // console.log('login response');
-        // console.log(json);
+        console.log('login response', json);
         return this.getUserInfo(username);
       })
       .then(user => {
@@ -48,7 +48,9 @@ export default class User {
   logout() {
     return fetch(base + 'auth/logout')
       .catch(e => {
-        console.log(e);
+         //this is a lesser error, because user will be null by the time this could
+        //be thrown
+        console.log('Logout error', e);
       });
   }
 

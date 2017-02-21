@@ -14,38 +14,15 @@ import {
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import {Drawer} from 'native-base';
 import {Actions} from 'react-native-router-flux'
-import {Container, Header, Title, Left, Right, Body, Button, Footer, FooterTab, Icon, Content, Thumbnail, Spinner} from 'native-base';
+import {Container, Header, Title, Left, Right, Body, Button, Footer, FooterTab, Icon, Content, Thumbnail} from 'native-base';
 import app from '../app';
 
 export default class Logout extends Component {
   constructor(props) {
     super(props);
-    console.log(app.user);
+    console.log('openning LogoutView');
+    // console.log(app.user);
     // console.log(app.user.user.info.profileImage.url);
-
-    this.state = {
-      imageLoaded: false
-    }
-  }
-
-  componentWillMount() {
-    if (app.user.user.info.profileImage) {
-      // console.log(app.user.user.info.profileImage);
-      this.setState({imageLoaded: true})
-    } else {
-      this.interval = setInterval(() => {
-        if (app.user.user.info.profileImage) {
-          this.setState({ imageLoaded: true});
-          console.log('checking');
-          clearInterval(this.interval);
-        }
-      }, 1000);
-    }
-  }
-
-  componentWillUnmount() {
-    //make sure the interval is killed
-    clearInterval(this.interval);
   }
 
   render() {
@@ -54,15 +31,12 @@ export default class Logout extends Component {
       <Container>
         <Content>
           <Body style={styles.Body}>
-            {this.state.imageLoaded ? <Thumbnail size={80} source={{uri: app.user.user.info.profileImage.secure_url}} /> :
-              <Spinner color='#CECECE'/>
-            }
+            <Thumbnail size={80} source={{uri: app.user.user.info.profileImage.secure_url}} />
             <Text style={styles.Name}>{app.user.user.info.username}</Text>
             <Button block bordered onPress={() => {
-              console.log('pressed!!')
-                app.user.logout();
-                app.user.user = null;
-                this.props.updateUser();
+              console.log('pressed!!');
+              app.user.logout();
+              this.props.updateUser();
               }}>
               <Text>Logout</Text>
             </Button>
