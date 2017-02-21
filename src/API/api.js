@@ -18,10 +18,14 @@ export default class Client extends EventEmitter {
     this.user = null;
     this.pm = new PM();
     this.socket = null;
+    this.loggedIn = false;
   }
 
   login = function (username, password) {
-    return this.user = new User(username, password);
+    this.user = new User();
+    return this.user.login(username, password).then(() => {
+      this.loggedIn = true;
+    });
   };
 
   joinRoom = function (id) {
@@ -49,7 +53,9 @@ export default class Client extends EventEmitter {
   };
 
   logout = function () {
+    this.loggedIn = false;
     this.user.logout();
+    this.user = null;
   };
 
   chat = function (message) {

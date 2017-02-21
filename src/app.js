@@ -36,6 +36,7 @@ export default class app extends Component {
     };
     this.showPage = this.showPage.bind(this);
     this.toggleSpinner = this.toggleSpinner.bind(this);
+    this.setSpinner = this.setSpinner.bind(this);
     app.user.login('dubtrackmobile', 'insecure');
     app.user.setSocket();
     this.checkNewPms();
@@ -64,6 +65,12 @@ export default class app extends Component {
     });
   }
 
+  setSpinner(set = true) {
+    this.setState({
+      loading: set
+    });
+  }
+
   render() {
     return (
       <Container>
@@ -78,7 +85,7 @@ export default class app extends Component {
           <Messages /> : null
         }
         {this.state.currentPage == 'settings' ?
-          <Settings /> : null
+          <Settings setSpinner={this.setSpinner} /> : null
         }
         <Footer>
           <FooterTab>

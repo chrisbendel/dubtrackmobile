@@ -20,6 +20,7 @@ import app from '../app';
 export default class Login extends Component {
   constructor(props) {
     super(props);
+    console.log('openning login');
     this.state = {
       username: '',
       password: ''
@@ -55,9 +56,16 @@ export default class Login extends Component {
                 placeholder="Password" />
               </Item>
               <Button block bordered onPress={() => {
-                console.log('pressed!!')
-                app.user.login(this.state.username, this.state.password);
-                this.props.updateUser();
+                console.log('pressed!!');
+                app.user.login(this.state.username, this.state.password)
+                  .then(() => {
+                    this.props.updateUser();
+                    this.props.loading(false);
+                  })
+                  .catch(e => {
+                    console.log(e);
+                  })
+                this.props.loading();
                 }}>
                 <Text>Login</Text>
               </Button>
@@ -95,16 +103,5 @@ const styles = {
   pholder: {
     textAlign: 'center'
 
-  },
-  input: {
-    height: 30,
-    borderColor: 'black',
-    textAlign: 'center',
-    margin: 10,
-  },
-  inputContainer: {
-    padding: 10,
-    borderWidth: 1,
-    borderColor: 'transparent'
   },
 }

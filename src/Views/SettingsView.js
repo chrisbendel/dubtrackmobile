@@ -12,78 +12,61 @@ import KeyboardSpacer from 'react-native-keyboard-spacer';
 // import {Actions} from 'react-native-router-flux'
 import Logout from './LogoutView';
 import Login from './LoginView';
-import {Container, Header, Title, Left, Right, Body, Button, Footer, FooterTab, Icon, Content, Thumbnail} from 'native-base';
+import FullSpinner from './FullSpinnerView';
+import {Container, Header, Title, Left, Right, Body, Button, Footer, FooterTab, Icon, Content, Thumbnail, Spinner} from 'native-base';
 import app from '../app';
 
 export default class Settings extends Component {
   constructor(props) {
     super(props);
-    console.log(app.user);
+    console.log('seetings view:', app.user);
     // console.log(app.user.user.info.profileImage.url);
 
     this.state = {
-      loggedIn: false
+      loggedIn: app.user.loggedIn,
+      // loading: false
     };
     this.updateUser = this.updateUser.bind(this);
+    // this.loading = this.loading.bind(this);
   }
 
   updateUser(e) {
     //called by child to update the state
     e && e.preventDefault();
-    if (app.user.user) {
+    if (app.user.loggedIn) {
       this.setState({loggedIn: true})
     } else {
       this.setState({loggedIn: false})
     }
+    console.log('settings loggedIn state:', this.state.loggedIn);
   }
 
-  componentWillMount() {
-    if (app.user.user) {
-      this.setState({loggedIn: true})
-    }
-  }
+  // loading(isloading = true) {
+  //   isloading ? this.setState({loading: true}) : this.setState({loading: false});
+  // }
+
+
+  // render() {
+  //   return (
+  //   <Container>
+  //     {this.state.loading ?
+  //       <FullSpinner/>
+  //       :
+  //         this.state.loggedIn ?
+  //           <Logout updateUser = {this.updateUser} loading = {this.loading}/> :
+  //           <Login updateUser = {this.updateUser} loading = {this.loading}/>
+  //     }
+  //     </Container>
+  //   );
+  // }
 
   render() {
     return (
     <Container>
-      {app.user.user ?
-        <Logout updateUser = {this.updateUser} /> :
-        <Login updateUser = {this.updateUser} />
-      }
+        {this.state.loggedIn ?
+          <Logout updateUser = {this.updateUser} loading = {this.props.setSpinner}/> :
+          <Login updateUser = {this.updateUser} loading = {this.props.setSpinner}/>}
       </Container>
     );
   }
-}
-
-const styles = {
-  Body: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20
-  },
-
-  Logout: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  Name: {
-    fontWeight: 'bold',
-    // justifyContent: 'center',
-    // textAlign: 'center'
-
-  },
-  input: {
-    height: 30,
-    borderColor: 'black',
-    textAlign: 'center',
-    margin: 10,
-  },
-  inputContainer: {
-    padding: 10,
-    borderWidth: 1,
-    borderColor: 'transparent'
-  },
 }
