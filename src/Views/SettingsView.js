@@ -24,10 +24,10 @@ export default class Settings extends Component {
 
     this.state = {
       loggedIn: app.user.loggedIn,
-      // loading: false
+      loading: false
     };
     this.updateUser = this.updateUser.bind(this);
-    // this.loading = this.loading.bind(this);
+    this.loading = this.loading.bind(this);
   }
 
   updateUser(e) {
@@ -41,31 +41,21 @@ export default class Settings extends Component {
     console.log('settings loggedIn state:', this.state.loggedIn);
   }
 
-  // loading(isloading = true) {
-  //   isloading ? this.setState({loading: true}) : this.setState({loading: false});
-  // }
+  loading(isloading = true) {
+    isloading ? this.setState({loading: true}) : this.setState({loading: false});
+  }
 
-
-  // render() {
-  //   return (
-  //   <Container>
-  //     {this.state.loading ?
-  //       <FullSpinner/>
-  //       :
-  //         this.state.loggedIn ?
-  //           <Logout updateUser = {this.updateUser} loading = {this.loading}/> :
-  //           <Login updateUser = {this.updateUser} loading = {this.loading}/>
-  //     }
-  //     </Container>
-  //   );
-  // }
 
   render() {
     return (
     <Container>
-        {this.state.loggedIn ?
-          <Logout updateUser = {this.updateUser} loading = {this.props.setSpinner}/> :
-          <Login updateUser = {this.updateUser} loading = {this.props.setSpinner}/>}
+      {this.state.loading ?
+        <FullSpinner/>
+        :
+          this.state.loggedIn ?
+            <Logout updateUser = {this.updateUser} loading = {this.loading}/> :
+            <Login updateUser = {this.updateUser} loading = {this.loading}/>
+      }
       </Container>
     );
   }
