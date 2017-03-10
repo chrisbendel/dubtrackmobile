@@ -7,7 +7,7 @@ import {
   ListView,
   TextInput
 } from 'react-native';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
+
 // import {Drawer} from 'native-base';
 // import {Actions} from 'react-native-router-flux'
 import Logout from './LogoutView';

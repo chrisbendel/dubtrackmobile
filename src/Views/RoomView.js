@@ -16,8 +16,11 @@ import KeyboardSpacer from 'react-native-keyboard-spacer';
 import {GiftedChat} from 'react-native-gifted-chat';
 import {
   Container,
-  Body,
   Tab,
+  Header,
+  Tabs,
+  Title,
+  Body,
   Icon,
   List,
   Left,
@@ -41,9 +44,21 @@ export default class RoomView extends Component {
   }
 
   onSend(msg) {
-    this.setState((previousState) => ({
-      messages: GiftedChat.append(previousState.messages, msg)
-    }));
+    app.user.chat(msg[0].text);
+    // msg = msg[0];
+    // let newMessage = {
+    //   _id: msg._id,
+    //   text: msg.message,
+    //   createdAt: Date.now(),
+    //   user: {
+    //     _id: app.user.user.info._id,
+    //     name: app.user.user.info.username,
+    //     avatar: app.user.user.info.profileImage.secure_url
+    //   }
+    // };
+    // this.setState((previousState) => ({
+    //   messages: GiftedChat.append(previousState.messages, newMessage)
+    // }));
   }
 
   setChatListener() {
@@ -60,6 +75,8 @@ export default class RoomView extends Component {
             app.user.getRoomUser(app.user.room.info._id, msg.user._id)
               .then(user => {
                 console.log(user);
+                //TODO: check if images have a unique field
+                //TODO: If they do, we can put images in the gifted chat message object
                 let newMessage = {
                   _id: msg.chatid,
                   text: msg.message,
@@ -90,31 +107,29 @@ export default class RoomView extends Component {
   render() {
     return (
       <Container>
-        <GiftedChat
-          messages={this.state.messages}
-          onSend={this.onSend.bind(this)}
-          user={{
-            _id: app.user.user.info._id,
-          }}
-        />
+        <Header hasTabs>
+          <Body>
+          <Title>{app.user.room.info.name}</Title>
+          </Body>
+        </Header>
+        <Tabs>
+          <Tab heading={<TabHeading><Icon name="ios-chatbubbles"/><Text> Chat</Text></TabHeading>}>
+            <GiftedChat
+              messages={this.state.messages}
+              onSend={this.onSend.bind(this)}
+              user={{
+                _id: app.user.user.info._id
+              }}
+            />
+          </Tab>
+          <Tab heading={<TabHeading><Icon name="ios-videocam"/><Text> Video</Text></TabHeading>}>
+            <Text>Put youtube player here</Text>
+          </Tab>
+          <Tab heading={<TabHeading><Icon name="ios-list"/><Text> Playlists</Text></TabHeading>}>
+            <Text>Queue stuff</Text>
+          </Tab>
+        </Tabs>
       </Container>
-      // <View style={styles.chatContainer}>
-      //   <TextInput
-      //     ref={'chat'}
-      //     style={styles.chatBar}
-      //     autoCorrect={false}
-      //     placeholderTextColor={'black'}
-      //     placeholder="Send chat message"
-      //     returnKeyType='send'
-      //     returnKeyLabel='send'
-      //     onChangeText={(message) => this.setState({message})}
-      //     onSubmitEditing={() => {
-      //       app.user.chat(this.state.message);
-      //       that.refs['chat'].clear();
-      //       this.setState({message: ''});
-      //     }}/>
-      //   <KeyboardSpacer/>
-      // </View>
     );
   }
 }

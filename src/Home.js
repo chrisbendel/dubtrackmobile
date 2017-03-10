@@ -73,34 +73,6 @@ export default class Home extends Component {
           })
         });
     }
-
-    // this.props.toggleSpinner();
-    // if (room) {
-    //   return fetch('https://api.dubtrack.fm/room/term/' + room)
-    //     .then((res) => res.json())
-    //     .then((json) => {
-    //       this.setState({
-    //         dataSource: this.state.dataSource.cloneWithRows(json.data)
-    //       });
-    //       this.props.toggleSpinner();
-    //     })
-    //     .catch(e => {
-    //       console.log(e);
-    //     });
-    // } else {
-    //   return fetch('https://api.dubtrack.fm/room')
-    //     .then((res) => res.json())
-    //     .then((json) => {
-    //       this.setState({
-    //         dataSource: this.state.dataSource.cloneWithRows(json.data),
-    //         refreshing: false,
-    //       });
-    //       this.props.toggleSpinner();
-    //     })
-    //     .catch(e => {
-    //       console.log(e);
-    //     });
-    // }
   }
 
   _onRefresh() {
@@ -172,12 +144,17 @@ export default class Home extends Component {
   }
 
   pressRow(rowData) {
-    this.props.toggleSpinner();
-    app.user.joinRoom(rowData._id)
-      .then(() => {
-        this.props.toggleSpinner();
-        this.props.showPage('room');
-      });
+    // this.props.toggleSpinner();
+    if (app.user.room && app.user.room.info._id == rowData._id) {
+      // this.props.toggleSpinner();
+      this.props.showPage('room');
+    } else {
+      app.user.joinRoom(rowData._id)
+        .then(() => {
+          // this.props.toggleSpinner();
+          this.props.showPage('room');
+        });
+    }
   }
 }
 

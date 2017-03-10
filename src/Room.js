@@ -35,7 +35,6 @@ export default class Room extends Component {
       users: [],
       listViewPaddingTop: 0
     };
-    // this.setChatListener();
   }
 
   componentWillMount() {
@@ -60,40 +59,11 @@ export default class Room extends Component {
         {app.user.room ?
           <RoomView/>
           :
-          <Text>Join a room</Text>
+          <Content>
+            <Text>Join a room</Text>
+          </Content>
         }
       </Container>
     );
   }
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     marginTop: 40,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     backgroundColor: '#A6A6A8',
-//   },
-//   roomTitle: {
-//     textAlign: 'center',
-//     fontWeight: 'bold',
-//     color: 'black',
-//   },
-//   chatContainer: {
-//     bottom: 55,
-//     right: 0,
-//     left: 0,
-//     position: 'absolute',
-//     backgroundColor: '#4a8bfc',
-//   },
-//   message: {
-//     width: width,
-//     borderWidth: 1,
-//     borderColor: 'black'
-//   },
-//   chatBar: {
-//     height: 30,
-//     textAlign: 'center'
-//   },
-// });
