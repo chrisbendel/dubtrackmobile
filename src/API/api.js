@@ -40,6 +40,10 @@ export default class Client extends EventEmitter {
     return this.room.joinRoom(id);
   };
 
+  updateRoom = function () {
+    return this.room.getRoomInfo(this.room.id);
+  };
+
   listRooms = function () {
     return fetch('https://api.dubtrack.fm/room')
       .then(res => res.json())
