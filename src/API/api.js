@@ -66,9 +66,9 @@ export default class Client extends EventEmitter {
       });
   };
 
-  // leaveRoom = function (id) {
-  //   return this.room.leaveRoom(id);
-  // };
+  leaveRoom = function (id) {
+    return this.room.leaveRoom(id);
+  };
 
   getRoomUsers = function (id) {
     return this.room.getRoomUsers(id);

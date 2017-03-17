@@ -10,8 +10,7 @@ import {
   AsyncStorage,
   Dimensions
 } from 'react-native';
-import InvertibleScrollView from 'react-native-invertible-scroll-view';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
+
 import {GiftedChat} from 'react-native-gifted-chat';
 import YouTube from 'react-native-youtube'
 import {
@@ -47,20 +46,6 @@ export default class RoomView extends Component {
 
   onSend(msg) {
     app.user.chat(msg[0].text);
-    // msg = msg[0];
-    // let newMessage = {
-    //   _id: msg._id,
-    //   text: msg.message,
-    //   createdAt: Date.now(),
-    //   user: {
-    //     _id: app.user.user.info._id,
-    //     name: app.user.user.info.username,
-    //     avatar: app.user.user.info.profileImage.secure_url
-    //   }
-    // };
-    // this.setState((previousState) => ({
-    //   messages: GiftedChat.append(previousState.messages, newMessage)
-    // }));
   }
 
   setChatListener() {

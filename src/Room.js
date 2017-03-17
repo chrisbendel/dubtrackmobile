@@ -11,8 +11,7 @@ import {
   AsyncStorage,
   Dimensions
 } from 'react-native';
-import InvertibleScrollView from 'react-native-invertible-scroll-view';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
+
 import {
   Container,
   Body,
@@ -25,7 +24,6 @@ import {
 import app from './app';
 import RoomView from './Views/RoomView';
 
-let {height, width} = Dimensions.get('window');
 export default class Room extends Component {
   constructor(props) {
     super(props);

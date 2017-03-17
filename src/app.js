@@ -35,6 +35,7 @@ export default class app extends Component {
       loading: false
     };
     this.showPage = this.showPage.bind(this);
+    this.getActivePage = this.getActivePage.bind(this);
     this.toggleSpinner = this.toggleSpinner.bind(this);
     app.user.login('dubtrackmobile', 'insecure');
     app.user.setSocket();
@@ -56,6 +57,14 @@ export default class app extends Component {
         currentPage: title,
       });
     }
+  }
+
+  getActivePage(title) {
+    return title == this.state.currentPage;
+    // if (title == this.state.currentPage) {
+    //   return true;
+    // }
+    // return false;
   }
 
   toggleSpinner() {
@@ -83,17 +92,17 @@ export default class app extends Component {
         }
         <Footer>
           <FooterTab>
-            <Button onPress={() => {
+            <Button active={this.getActivePage('home')} onPress={() => {
               this.showPage('home');
             }}>
               <Icon size={30} name={'ios-home'}/>
             </Button>
-            <Button onPress={() => {
+            <Button active={this.getActivePage('room')} onPress={() => {
               this.showPage('room');
             }}>
               <Icon size={30} name={'ios-musical-notes'}/>
             </Button>
-            <Button badgeValue={this.state.newMessages} onPress={() => {
+            <Button active={this.getActivePage('messages')} badgeValue={this.state.newMessages} onPress={() => {
               this.toggleSpinner();
               app.user.pm.listMessages()
               .then(() => {
@@ -103,7 +112,7 @@ export default class app extends Component {
             }}>
               <Icon size={30} name={'ios-mail'}/>
             </Button>
-            <Button onPress={() => {
+            <Button active={this.getActivePage('settings')} onPress={() => {
 
               this.showPage('settings');
             }}>
