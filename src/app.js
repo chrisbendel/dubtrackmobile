@@ -61,10 +61,6 @@ export default class app extends Component {
 
   getActivePage(title) {
     return title == this.state.currentPage;
-    // if (title == this.state.currentPage) {
-    //   return true;
-    // }
-    // return false;
   }
 
   toggleSpinner() {
@@ -113,7 +109,6 @@ export default class app extends Component {
               <Icon size={30} name={'ios-mail'}/>
             </Button>
             <Button active={this.getActivePage('settings')} onPress={() => {
-
               this.showPage('settings');
             }}>
               <Icon size={30} name={'ios-settings'}/>

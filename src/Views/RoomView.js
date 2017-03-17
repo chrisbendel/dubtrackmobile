@@ -115,20 +115,21 @@ export default class RoomView extends Component {
             <Title>Loading next video...</Title> : app.user.room.info.currentSong.type == 'youtube' ?
             <YouTube
             ref="youtubePlayer"
-            videoId={app.user.room.info.currentSong.fkid} // The YouTube video ID
-            play={true}           // control playback of video with true/false
-            hidden={false}        // control visiblity of the entire view
-            playsInline={true}    // control whether the video should play inline
-            loop={false}          // control whether the video should loop when ended
-
+            videoId={app.user.room.info.currentSong.fkid}
+            play={true}
+            hidden={false}
+            playsInline={true}
+            loop={false}
+            showinfo={false}
+            apiKey={'AIzaSyBkJJ0ZoT8XbBDYpZ8sVr1OkVev4C5poWI'}
+            origin={'https://www.youtube.com'}
+            
             onReady={(e)=>{this.setState({isReady: true})}}
             onChangeState={(e)=>{this.setState({status: e.state})}}
             onChangeQuality={(e)=>{this.setState({quality: e.quality})}}
             onError={(e)=>{this.setState({error: e.error})}}
             onProgress={(e)=>{
-              // console.log('current time:', e.currentTime, 'duration:', e.duration);
-              // console.log(this.state.status);
-              this.setState({currentTime: e.currentTime, duration: e.duration})
+              this.setState({currentTime: e.currentTime, duration: e.duration});
               if (e.duration <= e.currentTime + 1) {
                 console.log('Video Over', app.user.room.info.currentSong.name);
                 this.setState({isQueueing: true});
