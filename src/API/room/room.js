@@ -1,9 +1,11 @@
 import User from './../user/user';
+import Queue from './queue';
 
 const base = 'https://api.dubtrack.fm/';
 export default class Room {
   constructor() {
     this.users = [];
+    this.queue = new Queue();
     this.info = null;
   }
 

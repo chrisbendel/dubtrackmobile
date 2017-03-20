@@ -39,14 +39,16 @@ export default class RoomView extends Component {
       isQueueing: false
     };
     this.setChatListener();
+    app.user.room.queue.currentSong(app.user.room.info._id).then(data => {
+      console.log(data);
+    });
   }
 
   componentWillMount() {
-    console.log(app.user.room.info, app.user.room.users);
     this.setState({
       roomInfo: app.user.room.info,
       roomUsers: app.user.room.users,
-      currentSong: app.user.room.info.currentSong
+      currentSong: app.user.room.info.currentSong.fkid
     })
   }
 
@@ -86,6 +88,10 @@ export default class RoomView extends Component {
                 console.log(e);
               });
           }
+          if (msg.message.name == 'room_playlist-update') {
+            msg = JSON.parse(msg.message.data);
+            console.log(msg);
+          }
           break;
         case 14:
 
@@ -117,7 +123,7 @@ export default class RoomView extends Component {
             {this.state.currentSong ?
               <YouTube
                 ref="youtubePlayer"
-                videoId={this.state.roomInfo.currentSong ? this.state.roomInfo.currentSong : ''}
+                videoId={this.state.currentSong}
                 play={true}
                 hidden={false}
                 playsInline={true}

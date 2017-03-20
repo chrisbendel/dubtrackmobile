@@ -17,12 +17,12 @@ export default class Queue {
       });
   }
 
-  currentSong(roomid) {
-    return fetch(base + 'room/' + roomid + '/playlist/active')
+  currentSong(id) {
+    return fetch(base + 'room/' + id + '/playlist/active')
       .then(res => res.json())
       .then(json => {
         console.log('json in queue.currentSong()');
-        console.log(json);
+        console.log(json.data);
         return json;
       })
       .catch(e => {

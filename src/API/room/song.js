@@ -11,12 +11,8 @@ export default class Song {
     this.fkid = data.songInfo.fkid;
     this.type = data.songInfo.type;
     this.name = data.songInfo.name;
-    this.sender = undefined;
 
     let that = this;
-    this.dubbot.protocol.user.info(data.song.userid, function (data) {
-      that.sender = new User(data, that.room, that.dubbot);
-    })
   }
 
   skip() {
