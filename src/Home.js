@@ -149,7 +149,7 @@ export default class Home extends Component {
       // this.props.toggleSpinner();
       this.props.showPage('room');
     } else {
-      app.user.joinRoom(rowData._id)
+      return app.user.joinRoom(rowData._id)
         .then(() => {
           // this.props.toggleSpinner();
           this.props.showPage('room');
@@ -159,20 +159,6 @@ export default class Home extends Component {
 }
 
 const styles = StyleSheet.create({
-  searchContainer: {
-    bottom: 0,
-    right: 0,
-    left: 0,
-    position: 'absolute',
-    borderWidth: 3,
-    borderColor: '#4a8bfc',
-    borderStyle: 'solid',
-    backgroundColor: '#4a8bfc',
-  },
-  searchBar: {
-    height: 40,
-    textAlign: 'center',
-  },
   rowTitle: {
     color: '#333333',
     fontSize: 18,

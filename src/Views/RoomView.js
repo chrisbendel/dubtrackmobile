@@ -36,12 +36,13 @@ export default class RoomView extends Component {
     console.log(app.user);
     this.state = {
       messages: [],
-      message: '',
-      users: [],
-      listViewPaddingTop: 0,
       isQueueing: false
     };
     this.setChatListener();
+  }
+
+  componentWillMount() {
+
   }
 
   onSend(msg) {
@@ -50,19 +51,16 @@ export default class RoomView extends Component {
 
   setChatListener() {
     app.user.socket.on('message', (msg) => {
-      //New messages are sent over socket
       //TODO: Need to connect to the base socket on app open
       //TODO: but only connect to the room here
       msg = JSON.parse(msg);
+      console.log(msg);
       switch (msg.action) {
         case 15:
           if (msg.message.name == 'chat-message') {
             msg = JSON.parse(msg.message.data);
-            console.log('message:', msg);
-            console.log('room info:', app.user.room);
             app.user.getRoomUser(app.user.room.info._id, msg.user._id)
               .then(user => {
-                console.log(user);
                 //TODO: check if images have a unique field
                 //TODO: If they do, we can put images in the gifted chat message object
                 let newMessage = {
@@ -97,7 +95,7 @@ export default class RoomView extends Component {
       <Container>
         <Header hasTabs>
           <Body>
-          <Title>{app.user.room.info.name}</Title>
+          <Title>app.user.room.info.name</Title>
           </Body>
         </Header>
         <Tabs>
@@ -111,39 +109,46 @@ export default class RoomView extends Component {
             />
           </Tab>
           <Tab heading={<TabHeading><Icon name="ios-videocam"/><Text> Video</Text></TabHeading>}>
-          {this.state.isQueueing == true ?
-            <Title>Loading next video...</Title> : app.user.room.info.currentSong.type == 'youtube' ?
-            <YouTube
-            ref="youtubePlayer"
-            videoId={app.user.room.info.currentSong.fkid}
-            play={true}
-            hidden={false}
-            playsInline={true}
-            loop={false}
-            showinfo={false}
-            apiKey={'AIzaSyBkJJ0ZoT8XbBDYpZ8sVr1OkVev4C5poWI'}
-            origin={'https://www.youtube.com'}
-            
-            onReady={(e)=>{this.setState({isReady: true})}}
-            onChangeState={(e)=>{this.setState({status: e.state})}}
-            onChangeQuality={(e)=>{this.setState({quality: e.quality})}}
-            onError={(e)=>{this.setState({error: e.error})}}
-            onProgress={(e)=>{
-              this.setState({currentTime: e.currentTime, duration: e.duration});
-              if (e.duration <= e.currentTime + 1) {
-                console.log('Video Over', app.user.room.info.currentSong.name);
-                this.setState({isQueueing: true});
+            {this.state.isQueueing == true ?
+              <Title>Loading next video...</Title> : app.user.room.info.currentSong.type == 'youtube' ?
+              <YouTube
+                ref="youtubePlayer"
+                videoId={app.user.room.info.currentSong.fkid}
+                play={true}
+                hidden={false}
+                playsInline={true}
+                loop={false}
+                showinfo={false}
+                apiKey={'AIzaSyBkJJ0ZoT8XbBDYpZ8sVr1OkVev4C5poWI'}
+                origin={'https://www.youtube.com'}
 
-                //TODO this wont work if the next video isnt playing yet, when queue is implemented then
-                //we might have a better solution
-                app.user.updateRoom().then(() => {
-                  this.setState({isQueueing: false})
-                });
-              }
-            }}
-            style={{alignSelf: 'stretch', height: 300, backgroundColor: 'black', marginVertical: 10}}
-            /> : null
-          }
+                onReady={(e)=> {
+                  this.setState({isReady: true})
+                }}
+                onChangeState={(e)=> {
+                  this.setState({status: e.state})
+                }}
+                onChangeQuality={(e)=> {
+                  this.setState({quality: e.quality})
+                }}
+                onError={(e)=> {
+                  this.setState({error: e.error})
+                }}
+                onProgress={(e)=> {
+                  this.setState({currentTime: e.currentTime, duration: e.duration});
+                  if (e.duration <= e.currentTime + 1) {
+                    this.setState({isQueueing: true});
+
+                    //TODO this wont work if the next video isnt playing yet, when queue is implemented then
+                    //we might have a better solution
+                    app.user.updateRoom().then(() => {
+                      this.setState({isQueueing: false})
+                    });
+                  }
+                }}
+                style={{alignSelf: 'stretch', height: 300, backgroundColor: 'black', marginVertical: 10}}
+              /> : null
+            }
 
           </Tab>
           <Tab heading={<TabHeading><Icon name="ios-list"/><Text> Playlists</Text></TabHeading>}>

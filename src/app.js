@@ -101,10 +101,10 @@ export default class app extends Component {
             <Button active={this.getActivePage('messages')} badgeValue={this.state.newMessages} onPress={() => {
               this.toggleSpinner();
               app.user.pm.listMessages()
-              .then(() => {
-                this.toggleSpinner();
-                this.showPage('messages');
-              });
+                .then(() => {
+                  this.toggleSpinner();
+                  this.showPage('messages');
+                });
             }}>
               <Icon size={30} name={'ios-mail'}/>
             </Button>

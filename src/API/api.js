@@ -1,7 +1,4 @@
 import EventEmitter from 'event-emitter';
-// const User = require('./user/user.js');
-// const Room = require('./room/room.js');
-// const roles = require('./user/roles.js');
 
 import User from './user/user';
 import Room from './room/room';
@@ -13,7 +10,6 @@ export default class Client extends EventEmitter {
   constructor() {
     super();
 
-    this.emitter = new EventEmitter();
     this.room = null;
     this.user = null;
     this.pm = new PM();
@@ -29,11 +25,11 @@ export default class Client extends EventEmitter {
   };
 
   joinRoom = function (id) {
-    if (this.room) {
-      if (this.room.info._id != id) {
-        this.room.leaveRoom(this.room.info._id);
-      }
-    }
+    // if (this.room) {
+    //   if (this.room.info._id != id) {
+    //     this.room.leaveRoom(this.room.info._id);
+    //   }
+    // }
     this.socket.send(JSON.stringify({action: 10, channel: 'room:' + id}));
     this.room = new Room(id);
     this.room.getRoomUsers(id);

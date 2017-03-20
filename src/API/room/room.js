@@ -4,7 +4,8 @@ import Song from './song';
 const base = 'https://api.dubtrack.fm/';
 export default class Room {
   constructor(id) {
-    this.id = id;
+    // this.id = id;
+    this.info = this.getRoomInfo(id);
     // this.queue = new (require('./room/queue.js'));
     // this.userQueue = new (require('./room/userqueue.js'));
     // this.currentSong = new Song();
@@ -14,9 +15,9 @@ export default class Room {
 
   joinRoom(id) {
     return fetch('https://api.dubtrack.fm/auth/token')
-      .then(() => {
-        return this.getRoomInfo(id);
-      })
+      // .then(() => {
+      //   this.getRoomInfo(id);
+      // })
       .then(() => {
         let obj = {
           method: 'POST',
