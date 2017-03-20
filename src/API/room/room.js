@@ -1,23 +1,27 @@
 import User from './../user/user';
-import Song from './song';
 
 const base = 'https://api.dubtrack.fm/';
 export default class Room {
-  constructor(id) {
-    // this.id = id;
-    this.info = this.getRoomInfo(id);
-    // this.queue = new (require('./room/queue.js'));
-    // this.userQueue = new (require('./room/userqueue.js'));
-    // this.currentSong = new Song();
-    this.info = null;
+  constructor() {
     this.users = [];
+    this.info = null;
+  }
+
+  setupRoom(id) {
+    return this.joinRoom(id)
+      .then(() => {
+        return this.getRoomInfo(id);
+      })
+      .then(() => {
+        return this.getRoomUsers(id);
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 
   joinRoom(id) {
     return fetch('https://api.dubtrack.fm/auth/token')
-      // .then(() => {
-      //   this.getRoomInfo(id);
-      // })
       .then(() => {
         let obj = {
           method: 'POST',
@@ -27,7 +31,29 @@ export default class Room {
             'Origin': '',
           },
         };
-        return fetch('https://api.dubtrack.fm/room/' + id + '/users', obj)
+        return fetch('https://api.dubtrack.fm/room/' + id + '/users', obj);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
+
+  getRoomInfo(room) {
+    return fetch(base + 'room/' + room)
+      .then(res => res.json())
+      .then(json => {
+        return this.info = json.data;
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
+
+  getRoomUsers(room) {
+    return fetch(base + 'room/' + room + '/users')
+      .then(res => res.json())
+      .then(json => {
+        return this.users = json.data;
       })
       .catch(e => {
         console.log(e);
@@ -56,17 +82,6 @@ export default class Room {
       });
   }
 
-  getRoomInfo(room) {
-    return fetch(base + 'room/' + room)
-      .then(res => res.json())
-      .then(json => {
-        return this.info = json.data;
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
-
   leaveRoom(room) {
     let obj = {
       method: 'DELETE',
@@ -79,18 +94,6 @@ export default class Room {
     return fetch(base + 'room/' + room + '/users', obj)
       .then(() => {
         console.log('left room');
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
-
-  getRoomUsers(room) {
-    return fetch(base + 'room/' + room + '/users')
-      .then(res => res.json())
-      .then(json => {
-        return this.users = json.data;
-        // return json.data;
       })
       .catch(e => {
         console.log(e);

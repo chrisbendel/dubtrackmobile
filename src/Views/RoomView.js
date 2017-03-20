@@ -42,7 +42,12 @@ export default class RoomView extends Component {
   }
 
   componentWillMount() {
-
+    console.log(app.user.room.info, app.user.room.users);
+    this.setState({
+      roomInfo: app.user.room.info,
+      roomUsers: app.user.room.users,
+      currentSong: app.user.room.info.currentSong
+    })
   }
 
   onSend(msg) {
@@ -95,7 +100,7 @@ export default class RoomView extends Component {
       <Container>
         <Header hasTabs>
           <Body>
-          <Title>app.user.room.info.name</Title>
+          <Title>{this.state.roomInfo.name}</Title>
           </Body>
         </Header>
         <Tabs>
@@ -109,11 +114,10 @@ export default class RoomView extends Component {
             />
           </Tab>
           <Tab heading={<TabHeading><Icon name="ios-videocam"/><Text> Video</Text></TabHeading>}>
-            {this.state.isQueueing == true ?
-              <Title>Loading next video...</Title> : app.user.room.info.currentSong.type == 'youtube' ?
+            {this.state.currentSong ?
               <YouTube
                 ref="youtubePlayer"
-                videoId={app.user.room.info.currentSong.fkid}
+                videoId={this.state.roomInfo.currentSong ? this.state.roomInfo.currentSong : ''}
                 play={true}
                 hidden={false}
                 playsInline={true}
@@ -147,7 +151,7 @@ export default class RoomView extends Component {
                   }
                 }}
                 style={{alignSelf: 'stretch', height: 300, backgroundColor: 'black', marginVertical: 10}}
-              /> : null
+              /> : <Text>Nobody is playing right now!</Text>
             }
 
           </Tab>

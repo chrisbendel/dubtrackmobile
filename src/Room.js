@@ -36,7 +36,6 @@ export default class Room extends Component {
   }
 
   componentWillMount() {
-    app.user.joinRoom();
     // app.user.getRoomUsers(this.props.room._id)
     //   .then(users => {
     //     this.setState({users: users});

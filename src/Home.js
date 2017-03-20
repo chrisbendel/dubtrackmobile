@@ -144,17 +144,9 @@ export default class Home extends Component {
   }
 
   pressRow(rowData) {
-    // this.props.toggleSpinner();
-    if (app.user.room && app.user.room.info._id == rowData._id) {
-      // this.props.toggleSpinner();
+    return app.user.joinRoom(rowData._id).then(() => {
       this.props.showPage('room');
-    } else {
-      return app.user.joinRoom(rowData._id)
-        .then(() => {
-          // this.props.toggleSpinner();
-          this.props.showPage('room');
-        });
-    }
+    });
   }
 }
 
