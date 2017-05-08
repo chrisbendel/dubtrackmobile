@@ -23,6 +23,7 @@ import {
 } from 'react-native-card-view';
 
 import app from './app';
+import Nav from './Views/Nav';
 import {Actions} from 'react-native-router-flux'
 import {
   Container,
@@ -39,7 +40,7 @@ import {
   Icon,
   Content
 } from 'native-base';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
+
 let {height, width} = Dimensions.get('window');
 
 export default class Home extends Component {
@@ -51,13 +52,14 @@ export default class Home extends Component {
       dataSource: ds.cloneWithRows([]),
       refreshing: false,
     };
+    console.log(this.props);
   }
 
   componentWillMount() {
     this.loadData();
   }
 
-  loadData(room) {
+  loadData(room = null) {
     if (room) {
       app.user.filterRooms(room)
         .then(rooms => {
@@ -79,7 +81,12 @@ export default class Home extends Component {
     this.loadData();
   }
 
-  //use command+shift+k to enable keyboard hardware on ios emulator to test search bar
+  pressRow(rowData) {
+    return app.user.joinRoom(rowData._id).then(() => {
+      this.props.showPage('room');
+    });
+  }
+
   render() {
     return (
       <Container>
@@ -113,6 +120,7 @@ export default class Home extends Component {
             renderRow={this.renderRow.bind(this)}
           />
         </Content>
+        <Nav/>
       </Container>
     );
   }
@@ -143,11 +151,6 @@ export default class Home extends Component {
     );
   }
 
-  pressRow(rowData) {
-    return app.user.joinRoom(rowData._id).then(() => {
-      this.props.showPage('room');
-    });
-  }
 }
 
 const styles = StyleSheet.create({

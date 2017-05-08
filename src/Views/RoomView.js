@@ -159,7 +159,6 @@ export default class RoomView extends Component {
                 style={{alignSelf: 'stretch', height: 300, backgroundColor: 'black', marginVertical: 10}}
               /> : <Text>Nobody is playing right now!</Text>
             }
-
           </Tab>
           <Tab heading={<TabHeading><Icon name="ios-list"/><Text> Playlists</Text></TabHeading>}>
             <Text>Queue stuff</Text>

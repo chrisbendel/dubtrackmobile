@@ -65,20 +65,7 @@ export default class Queue {
       });
   }
 
-//TODO check from here
-
-
-  /* TODO
-   reorder(roomid, newOeder, callback) {
-
-   this.request({
-   method: '',
-   url: ''
-   }, function(error, response, body){
-   if (callback != undefined) callback(body);
-   });
-   }
-   //*/
+//TODO rewrite these eventually
 
   removeUserSong(roomid, userid, callback) {
     this.request({
