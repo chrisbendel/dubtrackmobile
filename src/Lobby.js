@@ -139,7 +139,13 @@ export default class Home extends Component {
             <Text>Search</Text>
           </Button>
         </Header>
-        <Content>
+        <Content
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh.bind(this)}
+            />
+          }>
           <GridView
             items={this.state.dataSource}
             itemsPerRow={2}
@@ -157,6 +163,8 @@ const styles = StyleSheet.create({
   rowTitle: {
     color: '#333333',
     fontSize: 18,
+    textAlign: 'center',
+    marginTop: 0,
   },
   list: {
     justifyContent: 'center',
