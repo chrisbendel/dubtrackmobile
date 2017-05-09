@@ -3,7 +3,7 @@ import {
   ListView,
   StyleSheet,
   Text,
-  TouchableHighlight,
+  TouchableOpacity,
   View,
   Image,
   Dimensions,
@@ -32,6 +32,9 @@ import {
   Item,
   Input,
   Body,
+  List,
+  ListItem,
+  Thumbnail,
   Button,
   Icon,
   Content
@@ -42,22 +45,22 @@ let {height, width} = Dimensions.get('window');
 export default class Home extends Component {
   constructor(props) {
     super(props);
-    // const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-
+    this.query = '';
     this.state = {
-      roomSearch: '',
-      // dataSource: ds.cloneWithRows([]),
       dataSource: [],
       refreshing: false,
     };
-    console.log(this.props);
   }
 
   componentWillMount() {
-    this.loadData();
+    this.listRooms();
   }
 
-  loadData(room = null) {
+  searchRooms(room) {
+
+  }
+
+  listRooms(room = null) {
     if (room) {
       app.user.filterRooms(room)
         .then(rooms => {
@@ -81,7 +84,7 @@ export default class Home extends Component {
 
   _onRefresh() {
     this.setState({refreshing: true});
-    this.loadData();
+    this.listRooms();
   }
 
   pressRow(rowData) {
@@ -91,28 +94,18 @@ export default class Home extends Component {
   }
 
   renderRow(rowData) {
-    let uri;
-
-    if (rowData.background) {
-      uri = rowData.background.secure_url;
-    } else {
-      uri = 'https://res.cloudinary.com/hhberclba/image/upload/c_fill,fl_lossy,f_auto,w_320,h_180/default.png';
-    }
+    let uri = 'https://res.cloudinary.com/hhberclba/image/upload/c_fill,fl_lossy,f_auto,w_320,h_180/default.png';
 
     return (
-      <Card>
-        <CardImage>
-          <TouchableHighlight onPress={() => this.pressRow(rowData)}>
-            <Image
-              style={{width: 150, height: 150}}
-              source={{uri: uri}}
-            />
-          </TouchableHighlight>
-        </CardImage>
-        <CardTitle>
-          <Text style={styles.rowTitle}> {rowData.name} </Text>
-        </CardTitle>
-      </Card>
+      <ListItem onPress={() => this.pressRow(rowData)}>
+        <Thumbnail size={80} source={{uri: rowData.background ? rowData.background.secure_url : uri}}/>
+        <Body>
+        <Text style={styles.rowTitle}>{rowData.name}</Text>
+        <Text style={styles.rowInfo}>{rowData.activeUsers} current users</Text>
+        <Text
+          style={styles.rowInfo}>{rowData.currentSong ? rowData.currentSong.name : 'No one is playing right now!'}</Text>
+        </Body>
+      </ListItem>
     );
   }
 
@@ -130,29 +123,25 @@ export default class Home extends Component {
               returnKeyLabel="search"
               autoCapitalize="none"
               autoCorrect={false}
-              onChangeText={(roomSearch) => this.setState({roomSearch})}
-              onSubmitEditing={() => {
-                this.loadData(this.state.roomSearch);
-              }}/>
+              onChangeText={search => this.query = search}
+              onSubmitEditing={this.listRooms(this.query)}/>
           </Item>
-          <Button onpress={this.loadData(this.state.roomSearch)} transparent>
-            <Text>Search</Text>
+          <Button iconLeft transparent onPress={() => {
+            alert('new room')
+          }}>
+            <Icon name="add"/>
+            <Text>Create Room</Text>
           </Button>
         </Header>
-        <Content
+        <List
+          dataArray={this.state.dataSource}
+          renderRow={this.renderRow.bind(this)}
           refreshControl={
             <RefreshControl
               refreshing={this.state.refreshing}
               onRefresh={this._onRefresh.bind(this)}
             />
-          }>
-          <GridView
-            items={this.state.dataSource}
-            itemsPerRow={2}
-            renderItem={this.renderRow.bind(this)}
-            style={styles.listView}
-          />
-        </Content>
+          }/>
         <Nav/>
       </Container>
     );
@@ -162,9 +151,13 @@ export default class Home extends Component {
 const styles = StyleSheet.create({
   rowTitle: {
     color: '#333333',
-    fontSize: 18,
+    fontSize: 16,
     textAlign: 'center',
-    marginTop: 0,
+  },
+  rowInfo: {
+    color: '#333333',
+    fontSize: 12,
+    textAlign: 'center',
   },
   list: {
     justifyContent: 'center',
