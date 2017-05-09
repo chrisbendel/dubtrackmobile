@@ -10,9 +10,10 @@ import {
   Navigator,
   TextInput,
   ScrollView,
-  RefreshControl,
-  Menu
+  RefreshControl
 } from 'react-native';
+
+import GridView from 'react-native-grid-view'
 
 import {
   Card,
@@ -28,13 +29,8 @@ import {Actions} from 'react-native-router-flux'
 import {
   Container,
   Header,
-  Title,
-  Left,
   Item,
-  Right,
-  Footer,
   Input,
-  FooterTab,
   Body,
   Button,
   Icon,
@@ -46,10 +42,12 @@ let {height, width} = Dimensions.get('window');
 export default class Home extends Component {
   constructor(props) {
     super(props);
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    // const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+
     this.state = {
       roomSearch: '',
-      dataSource: ds.cloneWithRows([]),
+      // dataSource: ds.cloneWithRows([]),
+      dataSource: [],
       refreshing: false,
     };
     console.log(this.props);
@@ -64,65 +62,32 @@ export default class Home extends Component {
       app.user.filterRooms(room)
         .then(rooms => {
           this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(rooms)
+            dataSource: rooms,
+            // dataSource: this.state.dataSource.cloneWithRows(rooms),
+            refreshing: false
           })
         });
     } else {
       app.user.listRooms()
         .then(rooms => {
           this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(rooms)
+            // dataSource: this.state.dataSource.cloneWithRows(rooms),
+            dataSource: rooms,
+            refreshing: false
           })
         });
     }
   }
 
   _onRefresh() {
+    this.setState({refreshing: true});
     this.loadData();
   }
 
   pressRow(rowData) {
     return app.user.joinRoom(rowData._id).then(() => {
-      this.props.showPage('room');
+      Actions.room({room: rowData});
     });
-  }
-
-  render() {
-    return (
-      <Container>
-        <Header searchBar rounded>
-          <Item>
-            <Icon name="search"/>
-            <Input
-              ref={'search'}
-              placeholder='Search For a Room'
-              placeholderTextColor={'black'}
-              returnKeyType="search"
-              returnKeyLabel="search"
-              autoCapitalize="none"
-              autoCorrect={false}
-              onChangeText={(roomSearch) => this.setState({roomSearch})}
-              onSubmitEditing={() => {
-                this.loadData(this.state.roomSearch);
-              }}/>
-          </Item>
-        </Header>
-        <Content
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={this._onRefresh.bind(this)}
-            />
-          }>
-          <ListView
-            enableEmptySections={true}
-            dataSource={this.state.dataSource}
-            renderRow={this.renderRow.bind(this)}
-          />
-        </Content>
-        <Nav/>
-      </Container>
-    );
   }
 
   renderRow(rowData) {
@@ -137,9 +102,9 @@ export default class Home extends Component {
     return (
       <Card>
         <CardImage>
-          <TouchableHighlight onPress={ () => this.pressRow(rowData)}>
+          <TouchableHighlight onPress={() => this.pressRow(rowData)}>
             <Image
-              style={{width: width * .97, height: 150}}
+              style={{width: 150, height: 150}}
               source={{uri: uri}}
             />
           </TouchableHighlight>
@@ -151,11 +116,63 @@ export default class Home extends Component {
     );
   }
 
+  render() {
+    return (
+      <Container style={{marginTop: 54}}>
+        <Header searchBar rounded>
+          <Item>
+            <Icon name="search"/>
+            <Input
+              ref={'search'}
+              placeholder='Search'
+              placeholderTextColor={'black'}
+              returnKeyType="search"
+              returnKeyLabel="search"
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={(roomSearch) => this.setState({roomSearch})}
+              onSubmitEditing={() => {
+                this.loadData(this.state.roomSearch);
+              }}/>
+          </Item>
+          <Button onpress={this.loadData(this.state.roomSearch)} transparent>
+            <Text>Search</Text>
+          </Button>
+        </Header>
+        <Content>
+          <GridView
+            items={this.state.dataSource}
+            itemsPerRow={2}
+            renderItem={this.renderRow.bind(this)}
+            style={styles.listView}
+          />
+        </Content>
+        <Nav/>
+      </Container>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
   rowTitle: {
     color: '#333333',
     fontSize: 18,
+  },
+  list: {
+    justifyContent: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap'
+  },
+  item: {
+    justifyContent: 'center',
+    padding: 10,
+    margin: 6,
+    width: 100,
+    height: 100,
+    backgroundColor: '#F6F6F6',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: '#CCC'
   },
 });

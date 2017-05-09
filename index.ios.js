@@ -5,11 +5,9 @@ import App from './src/app'
 export default class dubtrackmobile extends Component {
   render() {
     console.disableYellowBox = true;
-
     return (
       <App />
     )
   }
 }
-
 AppRegistry.registerComponent('dubtrackmobile', () => dubtrackmobile);
