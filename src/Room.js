@@ -36,13 +36,7 @@ export default class Room extends Component {
   }
 
   componentWillMount() {
-    // app.user.getRoomUsers(this.props.room._id)
-    //   .then(users => {
-    //     this.setState({users: users});
-    //   })
-    //   .catch(e => {
-    //     console.log(e);
-    //   });
+
   }
 
   componentWillUnmount() {

@@ -11,7 +11,6 @@ import {
   // Button,
   TextInput
 } from 'react-native';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
 import {Drawer} from 'native-base';
 import {Actions} from 'react-native-router-flux'
 import {Container, Header, Title, Left, Right, Body, Button, Footer, FooterTab, Icon, Content, Thumbnail, Form, Item, Input} from 'native-base';

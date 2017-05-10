@@ -13,16 +13,6 @@ import {
   RefreshControl
 } from 'react-native';
 
-import GridView from 'react-native-grid-view'
-
-import {
-  Card,
-  CardImage,
-  CardTitle,
-  CardContent,
-  CardAction
-} from 'react-native-card-view';
-
 import app from './app';
 import Nav from './Views/Nav';
 import {Actions} from 'react-native-router-flux'
@@ -56,7 +46,9 @@ export default class Home extends Component {
     this.listRooms();
   }
 
-  searchRooms(room) {
+  //TODO: Figure out how creating a new room works
+  //TODO: possibly do it in a modal or something from the lobby page
+  createRoom() {
 
   }
 
@@ -88,6 +80,7 @@ export default class Home extends Component {
   }
 
   pressRow(rowData) {
+    console.log(rowData);
     return app.user.joinRoom(rowData._id).then(() => {
       Actions.room({room: rowData});
     });
@@ -116,7 +109,7 @@ export default class Home extends Component {
           <Item>
             <Icon name="search"/>
             <Input
-              ref={'search'}
+              ref='search'
               placeholder='Search'
               placeholderTextColor={'black'}
               returnKeyType="search"
@@ -124,13 +117,13 @@ export default class Home extends Component {
               autoCapitalize="none"
               autoCorrect={false}
               onChangeText={search => this.query = search}
-              onSubmitEditing={this.listRooms(this.query)}/>
+              onSubmitEditing={() => this.listRooms(this.query)}/>
           </Item>
-          <Button iconLeft transparent onPress={() => {
+          <Button iconRight transparent onPress={() => {
             alert('new room')
           }}>
-            <Icon name="add"/>
             <Text>Create Room</Text>
+            <Icon name="add-circle"/>
           </Button>
         </Header>
         <List
