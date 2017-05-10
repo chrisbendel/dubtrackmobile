@@ -26,8 +26,15 @@ export default class Player extends Component {
           <Button>
             <Icon name="play"/>
           </Button>
+          <Button>
+            <Icon name="stop"/>
+          </Button>
         </FooterTab>
-        <Text>Hello im a footer</Text>
+        <FooterTab>
+          <Button>
+            <Icon name="pause"/>
+          </Button>
+        </FooterTab>
       </Footer>
     );
   }

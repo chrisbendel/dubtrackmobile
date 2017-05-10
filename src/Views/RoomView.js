@@ -170,8 +170,9 @@ export default class RoomView extends Component {
             <Text>Queue stuff</Text>
           </Tab>
         </Tabs>
-        <Nav/>
         <Player/>
+        <Nav/>
+
       </Container>
     );
   }

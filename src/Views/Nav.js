@@ -14,6 +14,8 @@ import {
   Fab,
 } from 'native-base';
 
+import ActionButton from 'react-native-action-button';
+
 import app from './../app';
 import {Actions} from 'react-native-router-flux';
 
@@ -38,71 +40,62 @@ export default class Room extends Component {
       })
   }
 
+
+
   render() {
     return (
-      <Fab
-        active={this.state.active}
-        direction="up"
-        position="bottomRight"
-        onPress={() => this.setState({active: !this.state.active})}>
-        <Icon name="md-menu"/>
-        <Button onPress={() => {
-          this.setState({active: !this.state.active});
+      <ActionButton buttonColor="#9b59b6" >
+        <ActionButton.Item title="Lobby" onPress={() => {
           Actions.lobby();
         }}>
           <Icon name="ios-home"/>
-        </Button>
-        <Button onPress={() => {
-          this.setState({active: !this.state.active});
+        </ActionButton.Item>
+        <ActionButton.Item title="Room" onPress={() => {
           Actions.room();
         }}>
           <Icon name="ios-musical-note"/>
-        </Button>
-        <Button onPress={() => {
-          this.setState({active: !this.state.active});
-          Actions.messages();
-        }}>
-          <Icon name="ios-mail"/>
-        </Button>
-        <Button onPress={() => {
-          this.setState({active: !this.state.active});
-          Actions.settings();
-        }}>
-          <Icon name="ios-settings"/>
-        </Button>
-      </Fab>
+        </ActionButton.Item>
+      </ActionButton>
     );
   }
 
   // render() {
   //   return (
-  //     <Footer>
-  //       <FooterTab>
+  //     <View>
+  //       <Fab
+  //         style={{marginBottom: 20}}
+  //         containerStyle={{marginBottom: 20}}
+  //         active={this.state.active}
+  //         direction="up"
+  //         position="bottomRight"
+  //         onPress={() => this.setState({active: !this.state.active})}>
+  //         <Icon name="md-menu"/>
   //         <Button onPress={() => {
+  //           this.setState({active: !this.state.active});
   //           Actions.lobby();
   //         }}>
-  //           <Icon size={30} name={'ios-home'}/>
+  //           <Icon name="ios-home"/>
   //         </Button>
   //         <Button onPress={() => {
+  //           this.setState({active: !this.state.active});
   //           Actions.room();
   //         }}>
-  //           <Icon size={30} name={'ios-musical-notes'}/>
-  //         </Button>
-  //         <Button badgeValue={this.state.newMessages} onPress={() => {
-  //           app.user.pm.listMessages()
-  //             .then(() => {
-  //               Actions.messages();
-  //             });
-  //         }}>
-  //           <Icon size={30} name={'ios-mail'}/>
+  //           <Icon name="ios-musical-note"/>
   //         </Button>
   //         <Button onPress={() => {
+  //           this.setState({active: !this.state.active});
+  //           Actions.messages();
+  //         }}>
+  //           <Icon name="ios-mail"/>
+  //         </Button>
+  //         <Button onPress={() => {
+  //           this.setState({active: !this.state.active});
   //           Actions.settings();
   //         }}>
-  //           <Icon size={30} name={'ios-settings'}/>
+  //           <Icon name="ios-settings"/>
   //         </Button>
-  //       </FooterTab>
-  //     </Footer>
+  //       </Fab>
+  //     </View>
   //   );
   // }
 }
