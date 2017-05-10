@@ -46,15 +46,15 @@ export default class Room extends Component {
   }
 
   render() {
+    if (app.user.room) {
+      return <RoomView/>
+    }
+
     return (
       <Container>
-        {app.user.room ?
-          <RoomView/>
-          :
-          <Content>
-            <Text>Join a room</Text>
-          </Content>
-        }
+        <Content>
+          <Text>Join a room</Text>
+        </Content>
       </Container>
     );
   }

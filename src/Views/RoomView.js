@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+
 import {
   StyleSheet,
   View,
@@ -29,11 +30,13 @@ import {
   Content,
 } from 'native-base';
 import app from './../app';
+import Nav from './Nav';
+import Player from './../Player';
 
 export default class RoomView extends Component {
   constructor(props) {
     super(props);
-    console.log(app.user);
+
     this.state = {
       messages: [],
       isQueueing: false
@@ -42,6 +45,7 @@ export default class RoomView extends Component {
     app.user.room.queue.currentSong(app.user.room.info._id).then(data => {
       console.log(data);
     });
+    console.log(app.user);
   }
 
   componentWillMount() {
@@ -103,7 +107,7 @@ export default class RoomView extends Component {
 
   render() {
     return (
-      <Container>
+      <Container style={{flex: 1}}>
         <Header hasTabs>
           <Body>
           <Title>{this.state.roomInfo.name}</Title>
@@ -132,19 +136,19 @@ export default class RoomView extends Component {
                 apiKey={'AIzaSyBkJJ0ZoT8XbBDYpZ8sVr1OkVev4C5poWI'}
                 origin={'https://www.youtube.com'}
 
-                onReady={(e)=> {
+                onReady={(e) => {
                   this.setState({isReady: true})
                 }}
-                onChangeState={(e)=> {
+                onChangeState={(e) => {
                   this.setState({status: e.state})
                 }}
-                onChangeQuality={(e)=> {
+                onChangeQuality={(e) => {
                   this.setState({quality: e.quality})
                 }}
-                onError={(e)=> {
+                onError={(e) => {
                   this.setState({error: e.error})
                 }}
-                onProgress={(e)=> {
+                onProgress={(e) => {
                   this.setState({currentTime: e.currentTime, duration: e.duration});
                   if (e.duration <= e.currentTime + 1) {
                     this.setState({isQueueing: true});
@@ -157,13 +161,17 @@ export default class RoomView extends Component {
                   }
                 }}
                 style={{alignSelf: 'stretch', height: 300, backgroundColor: 'black', marginVertical: 10}}
-              /> : <Text>Nobody is playing right now!</Text>
+              />
+              :
+              <Text>Nobody is playing right now!</Text>
             }
           </Tab>
           <Tab heading={<TabHeading><Icon name="ios-list"/><Text> Playlists</Text></TabHeading>}>
             <Text>Queue stuff</Text>
           </Tab>
         </Tabs>
+        <Nav/>
+        <Player/>
       </Container>
     );
   }

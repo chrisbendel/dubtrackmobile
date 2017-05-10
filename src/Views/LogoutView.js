@@ -8,7 +8,6 @@ import {
   TouchableHighlight,
   TouchableOpacity,
   Dimensions,
-  // Button,
   TextInput
 } from 'react-native';
 import {Drawer} from 'native-base';
@@ -33,7 +32,6 @@ export default class Logout extends Component {
             <Thumbnail size={80} source={{uri: app.user.user.info.profileImage.secure_url}} />
             <Text style={styles.Name}>{app.user.user.info.username}</Text>
             <Button block bordered onPress={() => {
-              console.log('pressed!!');
               app.user.logout();
               this.props.updateUser();
               }}>

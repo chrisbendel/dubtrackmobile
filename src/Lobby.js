@@ -1,23 +1,18 @@
 import React, {Component} from 'react';
 import {
-  ListView,
   StyleSheet,
   Text,
-  TouchableOpacity,
-  View,
-  Image,
   Dimensions,
-  Navigator,
-  TextInput,
-  ScrollView,
   RefreshControl
 } from 'react-native';
 
 import app from './app';
+import Player from './Player';
 import Nav from './Views/Nav';
 import {Actions} from 'react-native-router-flux'
 import {
   Container,
+  Content,
   Header,
   Item,
   Input,
@@ -27,7 +22,6 @@ import {
   Thumbnail,
   Button,
   Icon,
-  Content
 } from 'native-base';
 
 let {height, width} = Dimensions.get('window');
@@ -80,7 +74,6 @@ export default class Home extends Component {
   }
 
   pressRow(rowData) {
-    console.log(rowData);
     return app.user.joinRoom(rowData._id).then(() => {
       Actions.room({room: rowData});
     });
@@ -126,16 +119,19 @@ export default class Home extends Component {
             <Icon name="add-circle"/>
           </Button>
         </Header>
-        <List
-          dataArray={this.state.dataSource}
-          renderRow={this.renderRow.bind(this)}
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={this._onRefresh.bind(this)}
-            />
-          }/>
+        <Content>
+          <List
+            dataArray={this.state.dataSource}
+            renderRow={this.renderRow.bind(this)}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this._onRefresh.bind(this)}
+              />
+            }/>
+        </Content>
         <Nav/>
+        <Player/>
       </Container>
     );
   }

@@ -5,13 +5,14 @@ import Lobby from './Lobby';
 import Room from './Room';
 import Settings from './Views/SettingsView';
 import Messages from './Views/MessageListView';
+import Player from './Player';
 
-import {Actions, Scene, Router} from 'react-native-router-flux';
+import {Actions, Scene, Router, TabBar} from 'react-native-router-flux';
 
 const scenes = Actions.create(
   <Scene key="root">
     <Scene key="lobby" component={Lobby} initial={true} title="Lobby"/>
-    <Scene key="room" backTitle="Back" component={Room} title="Room"/>
+    <Scene key="room" backTitle="Lobby" component={Room} title="Room"/>
     <Scene key="messages" component={Messages} title="Messages"/>
     <Scene key="settings" component={Settings} title="Settings"/>
   </Scene>
