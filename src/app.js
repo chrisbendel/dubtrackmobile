@@ -12,7 +12,7 @@ import {
   Icon,
 } from 'native-base';
 
-import {Actions, Scene, Router} from 'react-native-router-flux';
+import {Scene, Router} from 'react-native-router-flux';
 
 import api from './API/api';
 import Lobby from './Lobby';
@@ -34,7 +34,7 @@ export default class app extends Component {
     };
 
     app.user.login('dubtrackmobile', 'insecure');
-    app.user.setSocket();
+    // app.user.setSocket();
   }
 
   render() {

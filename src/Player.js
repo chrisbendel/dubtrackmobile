@@ -2,11 +2,6 @@ import React, {Component} from 'react';
 import EventEmitter from "react-native-eventemitter";
 
 import {
-  Text,
-  View,
-} from 'react-native';
-
-import {
   Container,
   Footer,
   FooterTab,
@@ -16,6 +11,7 @@ import {
 
 import YouTube from 'react-native-youtube'
 import app from './app';
+import Socket from './API/socket';
 
 //TODO: This component will handle the socket, music player, aka all incoming chats, room updates, etc
 //TODO: Eventemitter can emit these actions to the other components updating their state
@@ -23,12 +19,15 @@ export default class Player extends Component {
   constructor(props) {
     super(props);
 
+    let socket = new Socket();
+
     this.state = {
       room: null,
       song: null,
     };
 
     EventEmitter.on('room', (room) => {
+      socket.join(room._id);
       if (room.currentSong) {
         app.user.currentSong(room._id).then(song => {
           this.setState({song: song.data});
@@ -49,7 +48,6 @@ export default class Player extends Component {
             <Button>
               <YouTube
                 ref="youtubePlayer"
-                //Set video id from currentsong.fkid
                 videoId={this.state.song.songInfo.fkid}
                 // videoId='AiyZseSfbsg'
                 play={true}

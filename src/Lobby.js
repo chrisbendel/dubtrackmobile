@@ -52,7 +52,6 @@ export default class Lobby extends Component {
         .then(rooms => {
           this.setState({
             dataSource: rooms,
-            // dataSource: this.state.dataSource.cloneWithRows(rooms),
             refreshing: false
           })
         });
@@ -60,7 +59,6 @@ export default class Lobby extends Component {
       app.user.listRooms()
         .then(rooms => {
           this.setState({
-            // dataSource: this.state.dataSource.cloneWithRows(rooms),
             dataSource: rooms,
             refreshing: false
           })
@@ -75,15 +73,7 @@ export default class Lobby extends Component {
 
   pressRow(rowData) {
     EventEmitter.emit('room', rowData);
-    // if (rowData.currentSong) {
-    //   app.user.currentSong(rowData._id).then(song => {
-    //     console.log(song);
-    //   });
-    //   console.log(rowData.currentSong);
-    // }
-    return app.user.joinRoom(rowData._id).then(() => {
-      Actions.room({room: rowData, title: rowData.name});
-    });
+    Actions.room({room: rowData, title: rowData.name});
   }
 
   renderRow(rowData) {
@@ -95,8 +85,9 @@ export default class Lobby extends Component {
         <Body>
         <Text style={styles.rowTitle}>{rowData.name}</Text>
         <Text style={styles.rowInfo}>{rowData.activeUsers} current users</Text>
-        <Text
-          style={styles.rowInfo}>{rowData.currentSong ? rowData.currentSong.name : 'No one is playing right now!'}</Text>
+        <Text style={styles.rowInfo}>
+          {rowData.currentSong ? rowData.currentSong.name : 'No one is playing right now!'}
+          </Text>
         </Body>
       </ListItem>
     );
@@ -110,7 +101,7 @@ export default class Lobby extends Component {
             <Icon name="search"/>
             <Input
               ref='search'
-              placeholder='Search'
+              placeholder='Search rooms'
               placeholderTextColor={'black'}
               returnKeyType="search"
               returnKeyLabel="search"

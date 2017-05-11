@@ -62,7 +62,6 @@ export default class Client extends EventEmitter {
     return fetch('https://api.dubtrack.fm/room/' + id + '/playlist/active')
       .then(res => res.json())
       .then(json => {
-        console.log('json in queue.currentSong()');
         return json;
       })
       .catch(e => {
@@ -97,7 +96,8 @@ export default class Client extends EventEmitter {
     return fetch('https://api.dubtrack.fm/auth/token')
       .then(res => res.json())
       .then(json => {
-        that.socket = new EngineIOClient({
+        return new EngineIOClient({
+        // that.socket = new EngineIOClient({
           hostname: 'ws.dubtrack.fm',
           secure: true,
           path: '/ws',

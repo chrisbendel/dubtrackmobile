@@ -21,7 +21,6 @@ export default class Queue {
     return fetch(base + 'room/' + id + '/playlist/active')
       .then(res => res.json())
       .then(json => {
-        console.log('json in queue.currentSong()');
         console.log(json.data);
         return json;
       })
