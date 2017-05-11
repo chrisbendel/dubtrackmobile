@@ -1,34 +1,68 @@
 import React, {Component} from 'react';
-import {Actions, DefaultRenderer} from 'react-native-router-flux';
-import Drawer from 'react-native-drawer';
 
-import MessageView from './Views/MessageView';
+import {
+  Container,
+  Content,
+  Thumbnail,
+  List,
+  ListItem,
+  Header,
+  Body,
+  Title,
+  Text,
+  Left,
+  Right,
+} from 'native-base';
+
+import {Actions} from 'react-native-router-flux'
+
+import app from './app';
+
 export default class Messages extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      conversations: []
+    };
+  }
+
+  componentWillMount() {
+    app.user.pm.listMessages()
+      .then(messages => {
+        this.setState({
+          conversations: messages,
+        })
+      })
+  }
+
+  renderRow(item) {
+    console.log(item);
+    return (
+      <ListItem thumbnail button onPress={() => {
+        Actions.pm({data: item, title: item.usersid[0].username});
+      }}>
+        <Left>
+          <Thumbnail size={60} source={{uri: item.usersid[0].profileImage.secure_url}}/>
+        </Left>
+        <Body>
+        <Text style={{fontWeight: 'bold', fontSize:16}}>{item.usersid[0].username}</Text>
+        <Text note>{item.latest_message_str}</Text>
+        </Body>
+      </ListItem>
+    );
   }
 
   render() {
-    const state = this.props.navigationState;
-    const children = state.children;
     return (
-      <Drawer
-        ref="navigation"
-        side="right"
-        open={state.open}
-        onOpen={()=>Actions.refresh({key:state.key, open: true})}
-        onClose={()=>Actions.refresh({key:state.key, open: false})}
-        type="displace"
-        content={<MessageView/>}
-        tapToClose={true}
-        openDrawerOffset={0.2}
-        panCloseMask={0.2}
-        negotiatePan={true}
-        tweenHandler={(ratio) => ({
-                 main: { opacity:Math.max(0.54,1-ratio) }
-            })}>
-        <DefaultRenderer navigationState={children[0]} onNavigate={this.props.onNavigate}/>
-      </Drawer>
+      <Container>
+        <Header/>
+        <Content>
+          <List
+            dataArray={this.state.conversations}
+            renderRow={this.renderRow.bind(this)}/>
+        </Content>
+      </Container>
+
     );
   }
 }

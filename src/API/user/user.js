@@ -32,8 +32,7 @@ export default class User {
       .then(json => {
         //TODO: event emitter and return out of login method
         //TODO: handle failed login logic here based on HTTP response code ex: 401, 200 etc
-        // console.log('login response');
-        console.log('login response', json);
+        // console.log('login response', json);
         return this.getUserInfo(username);
       })
       .then(user => {

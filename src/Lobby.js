@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import EventEmitter from "react-native-eventemitter";
+
 import {
   StyleSheet,
   Text,
@@ -7,8 +9,6 @@ import {
 } from 'react-native';
 
 import app from './app';
-import Player from './Player';
-import Nav from './Views/Nav';
 import {Actions} from 'react-native-router-flux'
 import {
   Container,
@@ -26,7 +26,7 @@ import {
 
 let {height, width} = Dimensions.get('window');
 
-export default class Home extends Component {
+export default class Lobby extends Component {
   constructor(props) {
     super(props);
     this.query = '';
@@ -74,6 +74,13 @@ export default class Home extends Component {
   }
 
   pressRow(rowData) {
+    EventEmitter.emit('room', rowData);
+    // if (rowData.currentSong) {
+    //   app.user.currentSong(rowData._id).then(song => {
+    //     console.log(song);
+    //   });
+    //   console.log(rowData.currentSong);
+    // }
     return app.user.joinRoom(rowData._id).then(() => {
       Actions.room({room: rowData, title: rowData.name});
     });
@@ -119,16 +126,17 @@ export default class Home extends Component {
             <Icon name="add-circle"/>
           </Button>
         </Header>
-        <Content>
+        <Content
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh.bind(this)}
+            />
+          }>
           <List
             dataArray={this.state.dataSource}
             renderRow={this.renderRow.bind(this)}
-            refreshControl={
-              <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this._onRefresh.bind(this)}
-              />
-            }/>
+          />
         </Content>
       </Container>
     );

@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 
-import Player from './Player';
+import {
+  Text,
+} from 'react-native';
+
 import {
   Container,
   Footer,
@@ -9,13 +12,15 @@ import {
   Icon,
 } from 'native-base';
 
-import {Actions, Scene, Router, Modal, TabBar} from 'react-native-router-flux';
+import {Actions, Scene, Router} from 'react-native-router-flux';
 
 import api from './API/api';
 import Lobby from './Lobby';
 import Room from './Room';
 import Profile from './Views/ProfileView';
-import Messages from './Views/MessageListView';
+import Messages from './Messages';
+import Player from './Player';
+import PM from './Views/PrivateMessage';
 import Nav from'./Views/Nav';
 
 export default class app extends Component {
@@ -25,15 +30,11 @@ export default class app extends Component {
     super(props);
     this.state = {
       newMessages: 0,
-      currentRoom: null,
+      song: null
     };
 
     app.user.login('dubtrackmobile', 'insecure');
     app.user.setSocket();
-  }
-
-  setRoom(room) {
-    this.setState({currentRoom: room});
   }
 
   render() {
@@ -41,13 +42,14 @@ export default class app extends Component {
       <Container>
         <Router>
           <Scene key="root">
-            <Scene setRoom={this.setRoom.bind(this)} key="lobby" component={Lobby} title="Lobby"/>
-            <Scene key="room" backTitle="Lobby" component={Room} title=""/>
+            <Scene key="lobby" component={Lobby} title="Lobby"/>
+            <Scene key="room" backTitle="Lobby" component={Room} title="Room"/>
             <Scene key="messages" component={Messages} title="Messages"/>
+            <Scene key="pm" component={PM} title="pm"/>
             <Scene key="profile" component={Profile} title="Profile"/>
           </Scene>
         </Router>
-        <Player room={this.state.room}/>
+        <Player/>
         <Nav/>
       </Container>
     );

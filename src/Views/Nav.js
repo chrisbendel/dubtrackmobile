@@ -59,7 +59,11 @@ export default class Room extends Component {
           <Icon name="ios-home"/>
         </ActionButton.Item>
         <ActionButton.Item title="Room" onPress={() => {
-          Actions.room({title: ''});
+          if (app.user.room) {
+            Actions.room({room: app.user.room.info, title: app.user.room.info.name});
+          } else {
+            alert('Join a room from the lobby!');
+          }
         }}>
           <Icon name="ios-musical-note"/>
         </ActionButton.Item>

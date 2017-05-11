@@ -30,19 +30,6 @@ export default class Queue {
       });
   }
 
-  currentSongDubs(roomid, callback) {
-    return fetch(base + 'room/' + '/playlist/active/dubs')
-      .then(res => res.json())
-      .then(json => {
-        console.log('json in queue.currentsongdubs()');
-        console.log(json);
-        return json;
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
-
   skip(roomid, songid, callback) {
     let obj = {
       method: 'POST',

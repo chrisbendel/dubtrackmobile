@@ -19,6 +19,7 @@
     "react-native-controllers": "^2.1.4",
     "react-native-drawer": "^2.3.0",
     "react-native-engine.io-client": "^1.6.12",
+    "react-native-eventemitter": "0.0.1",
     "react-native-fontawesome": "^4.6.4",
     "react-native-gifted-chat": "^0.1.3",
     "react-native-router-flux": "^3.38.1",

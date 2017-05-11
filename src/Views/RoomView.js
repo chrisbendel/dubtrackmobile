@@ -12,8 +12,8 @@ import {
   Dimensions
 } from 'react-native';
 
-import {GiftedChat, Bubble, GiftedAvatar} from 'react-native-gifted-chat';
-import YouTube from 'react-native-youtube'
+import {GiftedChat, Bubble} from 'react-native-gifted-chat';
+
 import {
   Container,
   Tab,
@@ -30,13 +30,11 @@ import {
   Content,
 } from 'native-base';
 import app from './../app';
-import Nav from './Nav';
-import Player from './../Player';
 
 export default class RoomView extends Component {
   constructor(props) {
     super(props);
-    console.log(this.props);
+
     this.state = {
       messages: [],
       isQueueing: false
@@ -61,7 +59,6 @@ export default class RoomView extends Component {
       //TODO: Need to connect to the base socket on app open
       //TODO: but only connect to the room here
       msg = JSON.parse(msg);
-      console.log(msg);
       switch (msg.action) {
         case 15:
           if (msg.message.name == 'chat-message') {
@@ -101,29 +98,7 @@ export default class RoomView extends Component {
     });
   }
 
-  renderAvatar(props) {
-    const renderAvatarOnTop = this.props.renderAvatarOnTop;
-    const messageToCompare = renderAvatarOnTop ? props.previousMessage : props.nextMessage;
-
-    if (props.isSameUser(this.props.currentMessage, messageToCompare) && props.isSameDay(this.props.currentMessage, messageToCompare)) {
-      return (
-        <View>
-          <GiftedAvatar
-            avatarStyle={StyleSheet.flatten([styles[this.props.position].image, this.props.imageStyle[this.props.position]])}
-          />
-        </View>
-      );
-    }
-    return (
-      <GiftedAvatar
-        user={this.props.currentMessage.user}
-        onPress={() => this.props.onPressAvatar && this.props.onPressAvatar(this.props.currentMessage.user)}
-      />
-    );
-  }
-
   renderBubble(props) {
-    console.log(props);
     if (props.isSameUser(props.currentMessage, props.previousMessage) && props.isSameDay(props.currentMessage, props.previousMessage)) {
       return (
         <Bubble {...props}/>
@@ -146,11 +121,7 @@ export default class RoomView extends Component {
   render() {
     return (
       <Container style={{flex: 1}}>
-        <Header hasTabs>
-          <Body>
-          <Title>{this.state.roomInfo.name}</Title>
-          </Body>
-        </Header>
+        <Header hasTabs/>
         <Tabs>
           <Tab heading={<TabHeading><Icon name="ios-chatbubbles"/><Text> Chat</Text></TabHeading>}>
             <GiftedChat

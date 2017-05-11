@@ -31,8 +31,6 @@ export default class PrivateMessages {
     return fetch(base + 'message/' + id)
       .then(res => res.json())
       .then(json => {
-        console.log('json inside pm.messages()');
-        console.log(json);
         return json;
       })
       .catch(e => {
@@ -50,14 +48,13 @@ export default class PrivateMessages {
       },
       body: JSON.stringify({
         'message': message,
-        'time': Date.now()
+        'time': Date.now(),
       })
     };
 
     return fetch(base + 'message/' + id, obj)
       .then(res => res.json())
       .then(json => {
-        console.log('json inside pm.send()');
         console.log(json);
         return json;
       })
@@ -65,6 +62,10 @@ export default class PrivateMessages {
         console.log(e);
       });
   }
+
+  //TODO: sending a private message to a user requires us to use this endpoint
+  //TODO: https://api.dubtrack.fm/search?query=ph1ve
+  //TODO: Possibly use a live search kinda thing to filter users as you type
 
   get(usersid) {
     if (usersid.length > 10) {

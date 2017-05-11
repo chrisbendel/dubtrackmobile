@@ -28,6 +28,7 @@ export default class Room extends Component {
       message: '',
       users: [],
     };
+    this.title = this.props.room.name;
   }
 
   componentWillMount() {

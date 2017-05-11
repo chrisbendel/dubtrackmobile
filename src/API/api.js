@@ -58,6 +58,18 @@ export default class Client extends EventEmitter {
       });
   };
 
+  currentSong = function(id) {
+    return fetch('https://api.dubtrack.fm/room/' + id + '/playlist/active')
+      .then(res => res.json())
+      .then(json => {
+        console.log('json in queue.currentSong()');
+        return json;
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
+
   leaveRoom = function (id) {
     return this.room.leaveRoom(id);
   };
@@ -92,15 +104,6 @@ export default class Client extends EventEmitter {
           query: {access_token: json.data.token},
           transports: ['websocket']
         });
-        that.socket.on('open', function () {
-          console.log('socket open');
-        });
-        that.socket.on('close', function () {
-          console.log('socket closed');
-        });
-        that.socket.on('error', function () {
-          console.log('socket error');
-        });
       })
       .catch(e => {
         console.log(e);
@@ -111,30 +114,5 @@ export default class Client extends EventEmitter {
     this.getConversation(users, function (conver) {
       conver.send(message);
     });
-  }
-
-  getConversation(users, callback) {
-    if (users.constructor !== Array) {
-      users = [users];
-    }
-
-    let usersid = [];
-    for (let user of users) {
-      usersid.push(user.id);
-    }
-
-    this.pm.getByUsers(usersid, callback);
-  }
-
-  _newPM(conver) {
-    this.emit('private-message', conver);
-  }
-
-  toString() {
-    return this.username;
-  }
-
-  static get roles() {
-    return roles;
   }
 }
