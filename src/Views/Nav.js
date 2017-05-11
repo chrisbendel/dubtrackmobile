@@ -59,7 +59,7 @@ export default class Room extends Component {
           <Icon name="ios-home"/>
         </ActionButton.Item>
         <ActionButton.Item title="Room" onPress={() => {
-          Actions.room();
+          Actions.room({title: ''});
         }}>
           <Icon name="ios-musical-note"/>
         </ActionButton.Item>

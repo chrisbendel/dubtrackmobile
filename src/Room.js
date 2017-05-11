@@ -6,10 +6,6 @@ import {
   Image,
   ListView,
   TouchableHighlight,
-  TextInput,
-  ScrollView,
-  AsyncStorage,
-  Dimensions
 } from 'react-native';
 
 import {
@@ -31,7 +27,6 @@ export default class Room extends Component {
       messages: [],
       message: '',
       users: [],
-      listViewPaddingTop: 0
     };
   }
 

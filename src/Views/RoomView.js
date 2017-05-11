@@ -36,16 +36,12 @@ import Player from './../Player';
 export default class RoomView extends Component {
   constructor(props) {
     super(props);
-
+    console.log(this.props);
     this.state = {
       messages: [],
       isQueueing: false
     };
     this.setChatListener();
-    // app.user.room.queue.currentSong(app.user.room.info._id).then(data => {
-    //   console.log(data);
-    // });
-    console.log(app.user);
   }
 
   componentWillMount() {

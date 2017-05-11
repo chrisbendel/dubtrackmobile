@@ -42,7 +42,7 @@ export default class app extends Component {
         <Router>
           <Scene key="root">
             <Scene setRoom={this.setRoom.bind(this)} key="lobby" component={Lobby} title="Lobby"/>
-            <Scene key="room" backTitle="Lobby" component={Room} title="Room"/>
+            <Scene key="room" backTitle="Lobby" component={Room} title=""/>
             <Scene key="messages" component={Messages} title="Messages"/>
             <Scene key="profile" component={Profile} title="Profile"/>
           </Scene>

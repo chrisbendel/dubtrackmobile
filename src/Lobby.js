@@ -75,7 +75,7 @@ export default class Home extends Component {
 
   pressRow(rowData) {
     return app.user.joinRoom(rowData._id).then(() => {
-      Actions.room({room: rowData});
+      Actions.room({room: rowData, title: rowData.name});
     });
   }
 
