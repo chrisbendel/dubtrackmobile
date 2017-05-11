@@ -130,9 +130,6 @@ export default class Home extends Component {
               />
             }/>
         </Content>
-        <Player/>
-        <Nav/>
-
       </Container>
     );
   }
