@@ -6,10 +6,6 @@ import {
   Image,
   ListView,
   TouchableHighlight,
-  TextInput,
-  ScrollView,
-  AsyncStorage,
-  Dimensions
 } from 'react-native';
 
 import {
@@ -31,18 +27,12 @@ export default class Room extends Component {
       messages: [],
       message: '',
       users: [],
-      listViewPaddingTop: 0
     };
+    this.title = this.props.room.name;
   }
 
   componentWillMount() {
-    // app.user.getRoomUsers(this.props.room._id)
-    //   .then(users => {
-    //     this.setState({users: users});
-    //   })
-    //   .catch(e => {
-    //     console.log(e);
-    //   });
+
   }
 
   componentWillUnmount() {
@@ -52,15 +42,15 @@ export default class Room extends Component {
   }
 
   render() {
+    if (app.user.room) {
+      return <RoomView/>
+    }
+
     return (
       <Container>
-        {app.user.room ?
-          <RoomView/>
-          :
-          <Content>
-            <Text>Join a room</Text>
-          </Content>
-        }
+        <Content>
+          <Text>Join a room</Text>
+        </Content>
       </Container>
     );
   }

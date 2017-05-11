@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+
 import {
   StyleSheet,
   View,
@@ -11,8 +12,8 @@ import {
   Dimensions
 } from 'react-native';
 
-import {GiftedChat} from 'react-native-gifted-chat';
-import YouTube from 'react-native-youtube'
+import {GiftedChat, Bubble} from 'react-native-gifted-chat';
+
 import {
   Container,
   Tab,
@@ -33,22 +34,19 @@ import app from './../app';
 export default class RoomView extends Component {
   constructor(props) {
     super(props);
-    console.log(app.user);
+
     this.state = {
       messages: [],
       isQueueing: false
     };
     this.setChatListener();
-    app.user.room.queue.currentSong(app.user.room.info._id).then(data => {
-      console.log(data);
-    });
   }
 
   componentWillMount() {
     this.setState({
       roomInfo: app.user.room.info,
       roomUsers: app.user.room.users,
-      currentSong: app.user.room.info.currentSong.fkid
+      // currentSong: app.user.room.info.currentSong.fkid
     })
   }
 
@@ -61,7 +59,6 @@ export default class RoomView extends Component {
       //TODO: Need to connect to the base socket on app open
       //TODO: but only connect to the room here
       msg = JSON.parse(msg);
-      console.log(msg);
       switch (msg.action) {
         case 15:
           if (msg.message.name == 'chat-message') {
@@ -101,65 +98,42 @@ export default class RoomView extends Component {
     });
   }
 
+  renderBubble(props) {
+    if (props.isSameUser(props.currentMessage, props.previousMessage) && props.isSameDay(props.currentMessage, props.previousMessage)) {
+      return (
+        <Bubble {...props}/>
+      );
+    }
+    if (props.position == 'left') {
+      return (
+        <View>
+          <Text>{props.currentMessage.user.name}</Text>
+          <Bubble {...props}/>
+        </View>
+      );
+    } else {
+      return (
+        <Bubble {...props}/>
+      );
+    }
+  }
+
   render() {
     return (
-      <Container>
-        <Header hasTabs>
-          <Body>
-          <Title>{this.state.roomInfo.name}</Title>
-          </Body>
-        </Header>
+      <Container style={{flex: 1}}>
+        <Header hasTabs/>
         <Tabs>
           <Tab heading={<TabHeading><Icon name="ios-chatbubbles"/><Text> Chat</Text></TabHeading>}>
             <GiftedChat
+              //TODO: implement onPressAvatar to go to profile
+              //TODO: reference: https://github.com/FaridSafi/react-native-gifted-chat
               messages={this.state.messages}
+              renderBubble={this.renderBubble}
               onSend={this.onSend.bind(this)}
               user={{
                 _id: app.user.user.info._id
               }}
             />
-          </Tab>
-          <Tab heading={<TabHeading><Icon name="ios-videocam"/><Text> Video</Text></TabHeading>}>
-            {this.state.currentSong ?
-              <YouTube
-                ref="youtubePlayer"
-                videoId={this.state.currentSong}
-                play={true}
-                hidden={false}
-                playsInline={true}
-                loop={false}
-                showinfo={false}
-                apiKey={'AIzaSyBkJJ0ZoT8XbBDYpZ8sVr1OkVev4C5poWI'}
-                origin={'https://www.youtube.com'}
-
-                onReady={(e)=> {
-                  this.setState({isReady: true})
-                }}
-                onChangeState={(e)=> {
-                  this.setState({status: e.state})
-                }}
-                onChangeQuality={(e)=> {
-                  this.setState({quality: e.quality})
-                }}
-                onError={(e)=> {
-                  this.setState({error: e.error})
-                }}
-                onProgress={(e)=> {
-                  this.setState({currentTime: e.currentTime, duration: e.duration});
-                  if (e.duration <= e.currentTime + 1) {
-                    this.setState({isQueueing: true});
-
-                    //TODO this wont work if the next video isnt playing yet, when queue is implemented then
-                    //we might have a better solution
-                    app.user.updateRoom().then(() => {
-                      this.setState({isQueueing: false})
-                    });
-                  }
-                }}
-                style={{alignSelf: 'stretch', height: 300, backgroundColor: 'black', marginVertical: 10}}
-              /> : <Text>Nobody is playing right now!</Text>
-            }
-
           </Tab>
           <Tab heading={<TabHeading><Icon name="ios-list"/><Text> Playlists</Text></TabHeading>}>
             <Text>Queue stuff</Text>
