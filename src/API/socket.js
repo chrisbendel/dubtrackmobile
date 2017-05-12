@@ -1,10 +1,15 @@
 let EngineIOClient = require('react-native-engine.io-client');
+import EventEmitter from "react-native-eventemitter";
 
 export default class Socket {
 
   constructor() {
     this.create().then((sock) => {
       this.sock = sock;
+      this.sock.on('message', (msg) => {
+        msg = JSON.parse(msg);
+        EventEmitter.emit('chat', (msg));
+      })
     });
   }
 
@@ -28,6 +33,4 @@ export default class Socket {
   join(id) {
     this.sock.send(JSON.stringify({action: 10, channel: 'room:' + id}));
   }
-
-
 }

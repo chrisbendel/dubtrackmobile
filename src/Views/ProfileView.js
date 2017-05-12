@@ -1,12 +1,4 @@
 import React, {Component} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  ListView,
-  TextInput
-} from 'react-native';
 
 // import {Drawer} from 'native-base';
 // import {Actions} from 'react-native-router-flux'
@@ -19,8 +11,6 @@ import app from '../app';
 export default class Settings extends Component {
   constructor(props) {
     super(props);
-    console.log('seetings view:', app.user);
-    // console.log(app.user.user.info.profileImage.url);
 
     this.state = {
       loggedIn: app.user.loggedIn,

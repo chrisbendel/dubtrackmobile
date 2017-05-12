@@ -18,9 +18,6 @@ import app from '../app';
 export default class Logout extends Component {
   constructor(props) {
     super(props);
-    console.log('openning LogoutView');
-    // console.log(app.user);
-    // console.log(app.user.user.info.profileImage.url);
   }
 
   render() {

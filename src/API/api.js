@@ -4,7 +4,7 @@ import User from './user/user';
 import Room from './room/room';
 import roles from './user/roles';
 import PM from './message/privatemessages';
-let EngineIOClient = require('react-native-engine.io-client');
+// let EngineIOClient = require('react-native-engine.io-client');
 
 export default class Client extends EventEmitter {
   constructor() {
@@ -19,9 +19,7 @@ export default class Client extends EventEmitter {
 
   login = function (username, password) {
     this.user = new User();
-    return this.user.login(username, password).then(() => {
-      this.loggedIn = true;
-    });
+    return this.user.login(username, password);
   };
 
   joinRoom = function (id) {
@@ -91,24 +89,24 @@ export default class Client extends EventEmitter {
     this.room.send(this.room.info._id, message, this.room.info.realTimeChannel);
   };
 
-  setSocket = function () {
-    let that = this;
-    return fetch('https://api.dubtrack.fm/auth/token')
-      .then(res => res.json())
-      .then(json => {
-        return new EngineIOClient({
-        // that.socket = new EngineIOClient({
-          hostname: 'ws.dubtrack.fm',
-          secure: true,
-          path: '/ws',
-          query: {access_token: json.data.token},
-          transports: ['websocket']
-        });
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  };
+  // setSocket = function () {
+  //   let that = this;
+  //   return fetch('https://api.dubtrack.fm/auth/token')
+  //     .then(res => res.json())
+  //     .then(json => {
+  //       return new EngineIOClient({
+  //       // that.socket = new EngineIOClient({
+  //         hostname: 'ws.dubtrack.fm',
+  //         secure: true,
+  //         path: '/ws',
+  //         query: {access_token: json.data.token},
+  //         transports: ['websocket']
+  //       });
+  //     })
+  //     .catch(e => {
+  //       console.log(e);
+  //     });
+  // };
 
   sendPM(users, message) {
     this.getConversation(users, function (conver) {

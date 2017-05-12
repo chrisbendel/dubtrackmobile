@@ -1,4 +1,3 @@
-import User from './../user/user';
 import Queue from './queue';
 
 const base = 'https://api.dubtrack.fm/';

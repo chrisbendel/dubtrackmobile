@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 
 import {
   Text,
+  AsyncStorage
 } from 'react-native';
 
 import {
@@ -29,12 +30,10 @@ export default class app extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      newMessages: 0,
       song: null
     };
 
     app.user.login('dubtrackmobile', 'insecure');
-    // app.user.setSocket();
   }
 
   render() {

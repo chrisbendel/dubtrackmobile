@@ -2,15 +2,8 @@ import React, {Component} from 'react';
 import EventEmitter from "react-native-eventemitter";
 
 import {
-  StyleSheet,
   View,
-  Image,
-  ListView,
-  TouchableHighlight,
-  TextInput,
-  ScrollView,
   AsyncStorage,
-  Dimensions
 } from 'react-native';
 
 import {GiftedChat, Bubble} from 'react-native-gifted-chat';
@@ -40,11 +33,56 @@ export default class Room extends Component {
       messages: [],
     };
 
-    EventEmitter.on('msg', (msg) => {
-      console.log(msg);
+    EventEmitter.on('chat', (msg) => {
+      switch (msg.action) {
+        case 15:
+          if (msg.message.name == 'chat-message') {
+            msg = JSON.parse(msg.message.data);
+            app.user.getRoomUser(app.user.room.info._id, msg.user._id)
+              .then(user => {
+                //TODO: check if images have a unique field
+                //TODO: If they do, we can put images in the gifted chat message object
+                let newMessage = {
+                  _id: msg.chatid,
+                  text: msg.message,
+                  createdAt: Date.now(),
+                  user: {
+                    _id: msg.user._id,
+                    name: user._user.username,
+                    avatar: user._user.profileImage.secure_url
+                  }
+                };
+                this.setState(previousState => ({
+                  messages: GiftedChat.append(previousState.messages, newMessage)
+                }));
+              })
+              .catch(e => {
+                console.log(e);
+              });
+          }
+          if (msg.message.name == 'room_playlist-update') {
+            msg = JSON.parse(msg.message.data);
+            console.log(msg);
+          }
+          break;
+        case 14:
+
+          break;
+        default:
+      }
     });
 
     // this.setChatListener();
+  }
+
+  componentWillMount() {
+    AsyncStorage.multiGet(['username', 'id', 'avatar'])
+      .then((data) => {
+        console.log(data);
+        if (data[0][1]) {
+
+        }
+      })
   }
 
   onSend(msg) {
@@ -116,13 +154,14 @@ export default class Room extends Component {
   }
 
   render() {
+    console.log(app.user);
     return (
       <Container style={{flex: 1}}>
         <Header hasTabs/>
         <Tabs>
           <Tab heading={<TabHeading><Icon name="ios-chatbubbles"/><Text> Chat</Text></TabHeading>}>
             <GiftedChat
-              //TODO: implement onPressAvatar to go to profile
+              //TODO: implement onPressAvatar to go to profile/room moderate
               //TODO: reference: https://github.com/FaridSafi/react-native-gifted-chat
               messages={this.state.messages}
               renderBubble={this.renderBubble}

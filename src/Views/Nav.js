@@ -75,7 +75,7 @@ export default class Room extends Component {
         <ActionButton.Item title="Profile" onPress={() => {
           Actions.profile();
         }}>
-          <Icon name="md-person"/>
+          <Icon name={app.user ? "md-person" : "md-log-in"}/>
         </ActionButton.Item>
       </ActionButton>
     );

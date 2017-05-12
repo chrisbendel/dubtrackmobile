@@ -30,14 +30,19 @@ export default class Player extends Component {
       socket.join(room._id);
       if (room.currentSong) {
         app.user.currentSong(room._id).then(song => {
-          this.setState({song: song.data});
+          this.setState({song: song.data, room: room});
         });
       }
-      this.setState({room: room});
     });
   }
 
   render() {
+    if (true) {
+      return (<Footer>
+        <FooterTab>
+        </FooterTab>
+      </Footer>);
+    }
     if (this.state.song) {
       return (
         <Footer>
@@ -49,7 +54,6 @@ export default class Player extends Component {
               <YouTube
                 ref="youtubePlayer"
                 videoId={this.state.song.songInfo.fkid}
-                // videoId='AiyZseSfbsg'
                 play={true}
                 hidden={false}
                 playsInline={true}
@@ -62,21 +66,7 @@ export default class Player extends Component {
                   this.refs.youtubePlayer.seekTo(this.state.song.startTime);
                   this.setState({isReady: true})
                 }}
-                onChangeState={(e) => {
-                  this.setState({status: e.state})
-                }}
-                onChangeQuality={(e) => {
-                  this.setState({quality: e.quality})
-                }}
-                onError={(e) => {
-                  this.setState({error: e.error})
-                }}
-                // onProgress={(e) => {
-                //   this.setState({currentTime: e.currentTime, duration: e.duration});
-                //   if (e.duration <= e.currentTime + 1) {
-                //     this.setState({isQueueing: true});
-                //   }
-                // }}
+
                 style={{alignSelf: 'stretch', height: 1, width: 1, backgroundColor: 'black', marginVertical: 10}}/>
             </Button>
             <Button>

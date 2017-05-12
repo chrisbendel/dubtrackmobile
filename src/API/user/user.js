@@ -1,16 +1,17 @@
 'use strict';
 
+import {
+  AsyncStorage
+} from 'react-native';
+
 const roles = require('./roles.js');
 const base = 'https://api.dubtrack.fm/';
 
 export default class User {
-  constructor(username = null, password = null) {
-    this.info = {};
+  constructor() {
+    this.info = null;
     //TODO: attach users playlist to the user object
     this.playlist = [];
-    // if (username && password) {
-    //   this.login(username, password);
-    // }
   }
 
   login(username, password) {
@@ -29,15 +30,20 @@ export default class User {
 
     return fetch('https://api.dubtrack.fm/auth/dubtrack', login)
       .then(res => res.json())
-      .then(json => {
-        //TODO: event emitter and return out of login method
-        //TODO: handle failed login logic here based on HTTP response code ex: 401, 200 etc
-        // console.log('login response', json);
-        return this.getUserInfo(username);
-      })
-      .then(user => {
-        //TODO: add event emitter for logged in to set state
-        return this.info = user;
+      .then(res => {
+        if (res.message == 'OK' && res.code == 200) {
+          this.getUserInfo(username).then(user => {
+            AsyncStorage.multiSet([
+              ['username', user.username],
+              ['id', user._id],
+              ['avatar', user.profileImage.secure_url],
+            ]);
+          });
+          console.log('success');
+        } else {
+          console.log('Login error');
+          AsyncStorage.multiRemove(['username', 'id', 'avatar',]);
+        }
       })
       .catch(e => {
         console.log(e);
@@ -46,9 +52,10 @@ export default class User {
 
   logout() {
     return fetch(base + 'auth/logout')
+      .then(() => {
+        AsyncStorage.multiRemove(['username', 'id', 'avatar',]);
+      })
       .catch(e => {
-         //this is a lesser error, because user will be null by the time this could
-        //be thrown
         console.log('Logout error', e);
       });
   }
@@ -64,6 +71,7 @@ export default class User {
       });
   }
 
+  //TODO: here down needs rewrites
   kick(msg) {
     this.dubbot.protocol.room.kick(this.room.id, this.id, this.room.realTimeChannel, msg);
   }
