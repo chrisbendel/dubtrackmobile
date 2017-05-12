@@ -22,17 +22,17 @@ export default class Client extends EventEmitter {
     return this.user.login(username, password);
   };
 
-  joinRoom = function (id) {
-    this.socket.send(JSON.stringify({action: 10, channel: 'room:' + id}));
-    this.room = new Room();
-    return this.room.setupRoom(id);
-    // this.room.getRoomUsers(id);
-    // return this.room.joinRoom(id);
-  };
+  // joinRoom = function (id) {
+  //   this.socket.send(JSON.stringify({action: 10, channel: 'room:' + id}));
+  //   this.room = new Room();
+  //   return this.room.setupRoom(id);
+  //   // this.room.getRoomUsers(id);
+  //   // return this.room.joinRoom(id);
+  // };
 
-  updateRoom = function () {
-    return this.room.getRoomInfo(this.room.id);
-  };
+  // updateRoom = function () {
+  //   return this.room.getRoomInfo(this.room.id);
+  // };
 
   listRooms = function () {
     return fetch('https://api.dubtrack.fm/room')

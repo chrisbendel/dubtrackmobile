@@ -1,18 +1,11 @@
 import React, {Component} from 'react';
 import {
-  StyleSheet,
   Text,
-  View,
-  Image,
-  ListView,
-  TouchableHighlight,
-  TouchableOpacity,
+  AsyncStorage,
   Dimensions,
-  TextInput
 } from 'react-native';
-import {Drawer} from 'native-base';
-import {Actions} from 'react-native-router-flux'
-import {Container, Header, Title, Left, Right, Body, Button, Footer, FooterTab, Icon, Content, Thumbnail} from 'native-base';
+
+import {Container, Body, Button, Content, Thumbnail} from 'native-base';
 import app from '../app';
 
 export default class Logout extends Component {
@@ -21,25 +14,27 @@ export default class Logout extends Component {
   }
 
   render() {
-
-    return(
+    return (
       <Container>
         <Content>
           <Body style={styles.Body}>
-            <Thumbnail size={80} source={{uri: app.user.user.info.profileImage.secure_url}} />
-            <Text style={styles.Name}>{app.user.user.info.username}</Text>
-            <Button block bordered onPress={() => {
-              app.user.logout();
-              this.props.updateUser();
-              }}>
-              <Text>Logout</Text>
-            </Button>
+          <Thumbnail size={80} source={{uri: this.props.avatar}}/>
+          <Text style={styles.Name}>{this.props.name}</Text>
+          <Button block bordered onPress={() => {
+            app.user.logout()
+              .then(() => {
+                this.props.update();
+              });
+          }}>
+            <Text>Logout</Text>
+          </Button>
           </Body>
         </Content>
       </Container>
     );
   }
 }
+
 const {height: screenHeight} = Dimensions.get('window');
 const styles = {
   Body: {

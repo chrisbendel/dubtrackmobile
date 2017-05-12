@@ -1,18 +1,11 @@
 import React, {Component} from 'react';
 import {
-  StyleSheet,
   Text,
-  View,
-  Image,
-  ListView,
-  TouchableHighlight,
-  TouchableOpacity,
   Dimensions,
   AsyncStorage,
 } from 'react-native';
-import {Drawer} from 'native-base';
-import {Actions} from 'react-native-router-flux'
-import {Container, Header, Title, Left, Right, Body, Button, Footer, FooterTab, Icon, Content, Thumbnail, Form, Item, Input} from 'native-base';
+
+import {Container, Body, Button, Content, Form, Item, Input} from 'native-base';
 import app from '../app';
 
 export default class Login extends Component {
@@ -54,7 +47,7 @@ export default class Login extends Component {
               <Button block bordered onPress={() => {
                 app.user.login(this.state.username, this.state.password)
                   .then(() => {
-                    this.props.updateUser();
+                    this.props.update();
                     this.props.loading(false);
                   })
                   .catch(e => {

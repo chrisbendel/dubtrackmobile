@@ -41,7 +41,6 @@ export default class User {
           });
           console.log('success');
         } else {
-          console.log('Login error');
           AsyncStorage.multiRemove(['username', 'id', 'avatar',]);
         }
       })
@@ -57,7 +56,8 @@ export default class User {
       })
       .catch(e => {
         console.log('Logout error', e);
-      });
+      })
+      .done();
   }
 
   getUserInfo(user) {

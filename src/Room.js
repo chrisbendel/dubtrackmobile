@@ -80,9 +80,13 @@ export default class Room extends Component {
       .then((data) => {
         console.log(data);
         if (data[0][1]) {
-
+          this.setState({
+            username: data[0][1],
+            userid: data[1][1],
+            avatar: data[2][1],
+          })
         }
-      })
+      });
   }
 
   onSend(msg) {
@@ -154,7 +158,7 @@ export default class Room extends Component {
   }
 
   render() {
-    console.log(app.user);
+    console.log(this.state);
     return (
       <Container style={{flex: 1}}>
         <Header hasTabs/>
@@ -167,7 +171,7 @@ export default class Room extends Component {
               renderBubble={this.renderBubble}
               onSend={this.onSend.bind(this)}
               user={{
-                _id: app.user.user.info._id
+                _id: this.state.userid
               }}
             />
           </Tab>

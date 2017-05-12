@@ -18,7 +18,7 @@ import {Scene, Router} from 'react-native-router-flux';
 import api from './API/api';
 import Lobby from './Lobby';
 import Room from './Room';
-import Profile from './Views/ProfileView';
+import Profile from './Profile';
 import Messages from './Messages';
 import Player from './Player';
 import PM from './Views/PrivateMessage';
@@ -33,6 +33,7 @@ export default class app extends Component {
       song: null
     };
 
+    // AsyncStorage.multiRemove(['username', 'id', 'avatar',]);
     app.user.login('dubtrackmobile', 'insecure');
   }
 
