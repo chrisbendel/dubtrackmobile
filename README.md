@@ -16,7 +16,5 @@
 #####Finally  
 ```react-native run-ios```
 
-## Colors and styles (subject to change - could use feedback on how to make things more pretty)
-- ![#CECECE](http://placehold.it/15/CECECE/000000?text=+) `Main background color - #CECECE`
-- ![#B1E5F2](http://placehold.it/15/B1E5F2/000000?text=+) `Buttons background color - #B1E5F2`
-- ![#272635](http://placehold.it/15/272635/000000?text=+) `Text colors - #272635`
+## If bug with duplicate module declaration name - check here for reference on how to fix
+https://github.com/aksonov/react-native-router-flux/issues/1803#issuecomment-296186543
