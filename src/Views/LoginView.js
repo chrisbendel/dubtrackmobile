@@ -45,15 +45,10 @@ export default class Login extends Component {
                 placeholder="Password" />
               </Item>
               <Button block bordered onPress={() => {
-                app.user.login(this.state.username, this.state.password)
-                  .then(() => {
-                    this.props.update();
-                    this.props.loading(false);
-                  })
-                  .catch(e => {
-                    console.log(e);
-                  });
                 this.props.loading();
+                app.user.login(this.state.username, this.state.password).then(() => {
+                  this.props.auth();
+                });
                 }}>
                 <Text>Login</Text>
               </Button>

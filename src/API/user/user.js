@@ -14,63 +14,6 @@ export default class User {
     this.playlist = [];
   }
 
-  login(username, password) {
-    let login = {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Origin': '',
-      },
-      body: JSON.stringify({
-        'username': username,
-        'password': password
-      }),
-    };
-
-    return fetch('https://api.dubtrack.fm/auth/dubtrack', login)
-      .then(res => res.json())
-      .then(res => {
-        if (res.message == 'OK' && res.code == 200) {
-          this.getUserInfo(username).then(user => {
-            AsyncStorage.multiSet([
-              ['username', user.username],
-              ['id', user._id],
-              ['avatar', user.profileImage.secure_url],
-            ]);
-          });
-          console.log('success');
-        } else {
-          AsyncStorage.multiRemove(['username', 'id', 'avatar',]);
-        }
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
-
-  logout() {
-    return fetch(base + 'auth/logout')
-      .then(() => {
-        AsyncStorage.multiRemove(['username', 'id', 'avatar',]);
-      })
-      .catch(e => {
-        console.log('Logout error', e);
-      })
-      .done();
-  }
-
-  getUserInfo(user) {
-    return fetch(base + 'user/' + user)
-      .then(res => res.json())
-      .then(json => {
-        return json.data;
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
-
   //TODO: here down needs rewrites
   kick(msg) {
     this.dubbot.protocol.room.kick(this.room.id, this.id, this.room.realTimeChannel, msg);

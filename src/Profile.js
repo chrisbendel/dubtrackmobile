@@ -6,14 +6,17 @@ import FullSpinner from './Views/FullSpinnerView';
 import {Container} from 'native-base';
 import {AsyncStorage} from 'react-native';
 import app from './app';
+import {Actions} from 'react-native-router-flux';
 
 export default class Profile extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      loading: false
+      loading: false,
     };
+
+    this.auth = this.auth.bind(this);
     this.loading = this.loading.bind(this);
   }
 
@@ -22,35 +25,15 @@ export default class Profile extends Component {
   }
 
   auth() {
-    AsyncStorage.multiGet(['username', 'id', 'avatar'])
-      .then((data) => {
-        // if (data[0][1]) {
-          this.setState({
-            username: data[0][1],
-            userid: data[1][1],
-            avatar: data[2][1],
-          })
-        // } else {
-        //   this.setState({
-        //     username: null,
-        //     userid: null,
-        //     avatar: null,
-        //   })
-        // }
-      });
-  }
-
-
-  update(e) {
-    e && e.preventDefault();
-    this.auth();
-    // this.setState({loggedIn: status});
+    AsyncStorage.getItem('user').then((user) => {
+      this.loading(false);
+      this.setState({user: JSON.parse(user)});
+    });
   }
 
   loading(isloading = true) {
     isloading ? this.setState({loading: true}) : this.setState({loading: false});
   }
-
 
   render() {
     return (
@@ -58,14 +41,14 @@ export default class Profile extends Component {
       {this.state.loading ?
         <FullSpinner/>
         :
-          this.state.username ?
+          this.state.user ?
             <Logout
-              name={this.state.username}
-              id={this.state.userid}
-              avatar={this.state.avatar}
-              update={this.update.bind(this)}
+              name={this.state.user.username}
+              id={this.state.user._id}
+              avatar={this.state.user.profileImage.secure_url}
+              auth={this.auth}
               loading={this.loading}/> :
-            <Login update={this.update.bind(this)} loading={this.loading}/>
+            <Login auth={this.auth} loading={this.loading}/>
       }
       </Container>
     );

@@ -1,27 +1,76 @@
 import EventEmitter from 'event-emitter';
-
+import {AsyncStorage} from 'react-native';
 import User from './user/user';
 import Room from './room/room';
 import roles from './user/roles';
 import PM from './message/privatemessages';
-// let EngineIOClient = require('react-native-engine.io-client');
 
-export default class Client extends EventEmitter {
+const base = 'https://api.dubtrack.fm/';
+
+export default class api {
   constructor() {
-    super();
 
     this.room = null;
-    this.user = null;
     this.pm = new PM();
-    this.socket = null;
     this.loggedIn = false;
   }
 
-  login = function (username, password) {
-    this.user = new User();
-    return this.user.login(username, password);
+  /* USER API CALLS */
+
+  logout = function() {
+    return fetch(base + 'auth/logout')
+      .then(() => {
+        AsyncStorage.removeItem('user').then(() => {
+          console.log('Logged out');
+        });
+      })
   };
 
+  login = function (username, password) {
+    let login = {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Origin': '',
+      },
+      body: JSON.stringify({
+        'username': username,
+        'password': password
+      }),
+    };
+
+    return fetch(base + 'auth/dubtrack', login)
+      .then(res => res.json())
+      .then(res => {
+        console.log(res);
+        if (res.code == 200) {
+          return this.getUserInfo(username).then(user => {
+            AsyncStorage.setItem('user', JSON.stringify(user)).then(() => {
+              console.log('Logged in');
+            });
+          });
+        } else {
+          // AsyncStorage.setItem('user', null);
+          AsyncStorage.removeItem('user').then(() => {
+            console.log('Login error');
+          });
+        }
+      })
+  };
+
+  getUserInfo = function (user) {
+    return fetch(base + 'user/' + user)
+      .then(res => res.json())
+      .then(json => {
+        return json.data;
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
+
+  /* ROOM API CALLS */
   // joinRoom = function (id) {
   //   this.socket.send(JSON.stringify({action: 10, channel: 'room:' + id}));
   //   this.room = new Room();
@@ -76,13 +125,7 @@ export default class Client extends EventEmitter {
   };
 
   getRoomUser = function (room, id) {
-    return this.room.getUserInfo(room, id);
-  };
-
-  logout = function () {
-    this.loggedIn = false;
-    this.user.logout();
-    this.user = null;
+    return this.getUserInfo(room, id);
   };
 
   chat = function (message) {

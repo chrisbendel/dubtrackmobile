@@ -21,10 +21,10 @@ export default class Logout extends Component {
           <Thumbnail size={80} source={{uri: this.props.avatar}}/>
           <Text style={styles.Name}>{this.props.name}</Text>
           <Button block bordered onPress={() => {
-            app.user.logout()
-              .then(() => {
-                this.props.update();
-              });
+            this.props.loading();
+            app.user.logout().then(() => {
+              this.props.auth();
+            });
           }}>
             <Text>Logout</Text>
           </Button>

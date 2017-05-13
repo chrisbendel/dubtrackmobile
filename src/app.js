@@ -33,7 +33,6 @@ export default class app extends Component {
       song: null
     };
 
-    // AsyncStorage.multiRemove(['username', 'id', 'avatar',]);
     app.user.login('dubtrackmobile', 'insecure');
   }
 
