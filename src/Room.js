@@ -4,6 +4,7 @@ import EventEmitter from "react-native-eventemitter";
 import {
   View,
   AsyncStorage,
+  AlertIOS,
 } from 'react-native';
 
 import {GiftedChat, Bubble} from 'react-native-gifted-chat';

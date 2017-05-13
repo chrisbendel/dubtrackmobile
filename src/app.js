@@ -33,7 +33,7 @@ export default class app extends Component {
       song: null
     };
 
-    app.user.login('dubtrackmobile', 'insecure');
+    // app.user.login('dubtrackmobile', 'insecure');
   }
 
   render() {

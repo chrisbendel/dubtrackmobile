@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
+import EventEmitter from "react-native-eventemitter";
 import {
   Text,
   Dimensions,
   AsyncStorage,
+  AlertIOS
 } from 'react-native';
 
 import {Container, Body, Button, Content, Form, Item, Input} from 'native-base';
@@ -11,10 +13,14 @@ import app from '../app';
 export default class Login extends Component {
   constructor(props) {
     super(props);
+    EventEmitter.on('loginError', (e) => {
+      AlertIOS.alert(e);
+    });
+
     this.state = {
       username: '',
       password: ''
-    }
+    };
   }
 
   render() {

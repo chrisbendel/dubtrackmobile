@@ -1,4 +1,4 @@
-import EventEmitter from 'event-emitter';
+import EventEmitter from "react-native-eventemitter";
 import {AsyncStorage} from 'react-native';
 import User from './user/user';
 import Room from './room/room';
@@ -15,7 +15,9 @@ export default class api {
     this.loggedIn = false;
   }
 
+  /******************/
   /* USER API CALLS */
+  /******************/
 
   logout = function() {
     return fetch(base + 'auth/logout')
@@ -43,7 +45,6 @@ export default class api {
     return fetch(base + 'auth/dubtrack', login)
       .then(res => res.json())
       .then(res => {
-        console.log(res);
         if (res.code == 200) {
           return this.getUserInfo(username).then(user => {
             AsyncStorage.setItem('user', JSON.stringify(user)).then(() => {
@@ -51,9 +52,8 @@ export default class api {
             });
           });
         } else {
-          // AsyncStorage.setItem('user', null);
           AsyncStorage.removeItem('user').then(() => {
-            console.log('Login error');
+            EventEmitter.emit('loginError', res.data.details.message);
           });
         }
       })
@@ -70,7 +70,10 @@ export default class api {
       });
   };
 
+  /******************/
   /* ROOM API CALLS */
+  /******************/
+
   // joinRoom = function (id) {
   //   this.socket.send(JSON.stringify({action: 10, channel: 'room:' + id}));
   //   this.room = new Room();
