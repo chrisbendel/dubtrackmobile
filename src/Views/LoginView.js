@@ -13,6 +13,7 @@ import app from '../app';
 export default class Login extends Component {
   constructor(props) {
     super(props);
+
     EventEmitter.on('loginError', (e) => {
       AlertIOS.alert(e);
     });

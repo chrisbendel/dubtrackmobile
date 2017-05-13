@@ -27,17 +27,6 @@ export default class PrivateMessages {
       });
   }
 
-  getConversation(id) {
-    return fetch(base + 'message/' + id)
-      .then(res => res.json())
-      .then(json => {
-        return json;
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
-
   send(id, message) {
     let obj = {
       method: 'POST',

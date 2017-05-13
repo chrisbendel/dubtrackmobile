@@ -8,7 +8,30 @@ export default class Socket {
       this.sock = sock;
       this.sock.on('message', (msg) => {
         msg = JSON.parse(msg);
-        EventEmitter.emit('chat', (msg));
+        console.log(msg);
+        switch (msg.action) {
+          case 15:
+            if (msg.message.name == 'chat-message') {
+              msg = JSON.parse(msg.message.data);
+              EventEmitter.emit('chat', msg);
+              // msg = JSON.parse(msg.message.data);
+            }
+            if (msg.message.name == 'new-message') {
+              msg = JSON.parse(msg.message.data);
+              EventEmitter.emit('pm', msg);
+            }
+            if (msg.message.name == 'room_playlist-update') {
+              msg = JSON.parse(msg.message.data);
+              console.log(msg);
+            }
+            break;
+          case 14:
+
+            break;
+          default:
+        }
+        // console.log(msg);
+        // EventEmitter.emit('chat', (msg));
       })
     });
   }

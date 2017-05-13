@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
+import EventEmitter from "react-native-eventemitter";
 import {
   StyleSheet,
   Text,
-  View
+  View,
+  AsyncStorage
 } from 'react-native';
 
 import {
@@ -13,6 +15,7 @@ import {
 
 import app from '../app';
 import {GiftedChat, Bubble} from 'react-native-gifted-chat';
+import FullSpinner from './FullSpinnerView';
 
 export default class PrivateMessage extends Component {
   constructor(props) {
@@ -22,34 +25,41 @@ export default class PrivateMessage extends Component {
     };
     // this.onSend = this.onSend.bind(this);
 
-    app.user.socket.on('message', (msg) => {
-      msg = JSON.parse(msg);
-      console.log(msg);
-    })
+    EventEmitter.on('pm', (pm) => {
+      console.log(pm);
+    });
+  }
+
+  getMessages() {
+    let that = this;
+    AsyncStorage.getItem('user').then((user) => {
+      this.setState({user: JSON.parse(user)});
+    }).then(() => {
+      app.user.getConversation(this.props.data._id)
+        .then(messages => {
+          messages.data.forEach(function (msg) {
+            console.log(msg);
+            let newMessage = {
+              _id: msg._id,
+              text: msg.message,
+              createdAt: msg.created,
+              user: {
+                _id: msg._user._id,
+                name: msg._user.username,
+                avatar: msg._user.profileImage.secure_url
+              }
+            };
+            that.setState(previousState => ({
+              messages: GiftedChat.append(previousState.messages, newMessage)
+            }));
+          });
+        })
+    });
   }
 
   componentWillMount() {
-    let that = this;
     console.log(this.props.data);
-    app.user.pm.getConversation(this.props.data._id)
-      .then(messages => {
-        messages.data.forEach(function (msg) {
-          console.log(msg);
-          let newMessage = {
-            _id: msg._id,
-            text: msg.message,
-            createdAt: msg.created,
-            user: {
-              _id: msg._user._id,
-              name: msg._user.username,
-              avatar: msg._user.profileImage.secure_url
-            }
-          };
-          that.setState(previousState => ({
-            messages: GiftedChat.append(previousState.messages, newMessage)
-          }));
-        });
-      })
+    this.getMessages();
   }
 
   onSend(msg) {
@@ -78,6 +88,10 @@ export default class PrivateMessage extends Component {
   }
 
   render() {
+    if (!this.state.user) {
+      return <FullSpinner/>
+    }
+
     return (
       <Container style={{flex: 1}}>
         <Header/>
@@ -86,7 +100,7 @@ export default class PrivateMessage extends Component {
           renderBubble={this.renderBubble}
           onSend={this.onSend.bind(this)}
           user={{
-            _id: app.user.user.info._id
+            _id: this.state.user._id
           }}
         />
       </Container>

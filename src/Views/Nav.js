@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import {
   Text,
   View,
-  Dimensions
+  Dimensions,
+  AsyncStorage
 } from 'react-native';
 
 import {
@@ -32,6 +33,13 @@ export default class Room extends Component {
     };
 
     this.checkNewPms();
+    this.user();
+  }
+
+  user() {
+    AsyncStorage.getItem('user').then((user) => {
+      this.setState({user: JSON.parse(user)});
+    })
   }
 
   checkNewPms() {
@@ -75,7 +83,7 @@ export default class Room extends Component {
         <ActionButton.Item title="Profile" onPress={() => {
           Actions.profile();
         }}>
-          <Icon name={app.user ? "md-person" : "md-log-in"}/>
+          <Icon name={this.state.user ? "md-person" : "md-log-in"}/>
         </ActionButton.Item>
       </ActionButton>
     );

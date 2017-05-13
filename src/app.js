@@ -13,7 +13,7 @@ import {
   Icon,
 } from 'native-base';
 
-import {Scene, Router} from 'react-native-router-flux';
+import {Scene, Router, Actions} from 'react-native-router-flux';
 
 import api from './API/api';
 import Lobby from './Lobby';
@@ -36,6 +36,10 @@ export default class app extends Component {
     // app.user.login('dubtrackmobile', 'insecure');
   }
 
+  refreshOnBack() {
+    Actions.lobby({type: 'reset'});
+  }
+
   render() {
     return (
       <Container>
@@ -45,7 +49,7 @@ export default class app extends Component {
             <Scene key="room" backTitle="Lobby" component={Room} title="Room"/>
             <Scene key="messages" component={Messages} title="Messages"/>
             <Scene key="pm" component={PM} title="pm"/>
-            <Scene key="profile" component={Profile} title="Profile"/>
+            <Scene key="profile" backTitle='Lobby' onBack={this.refreshOnBack} component={Profile} title="Profile"/>
           </Scene>
         </Router>
         <Player/>

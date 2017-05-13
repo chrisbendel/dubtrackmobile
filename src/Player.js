@@ -37,12 +37,13 @@ export default class Player extends Component {
   }
 
   render() {
-    if (true) {
-      return (<Footer>
-        <FooterTab>
-        </FooterTab>
-      </Footer>);
-    }
+    //For development so the sound doesn't blast me whenever i open a room
+    // if (true) {
+    //   return (<Footer>
+    //     <FooterTab>
+    //     </FooterTab>
+    //   </Footer>);
+    // }
     if (this.state.song) {
       return (
         <Footer>

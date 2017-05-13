@@ -71,20 +71,8 @@ export default class api {
   };
 
   /******************/
-  /* ROOM API CALLS */
+  /* LOBBY API CALLS */
   /******************/
-
-  // joinRoom = function (id) {
-  //   this.socket.send(JSON.stringify({action: 10, channel: 'room:' + id}));
-  //   this.room = new Room();
-  //   return this.room.setupRoom(id);
-  //   // this.room.getRoomUsers(id);
-  //   // return this.room.joinRoom(id);
-  // };
-
-  // updateRoom = function () {
-  //   return this.room.getRoomInfo(this.room.id);
-  // };
 
   listRooms = function () {
     return fetch('https://api.dubtrack.fm/room')
@@ -108,6 +96,90 @@ export default class api {
       });
   };
 
+  /******************/
+  /* ROOM API CALLS */
+  /******************/
+
+  getRoomInfo = function (room) {
+    return fetch(base + 'room/' + room)
+      .then(res => res.json())
+      .then(json => {
+        return json.data;
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
+
+  getRoomUsers = function (room) {
+    return fetch(base + 'room/' + room + '/users')
+      .then(res => res.json())
+      .then(json => {
+        return json.data;
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
+
+  chat = function (message, room, realTimeChannel) {
+    let obj = {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Origin': '',
+      },
+      body: JSON.stringify({
+        'message': message,
+        'realTimeChannel': realTimeChannel,
+        'time': Date.now(),
+        'type': 'chat-message'
+      })
+    };
+
+    return fetch(base + 'chat/' + room, obj)
+      .catch(e => {
+        console.log(e);
+      });
+  };
+
+  joinRoom = function (id) {
+    return fetch('https://api.dubtrack.fm/auth/token')
+      .then(() => {
+        let obj = {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Origin': '',
+          },
+        };
+        return fetch('https://api.dubtrack.fm/room/' + id + '/users', obj);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
+
+  leaveRoom = function (room) {
+    let obj = {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Origin': '',
+      },
+    };
+    return fetch(base + 'room/' + room + '/users', obj)
+      .then(() => {
+        console.log('left room');
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
+
   currentSong = function(id) {
     return fetch('https://api.dubtrack.fm/room/' + id + '/playlist/active')
       .then(res => res.json())
@@ -119,40 +191,20 @@ export default class api {
       });
   };
 
-  leaveRoom = function (id) {
-    return this.room.leaveRoom(id);
-  };
+  /******************/
+  /* PRIVATE MESSAGE API CALLS */
+  /******************/
 
-  getRoomUsers = function (id) {
-    return this.room.getRoomUsers(id);
-  };
-
-  getRoomUser = function (room, id) {
-    return this.getUserInfo(room, id);
-  };
-
-  chat = function (message) {
-    this.room.send(this.room.info._id, message, this.room.info.realTimeChannel);
-  };
-
-  // setSocket = function () {
-  //   let that = this;
-  //   return fetch('https://api.dubtrack.fm/auth/token')
-  //     .then(res => res.json())
-  //     .then(json => {
-  //       return new EngineIOClient({
-  //       // that.socket = new EngineIOClient({
-  //         hostname: 'ws.dubtrack.fm',
-  //         secure: true,
-  //         path: '/ws',
-  //         query: {access_token: json.data.token},
-  //         transports: ['websocket']
-  //       });
-  //     })
-  //     .catch(e => {
-  //       console.log(e);
-  //     });
-  // };
+  getConversation = function (id) {
+    return fetch(base + 'message/' + id)
+      .then(res => res.json())
+      .then(json => {
+        return json;
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
 
   sendPM(users, message) {
     this.getConversation(users, function (conver) {
