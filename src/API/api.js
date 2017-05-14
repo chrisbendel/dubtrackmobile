@@ -273,6 +273,7 @@ export default class api {
     return fetch(base + 'message/new')
       .then(res => res.json())
       .then(json => {
+        console.log(json.data);
         return json.data;
       })
       .catch(e => {

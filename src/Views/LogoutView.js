@@ -63,4 +63,4 @@ const styles = {
     borderWidth: 1,
     borderColor: 'transparent'
   },
-}
+};

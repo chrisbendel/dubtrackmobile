@@ -1,56 +1,44 @@
 import React, {Component} from 'react';
+import {
+  Text,
+  AsyncStorage,
+  Dimensions,
+} from 'react-native';
 
-import Logout from './Views/LogoutView';
-import Login from './Views/LoginView';
-import FullSpinner from './Views/FullSpinnerView';
-import {Container} from 'native-base';
-import {AsyncStorage} from 'react-native';
-import app from './app';
-import {Actions} from 'react-native-router-flux';
+import {Container, Body, Button, Content, Thumbnail} from 'native-base';
+import app from '../app';
 
-export default class Profile extends Component {
+export default class Logout extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      loading: false,
-    };
-
-    this.auth = this.auth.bind(this);
-    this.loading = this.loading.bind(this);
   }
 
-  componentWillMount() {
-    this.auth();
-  }
-
-  auth() {
-    AsyncStorage.getItem('user').then((user) => {
-      this.loading(false);
-      this.setState({user: JSON.parse(user)});
-    });
-  }
-
-  loading(isloading = true) {
-    isloading ? this.setState({loading: true}) : this.setState({loading: false});
-  }
-
+  //TODO: implement this page with followers, follow button, etc.
+  //TODO: Anytime we hit this component we wanna pass in the profile user's id
+  //TODO: with the users name as the title (Actions.profile({title: USERNAME});
+  //TODO: EX: hitting a users avatar in chat brings you to their profile page with their id
   render() {
     return (
-    <Container>
-      {this.state.loading ?
-        <FullSpinner/>
-        :
-          this.state.user ?
-            <Logout
-              name={this.state.user.username}
-              id={this.state.user._id}
-              avatar={this.state.user.profileImage.secure_url}
-              auth={this.auth}
-              loading={this.loading}/> :
-            <Login auth={this.auth} loading={this.loading}/>
-      }
+      <Container>
+        <Content>
+          <Body style={styles.Body}>
+          <Thumbnail size={80} source={{uri: this.props.avatar}}/>
+          <Text style={styles.Name}>{this.props.name}</Text>
+          </Body>
+        </Content>
       </Container>
     );
   }
 }
+
+const {height: screenHeight} = Dimensions.get('window');
+const styles = {
+  Body: {
+    flex: 1,
+    justifyContent: 'center'
+  },
+  Name: {
+    fontWeight: 'bold',
+    padding: 10
+  },
+};

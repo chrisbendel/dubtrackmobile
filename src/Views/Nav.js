@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import EventEmitter from "react-native-eventemitter";
 import {
   Text,
   View,
@@ -16,8 +17,6 @@ import {
   Fab,
 } from 'native-base';
 
-import ActionButton from 'react-native-action-button';
-
 import app from './../app';
 import {Actions} from 'react-native-router-flux';
 
@@ -34,6 +33,10 @@ export default class Room extends Component {
 
     this.checkNewPms();
     this.user();
+
+    EventEmitter.on('auth', () => {
+      this.user();
+    });
   }
 
   user() {
@@ -43,7 +46,7 @@ export default class Room extends Component {
   }
 
   checkNewPms() {
-    app.user.pm.checkNew()
+    app.user.checkNew()
       .then(count => {
         this.setState({
           newMessages: count,
@@ -53,39 +56,37 @@ export default class Room extends Component {
 
   //TODO: put a badge on messages with current new message count
   render() {
+    let user = this.state.user;
     return (
-      <ActionButton
-        icon={<Icon name="md-menu"/>}
-        offsetY={0}
-        position="center"
-        degrees={90}
-        buttonColor="#9b59b6"
-      >
-        <ActionButton.Item title="Lobby" onPress={() => {
-          Actions.lobby();
-        }}>
-          <Icon name="ios-home"/>
-        </ActionButton.Item>
-        <ActionButton.Item title="Room" onPress={() => {
-          if (app.user.room) {
-            Actions.room({room: app.user.room.info, title: app.user.room.info.name});
-          } else {
-            alert('Join a room from the lobby!');
+      <Footer>
+        <FooterTab>
+          <Button onPress={() => {
+            Actions.lobby();
+          }}>
+            <Icon name="ios-menu"/>
+          </Button>
+          <Button onPress={() => {
+            Actions.room();
+          }}>
+            <Icon name="ios-chatbubbles"/>
+          </Button>
+          {user ?
+            <Button onPress={() => {
+              Actions.messages();
+            }}>
+              <Icon name="ios-mail"/>
+            </Button>
+            :
+            null
           }
-        }}>
-          <Icon name="ios-musical-note"/>
-        </ActionButton.Item>
-        <ActionButton.Item title="Messages" onPress={() => {
-          Actions.messages();
-        }}>
-          <Icon name="ios-mail"/>
-        </ActionButton.Item>
-        <ActionButton.Item title="Profile" onPress={() => {
-          Actions.profile();
-        }}>
-          <Icon name={this.state.user ? "md-person" : "md-log-in"}/>
-        </ActionButton.Item>
-      </ActionButton>
+
+          <Button onPress={() => {
+            Actions.auth({title: user ? "Logout" : "Login or Signup"});
+          }}>
+            <Icon name={user ? "ios-log-out" : "ios-log-in"}/>
+          </Button>
+        </FooterTab>
+      </Footer>
     );
   }
 }

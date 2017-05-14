@@ -10,6 +10,8 @@ import {
 import {Container, Body, Button, Content, Form, Item, Input} from 'native-base';
 import app from '../app';
 
+
+//TODO: Component still needs social media signin options
 export default class Login extends Component {
   constructor(props) {
     super(props);

@@ -18,9 +18,10 @@ import {Scene, Router, Actions} from 'react-native-router-flux';
 import api from './API/api';
 import Lobby from './Lobby';
 import Room from './Room';
-import Profile from './Profile';
+import Auth from './Auth';
 import Messages from './Messages';
 import Player from './Player';
+import Profile from './Profile';
 import PM from './Views/PrivateMessage';
 import Nav from'./Views/Nav';
 
@@ -49,7 +50,8 @@ export default class app extends Component {
             <Scene key="room" backTitle="Lobby" component={Room} title="Room"/>
             <Scene key="messages" component={Messages} title="Messages"/>
             <Scene key="pm" component={PM} title="pm"/>
-            <Scene key="profile" backTitle='Lobby' onBack={this.refreshOnBack} component={Profile} title="Profile"/>
+            <Scene key="auth" backTitle='Lobby' onBack={this.refreshOnBack} component={Auth} title=""/>
+            <Scene key="profile" component={Profile} title="Profile"/>
           </Scene>
         </Router>
         <Player/>
