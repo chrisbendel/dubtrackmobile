@@ -6,8 +6,9 @@ import {
   FooterTab,
   Button,
   Icon,
+  Text
 } from 'native-base';
-
+import {Actions} from 'react-native-router-flux';
 import YouTube from 'react-native-youtube'
 import app from './app';
 import Socket from './API/socket';
@@ -48,7 +49,7 @@ export default class Player extends Component {
     //     </FooterTab>
     //   </Footer>);
     // }
-    console.log(this.state.room);
+    console.log(this.state.song);
     let playing = this.state.playing;
     if (this.state.song) {
       return (
@@ -64,6 +65,11 @@ export default class Player extends Component {
               apiKey={'AIzaSyBkJJ0ZoT8XbBDYpZ8sVr1OkVev4C5poWI'}
               origin={'https://www.youtube.com'}
 
+              onChangeState={(e) => {
+                console.log(e);
+                this.refs.youtubePlayer.seekTo(this.state.song.startTime);
+              }}
+
               onReady={(e) => {
                 this.refs.youtubePlayer.seekTo(this.state.song.startTime);
                 this.setState({isReady: true})
@@ -71,13 +77,13 @@ export default class Player extends Component {
 
               style={styles.player}/>
 
+            <Button>
+              <Text>{this.state.song.songInfo.name}</Text>
+            </Button>
 
             <Button onPress={() => {
               if (playing) {
                 this.setState({playing: false});
-                console.log(this.refs.youtubePlayer);
-                this.refs.youtubePlayer.props.play = false;
-                // this.refs.youtubePlayer.setNativeProps({play: false});
               } else {
                 this.getSongTime(this.state.room);
               }
