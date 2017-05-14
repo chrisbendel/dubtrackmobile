@@ -8,7 +8,6 @@ export default class Socket {
       this.sock = sock;
       this.sock.on('message', (msg) => {
         msg = JSON.parse(msg);
-        console.log(msg);
         switch (msg.action) {
           case 15:
             if (msg.message.name == 'chat-message') {

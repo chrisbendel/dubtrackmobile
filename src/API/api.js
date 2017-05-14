@@ -195,6 +195,17 @@ export default class api {
   /* PRIVATE MESSAGE API CALLS */
   /******************/
 
+  listMessages = function () {
+    return fetch(base + 'message')
+      .then(res => res.json())
+      .then(json => {
+        return json.data;
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
+
   getConversation = function (id) {
     return fetch(base + 'message/' + id)
       .then(res => res.json())
@@ -204,11 +215,93 @@ export default class api {
       .catch(e => {
         console.log(e);
       });
-  }
+  };
 
-  sendPM(users, message) {
-    this.getConversation(users, function (conver) {
-      conver.send(message);
-    });
-  }
+  markAsRead = function (id) {
+    let obj = {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Origin': '',
+      }
+    };
+
+    return fetch(base + 'message/' + id + '/read', obj)
+      .then(res => res.json())
+      .then(json => {
+        console.log('json inside pm.read()');
+        console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
+
+  newPM = function (usersid) {
+    if (usersid.length > 10) {
+      console.log("conversations are up to 10 people.");
+      return;
+    }
+
+    let obj = {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Origin': '',
+      },
+      body: JSON.stringify({
+        'usersid': usersid
+      })
+    };
+
+    return fetch(base + 'message', obj)
+      .then(res => res.json())
+      .then(json => {
+        console.log('json inside pm.get()');
+        console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
+
+  checkNew = function () {
+    return fetch(base + 'message/new')
+      .then(res => res.json())
+      .then(json => {
+        return json.data;
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
+
+  send = function (id, message) {
+    let obj = {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Origin': '',
+      },
+      body: JSON.stringify({
+        'message': message,
+        'time': Date.now(),
+      })
+    };
+
+    return fetch(base + 'message/' + id, obj)
+      .then(res => res.json())
+      .then(json => {
+        console.log(json);
+        return json;
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
 }

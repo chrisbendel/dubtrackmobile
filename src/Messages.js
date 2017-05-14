@@ -27,7 +27,7 @@ export default class Messages extends Component {
   }
 
   componentWillMount() {
-    app.user.pm.listMessages()
+    app.user.listMessages()
       .then(messages => {
         this.setState({
           conversations: messages,
