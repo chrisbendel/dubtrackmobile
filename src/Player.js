@@ -70,6 +70,7 @@ export default class Player extends Component {
     // }
     let playing = this.state.playing;
     if (this.state.song) {
+      console.log(this.state.song.songInfo);
       return (
         <Footer>
           <FooterTab>

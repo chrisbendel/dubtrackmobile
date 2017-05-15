@@ -26,26 +26,8 @@ export default class PrivateMessage extends Component {
     };
     this.onSend = this.onSend.bind(this);
 
-    EventEmitter.on('pm', (pm) => {
-      let that = this;
-      app.user.getConversation(pm.messageid).then((messages) => {
-        this.state.messages = [];
-        messages.data.forEach(function (msg) {
-          let newMessage = {
-            _id: msg._id,
-            text: msg.message,
-            createdAt: msg.created,
-            user: {
-              _id: msg._user._id,
-              name: msg._user.username,
-              avatar: msg._user.profileImage.secure_url
-            }
-          };
-          that.setState(previousState => ({
-            messages: GiftedChat.prepend(previousState.messages, newMessage)
-          }));
-        });
-      });
+    EventEmitter.on('pm', () => {
+      this.getMessages()
     });
   }
 
@@ -60,6 +42,7 @@ export default class PrivateMessage extends Component {
     }).then(() => {
       app.user.getConversation(this.props.id)
         .then(messages => {
+          that.state.messages = [];
           messages.data.forEach(function (msg) {
             let newMessage = {
               _id: msg._id,
@@ -104,6 +87,10 @@ export default class PrivateMessage extends Component {
   }
 
   render() {
+    if (!this.state.messages.length) {
+      return <FullSpinner/>
+    }
+
     if (!this.state.user) {
       return <FullSpinner/>
     }
