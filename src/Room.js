@@ -18,9 +18,11 @@ import {
   Text,
   Tabs,
   Title,
+  Thumbnail,
   Body,
   Icon,
   List,
+  ListItem,
   Left,
   Right,
   TabHeading,
@@ -125,6 +127,25 @@ export default class Room extends Component {
     );
   }
 
+  //Avatar onpress can go to user profile
+  renderRow(rowData) {
+    console.log(rowData);
+    let user = rowData._user;
+    return (
+       <ListItem avatar>
+         <Left>
+           <Thumbnail source={{uri:user.profileImage.secure_url}} />
+         </Left>
+         <Body>
+         <Text>{user.username}</Text>
+         </Body>
+         <Right>
+           <Text note>{rowData.dubs} Dubs</Text>
+         </Right>
+       </ListItem>
+    );
+  }
+
   render() {
     if (!this.state.room) {
       return <FullSpinner/>
@@ -157,6 +178,11 @@ export default class Room extends Component {
                 user={{_id: 1}}
               />
             }
+          </Tab>
+          <Tab heading={<TabHeading><Icon name="ios-people"/><Text> Users</Text></TabHeading>}>
+            <List
+              dataArray={this.state.users}
+              renderRow={this.renderRow.bind(this)}/>
           </Tab>
           <Tab heading={<TabHeading><Icon name="ios-list"/><Text> Playlists</Text></TabHeading>}>
             <Text>Queue stuff</Text>
