@@ -20,7 +20,30 @@ export default class Player extends Component {
   constructor(props) {
     super(props);
 
-    let socket = new Socket();
+    let socket;
+
+    AsyncStorage.getItem('user').then((user) => {
+      user = JSON.parse(user);
+      socket = new Socket(user._id);
+
+      EventEmitter.on('connectUser', (id) => {
+        socket.connectUser(id);
+      });
+
+      EventEmitter.on('userAuth', (user) => {
+        this.setState({user: user});
+      });
+
+      EventEmitter.on('room', (room) => {
+        socket.join(room._id);
+        if (room.currentSong) {
+          this.setState({playing: true});
+          this.getSongTime(room);
+        } else {
+          this.setState({playing: false});
+        }
+      });
+    });
 
     this.state = {
       room: null,
@@ -28,23 +51,7 @@ export default class Player extends Component {
       user: null,
     };
 
-    EventEmitter.on('connectUser', (id) => {
-      socket.connectUser(id);
-    });
 
-    EventEmitter.on('userAuth', (user) => {
-      this.setState({user: user});
-    });
-
-    EventEmitter.on('room', (room) => {
-      socket.join(room._id);
-      if (room.currentSong) {
-        this.setState({playing: true});
-        this.getSongTime(room);
-      } else {
-        this.setState({playing: false});
-      }
-    });
   }
 
   getSongTime(room) {

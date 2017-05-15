@@ -29,6 +29,7 @@ export default class app extends Component {
     this.state = {
       song: null
     };
+    app.user.checkNew();
     // app.user.login('dubtrackmobile', 'insecure');
   }
 
