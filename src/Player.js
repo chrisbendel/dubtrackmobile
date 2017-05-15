@@ -8,6 +8,9 @@ import {
   Icon,
   Text
 } from 'native-base';
+import {
+  AsyncStorage
+} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import YouTube from 'react-native-youtube'
 import app from './app';
@@ -49,7 +52,6 @@ export default class Player extends Component {
     //     </FooterTab>
     //   </Footer>);
     // }
-    console.log(this.state.song);
     let playing = this.state.playing;
     if (this.state.song) {
       return (

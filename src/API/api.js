@@ -23,6 +23,7 @@ export default class api {
     return fetch(base + 'auth/logout')
       .then(() => {
         AsyncStorage.removeItem('user').then(() => {
+          EventEmitter.emit('setSocketUser', null);
           console.log('Logged out');
         });
       })
@@ -47,13 +48,18 @@ export default class api {
       .then(res => {
         if (res.code == 200) {
           return this.getUserInfo(username).then(user => {
+            EventEmitter.emit('setSocketUser', user._id);
             AsyncStorage.setItem('user', JSON.stringify(user)).then(() => {
               console.log('Logged in');
             });
           });
         } else {
           AsyncStorage.removeItem('user').then(() => {
-            EventEmitter.emit('loginError', res.data.details.message);
+            if (res.data.details.message.message) {
+              EventEmitter.emit('loginError', res.data.details.message.message);
+            } else {
+              EventEmitter.emit('loginError', res.data.details.message);
+            }
           });
         }
       })
@@ -171,13 +177,7 @@ export default class api {
         'Origin': '',
       },
     };
-    return fetch(base + 'room/' + room + '/users', obj)
-      .then(() => {
-        console.log('left room');
-      })
-      .catch(e => {
-        console.log(e);
-      });
+    return fetch(base + 'room/' + room + '/users', obj);
   };
 
   currentSong = function(id) {
@@ -227,16 +227,7 @@ export default class api {
       }
     };
 
-    return fetch(base + 'message/' + id + '/read', obj)
-      .then(res => res.json())
-      .then(json => {
-        console.log('json inside pm.read()');
-        console.log(json);
-        return json;
-      })
-      .catch(e => {
-        console.log(e);
-      });
+    return fetch(base + 'message/' + id + '/read', obj);
   };
 
   newPM = function (usersid) {
@@ -273,7 +264,6 @@ export default class api {
     return fetch(base + 'message/new')
       .then(res => res.json())
       .then(json => {
-        console.log(json.data);
         return json.data;
       })
       .catch(e => {
@@ -281,7 +271,7 @@ export default class api {
       });
   };
 
-  send = function (id, message) {
+  sendPM = function (id, message) {
     let obj = {
       method: 'POST',
       headers: {
@@ -298,7 +288,6 @@ export default class api {
     return fetch(base + 'message/' + id, obj)
       .then(res => res.json())
       .then(json => {
-        console.log(json);
         return json;
       })
       .catch(e => {

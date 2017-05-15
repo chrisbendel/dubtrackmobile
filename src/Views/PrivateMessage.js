@@ -15,19 +15,24 @@ import {
 
 import app from '../app';
 import {GiftedChat, Bubble} from 'react-native-gifted-chat';
+import {Actions} from 'react-native-router-flux';
 import FullSpinner from './FullSpinnerView';
 
 export default class PrivateMessage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      messages: []
+      messages: [],
     };
-    // this.onSend = this.onSend.bind(this);
+    this.onSend = this.onSend.bind(this);
 
-    EventEmitter.on('pm', (pm) => {
-      console.log(pm);
+    EventEmitter.on('pm', () => {
+      Actions.refresh();
     });
+  }
+
+  componentWillMount() {
+    this.getMessages();
   }
 
   getMessages() {
@@ -35,10 +40,9 @@ export default class PrivateMessage extends Component {
     AsyncStorage.getItem('user').then((user) => {
       this.setState({user: JSON.parse(user)});
     }).then(() => {
-      app.user.getConversation(this.props.data._id)
+      app.user.getConversation(this.props.id)
         .then(messages => {
           messages.data.forEach(function (msg) {
-            console.log(msg);
             let newMessage = {
               _id: msg._id,
               text: msg.message,
@@ -50,21 +54,15 @@ export default class PrivateMessage extends Component {
               }
             };
             that.setState(previousState => ({
-              messages: GiftedChat.append(previousState.messages, newMessage)
+              messages: GiftedChat.prepend(previousState.messages, newMessage)
             }));
           });
         })
     });
   }
 
-  componentWillMount() {
-    console.log(this.props.data);
-    this.getMessages();
-  }
-
   onSend(msg) {
-    console.log(msg);
-    app.user.pm.send(this.props.data._id, msg[0].text);
+    app.user.sendPM(this.props.id, msg[0].text);
   }
 
   renderBubble(props) {
@@ -100,9 +98,10 @@ export default class PrivateMessage extends Component {
           renderBubble={this.renderBubble}
           onSend={this.onSend.bind(this)}
           user={{
-            _id: this.state.user._id
-          }}
-        />
+            _id: this.state.user._id,
+            name: this.state.user.username,
+            avatar: this.state.user.profileImage.secure_url
+          }}/>
       </Container>
     );
   }

@@ -39,13 +39,14 @@ export default class Messages extends Component {
     console.log(item);
     return (
       <ListItem thumbnail button onPress={() => {
-        Actions.pm({data: item, title: item.usersid[0].username});
+        app.user.markAsRead(item._id);
+        Actions.pm({id: item._id, title: item.usersid[0].username});
       }}>
         <Left>
           <Thumbnail size={60} source={{uri: item.usersid[0].profileImage.secure_url}}/>
         </Left>
         <Body>
-        <Text style={{fontWeight: 'bold', fontSize:16}}>{item.usersid[0].username}</Text>
+        <Text style={{fontWeight: 'bold', fontSize: 16}}>{item.usersid[0].username}</Text>
         <Text note>{item.latest_message_str}</Text>
         </Body>
       </ListItem>

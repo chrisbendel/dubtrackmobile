@@ -116,7 +116,6 @@ export default class Room extends Component {
   }
 
   render() {
-    console.log(this.state.room);
     if (!this.state.room) {
       return <FullSpinner/>
     }

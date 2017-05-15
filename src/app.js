@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import EventEmitter from "react-native-eventemitter";
 
 import {
   Text,
@@ -33,6 +34,14 @@ export default class app extends Component {
     this.state = {
       song: null
     };
+
+    AsyncStorage.getItem('user').then((user) => {
+      if (user) {
+        EventEmitter.emit('setSocketUser', user._id);
+      } else {
+        EventEmitter.emit('setSocketUser', null);
+      }
+    });
 
     // app.user.login('dubtrackmobile', 'insecure');
   }
