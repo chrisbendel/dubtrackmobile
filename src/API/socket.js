@@ -35,7 +35,6 @@ export default class Socket {
           switch (msg.action) {
             case 15:
               console.log(msg);
-
               if (msg.message.name == 'chat-message') {
                 msg = JSON.parse(msg.message.data);
                 EventEmitter.emit('chat', msg);
@@ -44,10 +43,11 @@ export default class Socket {
                 msg = JSON.parse(msg.message.data);
                 EventEmitter.emit('pm', msg);
               }
-              // if (msg.message.name == 'room_playlist-update') {
-              //   msg = JSON.parse(msg.message.data);
-              //   console.log(msg);
-              // }
+              if (msg.message.name == 'room_playlist-update') {
+                msg = JSON.parse(msg.message.data);
+                EventEmitter.emit('newSong', msg);
+                console.log(msg);
+              }
               break;
             default:
               console.log('fallthrough', msg);

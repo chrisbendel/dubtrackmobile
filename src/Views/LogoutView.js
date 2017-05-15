@@ -35,12 +35,13 @@ export default class Logout extends Component {
   }
 }
 
-const {height: screenHeight} = Dimensions.get('window');
+let {height, width} = Dimensions.get('window');
 const styles = {
   Body: {
     flex: 1,
-    height: screenHeight,
-    justifyContent: 'center'
+    height: height,
+    justifyContent: 'center',
+    // alignItems: 'center'
   },
 
   Logout: {

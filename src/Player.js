@@ -8,9 +8,7 @@ import {
   Icon,
   Text
 } from 'native-base';
-import {
-  AsyncStorage
-} from 'react-native';
+import {AsyncStorage, View} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import YouTube from 'react-native-youtube'
 import app from './app';
@@ -34,13 +32,18 @@ export default class Player extends Component {
         this.setState({user: user});
       });
 
+      EventEmitter.on('newSong', (song) => {
+        console.log(song);
+        this.setState({song: song, playing: true});
+      });
+
       EventEmitter.on('room', (room) => {
         socket.join(room._id);
         if (room.currentSong) {
-          this.setState({playing: true});
+          this.setState({playing: true, room: room});
           this.getSongTime(room);
         } else {
-          this.setState({playing: false});
+          this.setState({playing: false, room: room});
         }
       });
     });
@@ -48,10 +51,7 @@ export default class Player extends Component {
     this.state = {
       room: null,
       song: null,
-      user: null,
     };
-
-
   }
 
   getSongTime(room) {
@@ -61,23 +61,17 @@ export default class Player extends Component {
   }
 
   render() {
-    //For development so the sound doesn't blast me whenever i open a room
-    // if (true) {
-    //   return (<Footer>
-    //     <FooterTab>
-    //     </FooterTab>
-    //   </Footer>);
-    // }
     let playing = this.state.playing;
-    if (this.state.song) {
-      console.log(this.state.song.songInfo);
+    let song = this.state.song;
+    let room = this.state.room;
+    if (room) {
       return (
-        <Footer>
-          <FooterTab>
+        <View style={styles.playerContainer}>
+          {song ?
             <YouTube
               ref="youtubePlayer"
-              videoId={this.state.song.songInfo.fkid}
-              play={this.state.playing}
+              videoId={song.songInfo.fkid}
+              play={playing}
               hidden={false}
               playsInline={true}
               showinfo={false}
@@ -86,31 +80,53 @@ export default class Player extends Component {
 
               onChangeState={(e) => {
                 console.log(e);
-                this.refs.youtubePlayer.seekTo(this.state.song.startTime);
+                this.refs.youtubePlayer.seekTo(song.startTime);
               }}
 
               onReady={(e) => {
-                this.refs.youtubePlayer.seekTo(this.state.song.startTime);
+                this.refs.youtubePlayer.seekTo(song.startTime);
                 this.setState({isReady: true})
               }}
 
               style={styles.player}/>
-
-            <Button>
-              <Text>{this.state.song.songInfo.name}</Text>
-            </Button>
-
-            <Button onPress={() => {
-              if (playing) {
-                this.setState({playing: false});
-              } else {
-                this.getSongTime(this.state.room);
-              }
-            }}>
-              <Icon name={playing ? "ios-volume-up" : "ios-volume-off"}/>
-            </Button>
-          </FooterTab>
-        </Footer>
+            : null }
+          <View style={styles.info}>
+            <Text style={{fontSize: 11, fontWeight: 'bold'}} numberOfLines={1}>{room.name}</Text>
+          </View>
+          {song ?
+            <View style={styles.info}>
+              <Text style={{fontSize: 11}} numberOfLines={1}>{song.songInfo.name}</Text>
+            </View> : null
+          }
+          <Footer style={{borderTopWidth: 0}}>
+            <FooterTab>
+              <Button onPress={() => {
+                //updub the song
+              }}>
+                <Icon name="ios-arrow-up"/>
+              </Button>
+              <Button onPress={() => {
+                //downdub song
+              }}>
+                <Icon name="ios-arrow-down"/>
+              </Button>
+              <Button onPress={() => {
+                Actions.room({title: room.name});
+              }}>
+                <Icon name="ios-chatbubbles"/>
+              </Button>
+              <Button onPress={() => {
+                if (playing) {
+                  this.setState({playing: false});
+                } else {
+                  this.getSongTime(room);
+                }
+              }}>
+                <Icon name={playing ? "ios-volume-up" : "ios-volume-off"}/>
+              </Button>
+            </FooterTab>
+          </Footer>
+        </View>
       );
     } else {
       return null;
@@ -118,6 +134,15 @@ export default class Player extends Component {
   }
 }
 const styles = {
+  playerContainer: {
+    backgroundColor: '#f8f8f8',
+  },
+  info: {
+    alignItems: 'center',
+  },
+  controls: {
+    flexDirection: 'row',
+  },
   player: {
     alignSelf: 'stretch',
     height: 1,

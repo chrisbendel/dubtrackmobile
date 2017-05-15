@@ -33,39 +33,49 @@ export default class Room extends Component {
 
     this.state = {
       messages: [],
+      mounted: false,
     };
 
     EventEmitter.on('chat', (msg) => {
-      console.log('chat', msg);
-      app.user.getUserInfo(msg.user._id)
-        .then(user => {
-          console.log('user', user);
-          console.log('msg', msg);
-          //TODO: check if images have a unique field
-          //TODO: If they do, we can put images in the gifted chat message object
-          let newMessage = {
-            _id: msg.chatid,
-            text: msg.message,
-            createdAt: Date.now(),
-            user: {
-              _id: msg.user._id,
-              name: user.username,
-              avatar: user.profileImage.secure_url
-            }
-          };
-          this.setState(previousState => ({
-            messages: GiftedChat.append(previousState.messages, newMessage)
-          }));
-        })
-        .catch(e => {
-          console.log(e);
-        });
+      if (this.state.mounted) {
+        app.user.getUserInfo(msg.user._id)
+          .then(user => {
+            let newMessage = {
+              _id: msg.chatid,
+              text: msg.message,
+              createdAt: Date.now(),
+              user: {
+                _id: msg.user._id,
+                name: user.username,
+                avatar: user.profileImage.secure_url
+              }
+            };
+            this.setState(previousState => ({
+              messages: GiftedChat.append(previousState.messages, newMessage)
+            }));
+          })
+          .catch(e => {
+            console.log(e);
+          });
+      } else {
+        console.log('got chat but not mounted');
+      }
     });
   }
 
   componentWillMount() {
+    // AsyncStorage.getItem('chats').then((chats) => {
+    //   this.setState({messages: JSON.parse(chats)});
+    //   console.log(JSON.parse(chats));
+    // });
+    this.setState({mounted: true});
     this.setRoom(this.props.id);
     app.user.joinRoom(this.props.id);
+  }
+
+  componentWillUnmount() {
+    this.setState({mounted: false});
+    // AsyncStorage.setItem('chats', JSON.stringify(this.state.messages));
   }
 
   setRoom(room) {
@@ -110,7 +120,7 @@ export default class Room extends Component {
   renderInputToolbar() {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Text >Login or Signup to chat</Text>
+        <Text>Login or Signup to chat</Text>
       </View>
     );
   }
@@ -121,8 +131,7 @@ export default class Room extends Component {
     }
 
     return (
-      <Container style={{flex: 1}}>
-        <Header hasTabs/>
+      <Container>
         <Tabs>
           <Tab heading={<TabHeading><Icon name="ios-chatbubbles"/><Text> Chat</Text></TabHeading>}>
             {this.state.user ?
@@ -132,6 +141,7 @@ export default class Room extends Component {
                 messages={this.state.messages}
                 renderBubble={this.renderBubble}
                 onSend={this.onSend.bind(this)}
+                bottomOffset={60}
                 user={{
                   _id: this.state.user._id,
                   name: this.state.user.username,
@@ -139,10 +149,7 @@ export default class Room extends Component {
                 }}
               />
             :
-              //Non logged in user should not be able to send chats, so we have to disable the inputbox
-              //Could render an empty input box or helptext telling user to sign in
-              //Check methods renderComposer, renderInputToolbar, renderActions at
-              //https://github.com/FaridSafi/react-native-gifted-chat
+              //For non logged in users- we don't render the input box for chat
               <GiftedChat
                 messages={this.state.messages}
                 renderBubble={this.renderBubble}

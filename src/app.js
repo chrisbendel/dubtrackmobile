@@ -47,19 +47,19 @@ export default class app extends Component {
 
   render() {
     return (
-      <Container>
-        <Router>
+      <Container style={{marginTop: 22}}>
+        <Nav/>
+        <Router hideNavBar={true}>
           <Scene key="root">
-            <Scene key="lobby" component={Lobby} title="Lobby"/>
-            <Scene key="room" backTitle="Lobby" component={Room} title="Room"/>
+            <Scene key="lobby" renderBackButton={() => (null)} component={Lobby} title="Lobby"/>
+            <Scene key="room" renderBackButton={() => (null)} component={Room} title="Room"/>
             <Scene key="messages" component={Messages} title="Messages"/>
             <Scene key="pm" component={PM} title="pm"/>
-            <Scene key="auth" backTitle='Lobby' onBack={this.refreshOnBack} component={Auth} title=""/>
+            <Scene key="auth" renderBackButton={() => (null)} component={Auth} title=""/>
             <Scene key="profile" component={Profile} title="Profile"/>
           </Scene>
         </Router>
         <Player/>
-        <Nav/>
       </Container>
     );
   }

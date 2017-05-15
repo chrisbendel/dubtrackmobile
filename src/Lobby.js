@@ -5,7 +5,8 @@ import {
   StyleSheet,
   Text,
   Dimensions,
-  RefreshControl
+  RefreshControl,
+  WebView
 } from 'react-native';
 
 import app from './app';
@@ -25,6 +26,7 @@ import {
 } from 'native-base';
 
 let {height, width} = Dimensions.get('window');
+const uri = 'https://res.cloudinary.com/hhberclba/image/upload/c_fill,fl_lossy,f_auto,w_320,h_180/default.png';
 
 export default class Lobby extends Component {
   constructor(props) {
@@ -47,6 +49,7 @@ export default class Lobby extends Component {
   }
 
   listRooms(room = null) {
+    this.setState({refreshing: true});
     if (room) {
       app.user.filterRooms(room)
         .then(rooms => {
@@ -58,6 +61,7 @@ export default class Lobby extends Component {
     } else {
       app.user.listRooms()
         .then(rooms => {
+          this.clearSearch();
           this.setState({
             dataSource: rooms,
             refreshing: false
@@ -67,8 +71,8 @@ export default class Lobby extends Component {
   }
 
   _onRefresh() {
-    this.setState({refreshing: true});
     this.listRooms();
+    this.clearSearch();
   }
 
   pressRow(rowData) {
@@ -78,8 +82,6 @@ export default class Lobby extends Component {
   }
 
   renderRow(rowData) {
-    let uri = 'https://res.cloudinary.com/hhberclba/image/upload/c_fill,fl_lossy,f_auto,w_320,h_180/default.png';
-
     return (
       <ListItem onPress={() => this.pressRow(rowData)}>
         <Thumbnail size={80} source={{uri: rowData.background ? rowData.background.secure_url : uri}}/>
@@ -88,18 +90,23 @@ export default class Lobby extends Component {
         <Text style={styles.rowInfo}>{rowData.activeUsers} current users</Text>
         <Text style={styles.rowInfo}>
           {rowData.currentSong ? rowData.currentSong.name : 'No one is playing right now!'}
-          </Text>
+        </Text>
         </Body>
       </ListItem>
     );
   }
 
+  clearSearch() {
+    this.refs.search._root.setNativeProps({text: ''});
+    this.query = '';
+  }
+
   render() {
     return (
-      <Container style={{marginTop: 54}}>
+      <Container>
         <Header searchBar rounded>
           <Item>
-            <Icon name="search"/>
+            <Icon onPress={this.clearSearch.bind(this)} name="ios-close"/>
             <Input
               ref='search'
               placeholder='Search rooms'
@@ -136,6 +143,12 @@ export default class Lobby extends Component {
 }
 
 const styles = StyleSheet.create({
+  emptyState: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   rowTitle: {
     color: '#333333',
     fontSize: 16,

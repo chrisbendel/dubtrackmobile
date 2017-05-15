@@ -3,7 +3,6 @@ import {AsyncStorage} from 'react-native';
 import User from './user/user';
 import Room from './room/room';
 import roles from './user/roles';
-import PM from './message/privatemessages';
 import socket from './socket';
 const base = 'https://api.dubtrack.fm/';
 
@@ -11,7 +10,6 @@ export default class api {
   constructor() {
 
     this.room = null;
-    this.pm = new PM();
     this.loggedIn = false;
   }
 

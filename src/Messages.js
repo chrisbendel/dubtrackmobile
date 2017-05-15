@@ -36,6 +36,7 @@ export default class Messages extends Component {
   }
 
   renderRow(item) {
+    console.log(item);
     return (
       <ListItem thumbnail button onPress={() => {
         app.user.markAsRead(item._id);
@@ -55,7 +56,6 @@ export default class Messages extends Component {
   render() {
     return (
       <Container>
-        <Header/>
         <Content>
           <List
             dataArray={this.state.conversations}

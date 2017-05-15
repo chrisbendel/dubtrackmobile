@@ -23,16 +23,26 @@ export default class PrivateMessage extends Component {
     super(props);
     this.state = {
       messages: [],
+      mounted: false,
     };
     this.onSend = this.onSend.bind(this);
 
     EventEmitter.on('pm', () => {
-      this.getMessages()
+      if (this.state.mounted) {
+        this.getMessages();
+      } else {
+        console.log('got message but unmounted');
+      }
     });
   }
 
   componentWillMount() {
     this.getMessages();
+    this.setState({mounted: true});
+  }
+
+  componentWillUnmount() {
+    this.setState({mounted: false});
   }
 
   getMessages() {
@@ -97,7 +107,6 @@ export default class PrivateMessage extends Component {
 
     return (
       <Container style={{flex: 1}}>
-        <Header/>
         <GiftedChat
           messages={this.state.messages}
           renderBubble={this.renderBubble}

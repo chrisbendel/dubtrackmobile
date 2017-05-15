@@ -13,6 +13,7 @@ import {
   Content,
   FooterTab,
   Button,
+  Badge,
   Icon,
   Fab,
 } from 'native-base';
@@ -37,6 +38,10 @@ export default class Room extends Component {
     EventEmitter.on('auth', () => {
       this.user();
     });
+
+    EventEmitter.on('pm', () => {
+      this.checkNewPms();
+    })
   }
 
   user() {
@@ -64,17 +69,16 @@ export default class Room extends Component {
             Actions.lobby();
           }}>
             <Icon name="ios-menu"/>
+            <Text>Lobby</Text>
           </Button>
-          <Button onPress={() => {
-            Actions.room();
-          }}>
-            <Icon name="ios-chatbubbles"/>
-          </Button>
+
           {user ?
-            <Button onPress={() => {
+            <Button badgeValue={this.state.newMessages} onPress={() => {
+              this.setState({newMessages: 0});
               Actions.messages();
             }}>
               <Icon name="ios-mail"/>
+              <Text>Messages</Text>
             </Button>
             :
             null
@@ -84,6 +88,7 @@ export default class Room extends Component {
             Actions.auth({title: user ? "Logout" : "Login or Signup"});
           }}>
             <Icon name={user ? "ios-log-out" : "ios-log-in"}/>
+            <Text>{user ? "Logout" : "Login"}</Text>
           </Button>
         </FooterTab>
       </Footer>
