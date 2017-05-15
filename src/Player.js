@@ -25,7 +25,16 @@ export default class Player extends Component {
     this.state = {
       room: null,
       song: null,
+      user: null,
     };
+
+    EventEmitter.on('connectUser', (id) => {
+      socket.connectUser(id);
+    });
+
+    EventEmitter.on('userAuth', (user) => {
+      this.setState({user: user});
+    });
 
     EventEmitter.on('room', (room) => {
       socket.join(room._id);

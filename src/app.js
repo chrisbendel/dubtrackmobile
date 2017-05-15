@@ -2,16 +2,11 @@ import React, {Component} from 'react';
 import EventEmitter from "react-native-eventemitter";
 
 import {
-  Text,
   AsyncStorage
 } from 'react-native';
 
 import {
   Container,
-  Footer,
-  FooterTab,
-  Button,
-  Icon,
 } from 'native-base';
 
 import {Scene, Router, Actions} from 'react-native-router-flux';
@@ -34,16 +29,15 @@ export default class app extends Component {
     this.state = {
       song: null
     };
+    // app.user.login('dubtrackmobile', 'insecure');
+  }
 
+  componentWillMount() {
     AsyncStorage.getItem('user').then((user) => {
       if (user) {
-        EventEmitter.emit('setSocketUser', user._id);
-      } else {
-        EventEmitter.emit('setSocketUser', null);
+        EventEmitter.emit('connectUser', user._id);
       }
     });
-
-    // app.user.login('dubtrackmobile', 'insecure');
   }
 
   refreshOnBack() {

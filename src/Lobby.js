@@ -72,6 +72,7 @@ export default class Lobby extends Component {
   }
 
   pressRow(rowData) {
+    app.user.joinRoom(rowData._id);
     EventEmitter.emit('room', rowData);
     Actions.room({id: rowData._id, title: rowData.name});
   }

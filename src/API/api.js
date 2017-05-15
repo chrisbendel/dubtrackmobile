@@ -4,7 +4,7 @@ import User from './user/user';
 import Room from './room/room';
 import roles from './user/roles';
 import PM from './message/privatemessages';
-
+import socket from './socket';
 const base = 'https://api.dubtrack.fm/';
 
 export default class api {
@@ -19,11 +19,11 @@ export default class api {
   /* USER API CALLS */
   /******************/
 
-  logout = function() {
+  logout = function () {
     return fetch(base + 'auth/logout')
       .then(() => {
         AsyncStorage.removeItem('user').then(() => {
-          EventEmitter.emit('setSocketUser', null);
+          EventEmitter.emit('userAuth', null);
           console.log('Logged out');
         });
       })
@@ -48,7 +48,7 @@ export default class api {
       .then(res => {
         if (res.code == 200) {
           return this.getUserInfo(username).then(user => {
-            EventEmitter.emit('setSocketUser', user._id);
+            EventEmitter.emit('userAuth', user._id);
             AsyncStorage.setItem('user', JSON.stringify(user)).then(() => {
               console.log('Logged in');
             });
@@ -151,36 +151,18 @@ export default class api {
   };
 
   joinRoom = function (id) {
-    return fetch('https://api.dubtrack.fm/auth/token')
-      .then(() => {
-        let obj = {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Origin': '',
-          },
-        };
-        return fetch('https://api.dubtrack.fm/room/' + id + '/users', obj);
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  };
-
-  leaveRoom = function (room) {
     let obj = {
-      method: 'DELETE',
+      method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
         'Origin': '',
       },
     };
-    return fetch(base + 'room/' + room + '/users', obj);
+    return fetch('https://api.dubtrack.fm/room/' + id + '/users', obj);
   };
 
-  currentSong = function(id) {
+  currentSong = function (id) {
     return fetch('https://api.dubtrack.fm/room/' + id + '/playlist/active')
       .then(res => res.json())
       .then(json => {
