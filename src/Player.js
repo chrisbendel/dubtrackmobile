@@ -136,6 +136,7 @@ export default class Player extends Component {
 const styles = {
   playerContainer: {
     backgroundColor: '#f8f8f8',
+    height: 80,
   },
   info: {
     alignItems: 'center',

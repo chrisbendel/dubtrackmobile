@@ -10,7 +10,7 @@ import {
 import {GiftedChat, Bubble} from 'react-native-gifted-chat';
 import FullSpinner from './Views/FullSpinnerView';
 import app from './app';
-
+import Player from './Player';
 import {
   Container,
   Tab,
@@ -132,17 +132,17 @@ export default class Room extends Component {
     console.log(rowData);
     let user = rowData._user;
     return (
-       <ListItem avatar>
-         <Left>
-           <Thumbnail source={{uri:user.profileImage.secure_url}} />
-         </Left>
-         <Body>
-         <Text>{user.username}</Text>
-         </Body>
-         <Right>
-           <Text note>{rowData.dubs} Dubs</Text>
-         </Right>
-       </ListItem>
+      <ListItem avatar>
+        <Left>
+          <Thumbnail source={{uri: user.profileImage.secure_url}}/>
+        </Left>
+        <Body>
+        <Text>{user.username}</Text>
+        </Body>
+        <Right>
+          <Text note>{rowData.dubs} Dubs</Text>
+        </Right>
+      </ListItem>
     );
   }
 
@@ -152,43 +152,44 @@ export default class Room extends Component {
     }
 
     return (
-      <Container>
-        <Tabs>
-          <Tab heading={<TabHeading><Icon name="ios-chatbubbles"/><Text> Chat</Text></TabHeading>}>
-            {this.state.user ?
-              <GiftedChat
-                //TODO: implement onPressAvatar to go to profile/room moderate
-                //TODO: reference: https://github.com/FaridSafi/react-native-gifted-chat
-                messages={this.state.messages}
-                renderBubble={this.renderBubble}
-                onSend={this.onSend.bind(this)}
-                bottomOffset={60}
-                user={{
-                  _id: this.state.user._id,
-                  name: this.state.user.username,
-                  avatar: this.state.user.profileImage.secure_url
-                }}
-              />
+      <View>
+        <Player/>
+      <Tabs>
+        <Tab heading={<TabHeading><Icon name="ios-chatbubbles"/><Text> Chat</Text></TabHeading>}>
+          {this.state.user ?
+            <GiftedChat
+              //TODO: implement onPressAvatar to go to profile/room moderate
+              //TODO: reference: https://github.com/FaridSafi/react-native-gifted-chat
+              messages={this.state.messages}
+              renderBubble={this.renderBubble}
+              onSend={this.onSend.bind(this)}
+              bottomOffset={60}
+              user={{
+                _id: this.state.user._id,
+                name: this.state.user.username,
+                avatar: this.state.user.profileImage.secure_url
+              }}
+            />
             :
-              //For non logged in users- we don't render the input box for chat
-              <GiftedChat
-                messages={this.state.messages}
-                renderBubble={this.renderBubble}
-                renderInputToolbar={this.renderInputToolbar}
-                user={{_id: 1}}
-              />
-            }
-          </Tab>
-          <Tab heading={<TabHeading><Icon name="ios-people"/><Text> Users</Text></TabHeading>}>
-            <List
-              dataArray={this.state.users}
-              renderRow={this.renderRow.bind(this)}/>
-          </Tab>
-          <Tab heading={<TabHeading><Icon name="ios-list"/><Text> Playlists</Text></TabHeading>}>
-            <Text>Queue stuff</Text>
-          </Tab>
-        </Tabs>
-      </Container>
+            //For non logged in users- we don't render the input box for chat
+            <GiftedChat
+              messages={this.state.messages}
+              renderBubble={this.renderBubble}
+              renderInputToolbar={this.renderInputToolbar}
+              user={{_id: 1}}
+            />
+          }
+        </Tab>
+        <Tab heading={<TabHeading><Icon name="ios-people"/><Text> Users</Text></TabHeading>}>
+          <List
+            dataArray={this.state.users}
+            renderRow={this.renderRow.bind(this)}/>
+        </Tab>
+        <Tab heading={<TabHeading><Icon name="ios-list"/><Text> Playlists</Text></TabHeading>}>
+          <Text>Queue stuff</Text>
+        </Tab>
+      </Tabs>
+      </View>
     );
   }
 }
