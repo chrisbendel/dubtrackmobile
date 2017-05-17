@@ -32,21 +32,24 @@ export default class Socket {
         this.sock.send(JSON.stringify({action: 10, channel: 'user:' + user}));
         this.sock.on('message', (msg) => {
           msg = JSON.parse(msg);
+          console.log(msg);
           switch (msg.action) {
             case 15:
-              console.log(msg);
-              if (msg.message.name == 'chat-message') {
-                msg = JSON.parse(msg.message.data);
-                EventEmitter.emit('chat', msg);
-              }
-              if (msg.message.name == 'new-message') {
-                msg = JSON.parse(msg.message.data);
-                EventEmitter.emit('pm', msg);
-              }
-              if (msg.message.name == 'room_playlist-update') {
-                msg = JSON.parse(msg.message.data);
-                EventEmitter.emit('newSong', msg);
-                console.log(msg);
+              switch (msg.message.name) {
+                case 'chat-message':
+                  msg = JSON.parse(msg.message.data);
+                  EventEmitter.emit('chat', msg);
+                  break;
+                case 'new-message':
+                  msg = JSON.parse(msg.message.data);
+                  EventEmitter.emit('pm', msg);
+                  break;
+                case 'room_playlist-update':
+                  msg = JSON.parse(msg.message.data);
+                  EventEmitter.emit('newSong', msg);
+                  break;
+                default:
+                  console.log(msg.message.name);
               }
               break;
             default:
@@ -66,6 +69,6 @@ export default class Socket {
     // }
     // this.sock.send(JSON.stringify({action: 10, channel: 'user:5876ef8384d754ae0091dedb'}));
     this.sock.send(JSON.stringify({action: 10, channel: 'room:' + id}));
-    this.sock.send(JSON.stringify({action: 14, channel:'room:' + id, presence: {action: 0, data: {}}}));
+    this.sock.send(JSON.stringify({action: 14, channel: 'room:' + id, presence: {action: 0, data: {}}}));
   }
 }

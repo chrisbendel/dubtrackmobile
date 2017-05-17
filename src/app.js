@@ -23,10 +23,17 @@ export default class app extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      song: null
+      song: null,
+      panelOpen: false,
     };
     app.user.checkNew();
+
     // app.user.login('dubtrackmobile', 'insecure');
+  }
+
+
+  componentDidMount() {
+    console.log(this.panel);
   }
 
   componentWillMount() {
@@ -37,41 +44,55 @@ export default class app extends Component {
     });
   }
 
-  refreshOnBack() {
-    Actions.lobby({type: 'reset'});
+  togglePanel() {
+    if (this.state.panelOpen) {
+      this.panel.collapsePanel();
+    } else {
+      this.panel.reloadHeight(height - 54);
+    }
   }
 
-  getContainerHeight = (height) => {
-    this.setState({
-      containerHeight: height
-    });
-  };
-
   render() {
+    let that = this;
+    let panelOpen = this.state.panelOpen;
+
     return (
       <Container style={{marginTop: 22}}>
         <Nav/>
         <Router hideNavBar={true}>
           <Scene key="root">
-            <Scene key="lobby" renderBackButton={() => (null)} component={Lobby} title="Lobby"/>
-            {/*<Scene key="room" renderBackButton={() => (null)} component={Room} title="Room"/>*/}
+            <Scene key="lobby" togglePanel={this.togglePanel.bind(this)} renderBackButton={() => (null)}
+                   component={Lobby} title="Lobby"/>
             <Scene key="messages" component={Messages} title="Messages"/>
             <Scene key="pm" component={PM} title="pm"/>
             <Scene key="auth" renderBackButton={() => (null)} component={Auth} title=""/>
             <Scene key="profile" component={Profile} title="Profile"/>
           </Scene>
         </Router>
+        <View style={panelOpen ? styles.panelOpen : styles.panelClosed}>
         <SlidingUpPanel
-          containerMaximumHeight={height - 54}
+          ref={(panel) => {
+            that.panel = panel;
+          }}
+          containerMaximumHeight={height - 76}
           handlerHeight={80}
           allowStayMiddle={false}
-          handlerDefaultView={Player}>
+          handlerDefaultView={<Player/>}>
           <View style={{flexDirection: 'row'}}>
             <Room/>
           </View>
         </SlidingUpPanel>
-
+        </View>
       </Container>
     );
   }
 }
+
+const styles = {
+  panelOpen: {
+    marginTop: 0,
+  },
+  panelClosed: {
+    marginTop: 80,
+  }
+};

@@ -50,7 +50,7 @@ export default class Player extends Component {
 
     this.state = {
       room: null,
-      song: null,
+      song: null
     };
   }
 
@@ -129,7 +129,11 @@ export default class Player extends Component {
         </View>
       );
     } else {
-      return null;
+      return (
+        <View style={styles.info}>
+          <Text>Join a room to start listening!</Text>
+        </View>
+      );
     }
   }
 }

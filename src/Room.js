@@ -36,8 +36,8 @@ export default class Room extends Component {
     this.state = {
       messages: [],
       mounted: false,
+      room: null
     };
-
     EventEmitter.on('chat', (msg) => {
       if (this.state.mounted) {
         app.user.getUserInfo(msg.user._id)
@@ -85,13 +85,16 @@ export default class Room extends Component {
     AsyncStorage.getItem('user').then((user) => {
       this.setState({user: JSON.parse(user)});
     }).then(() => {
-      app.user.getRoomInfo(room).then((room) => {
-        this.setState({room: room});
-      }).then(() => {
-        app.user.getRoomUsers(room).then((users) => {
-          this.setState({users: users});
-        });
-      })
+      if (room) {
+        app.user.getRoomInfo(room).then((room) => {
+          console.log(room);
+          this.setState({room: room});
+        }).then(() => {
+          app.user.getRoomUsers(room).then((users) => {
+            this.setState({users: users});
+          });
+        })
+      }
     });
   }
 
@@ -152,8 +155,6 @@ export default class Room extends Component {
     }
 
     return (
-      <View>
-        <Player/>
       <Tabs>
         <Tab heading={<TabHeading><Icon name="ios-chatbubbles"/><Text> Chat</Text></TabHeading>}>
           {this.state.user ?
@@ -189,7 +190,6 @@ export default class Room extends Component {
           <Text>Queue stuff</Text>
         </Tab>
       </Tabs>
-      </View>
     );
   }
 }
