@@ -61,6 +61,12 @@ export default class Lobby extends Component {
     } else {
       app.user.listRooms()
         .then(rooms => {
+          console.log(rooms);
+          rooms.forEach((room) => {
+            if (!room.background) {
+              room.background = {secure_url: uri};
+            }
+          });
           this.clearSearch();
           this.setState({
             dataSource: rooms,
@@ -85,7 +91,7 @@ export default class Lobby extends Component {
   renderRow(rowData) {
     return (
       <ListItem onPress={() => this.pressRow(rowData)}>
-        <Thumbnail size={80} source={{uri: rowData.background ? rowData.background.secure_url : uri}}/>
+        <Thumbnail size={80} source={{uri: rowData.background.secure_url}}/>
         <Body>
         <Text style={styles.rowTitle}>{rowData.name}</Text>
         <Text style={styles.rowInfo}>{rowData.activeUsers} current users</Text>
@@ -134,6 +140,7 @@ export default class Lobby extends Component {
             />
           }>
           <List
+            initialListSize={25}
             dataArray={this.state.dataSource}
             renderRow={this.renderRow.bind(this)}
           />
