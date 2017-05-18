@@ -32,7 +32,7 @@ export default class Socket {
         this.sock.send(JSON.stringify({action: 10, channel: 'user:' + user}));
         this.sock.on('message', (msg) => {
           msg = JSON.parse(msg);
-          console.log(msg);
+          // console.log(msg);
           switch (msg.action) {
             case 15:
               switch (msg.message.name) {
@@ -48,12 +48,16 @@ export default class Socket {
                   msg = JSON.parse(msg.message.data);
                   EventEmitter.emit('newSong', msg);
                   break;
+                case 'chat-skip':
+                  msg = JSON.parse(msg.message.data);
+                  EventEmitter.emit('skipSong', msg);
+                  break;
                 default:
                   console.log(msg.message.name);
               }
               break;
             default:
-              console.log('fallthrough', msg);
+              // console.log('fallthrough', msg);
           }
         })
       });
@@ -63,11 +67,12 @@ export default class Socket {
     this.sock.send(JSON.stringify({action: 10, channel: 'user:' + id}));
   }
 
+  //possibly use this to leave current room when joining a new one.
+  leave(id) {
+    this.sock.send(JSON.stringify({action: 14, channel: 'room:' + id, presence: {action: 1, data: {}}}));
+  }
+
   join(id) {
-    // if (this.user) {
-    //   this.sock.send(JSON.stringify({action: 10, channel: 'user:' + this.user}));
-    // }
-    // this.sock.send(JSON.stringify({action: 10, channel: 'user:5876ef8384d754ae0091dedb'}));
     this.sock.send(JSON.stringify({action: 10, channel: 'room:' + id}));
     this.sock.send(JSON.stringify({action: 14, channel: 'room:' + id, presence: {action: 0, data: {}}}));
   }

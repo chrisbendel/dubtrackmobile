@@ -5,6 +5,7 @@ import {
   View,
   AsyncStorage,
   AlertIOS,
+  Dimensions
 } from 'react-native';
 
 import {GiftedChat, Bubble} from 'react-native-gifted-chat';
@@ -28,7 +29,7 @@ import {
   TabHeading,
   Content,
 } from 'native-base';
-
+const {height, width} = Dimensions.get('window');
 export default class Room extends Component {
   constructor(props) {
     super(props);
@@ -38,6 +39,12 @@ export default class Room extends Component {
       mounted: false,
       room: null
     };
+
+    EventEmitter.on('roomJoin', (room) => {
+      this.setRoom(room);
+    });
+
+    //Maybe add notification sound if message contains current user's name with an @
     EventEmitter.on('chat', (msg) => {
       if (this.state.mounted) {
         app.user.getUserInfo(msg.user._id)
@@ -66,35 +73,48 @@ export default class Room extends Component {
   }
 
   componentWillMount() {
+    if (this.props.room) {
+      this.setRoom(this.props.room);
+    } else {
+      AsyncStorage.getItem('currentRoom').then((room) => {
+        console.log(room);
+        console.log(JSON.parse(room));
+        // this.setRoom(JSON.parse(room));
+      });
+    }
+    this.setState({mounted: true});
     // AsyncStorage.getItem('chats').then((chats) => {
     //   this.setState({messages: JSON.parse(chats)});
     //   console.log(JSON.parse(chats));
     // });
-    this.setState({mounted: true});
-    this.setRoom(this.props.id);
-    app.user.joinRoom(this.props.id);
   }
 
   componentWillUnmount() {
-    this.setState({mounted: false});
+    // console.log('hi');
+    // console.log(this.state.room);
+    // console.log(JSON.stringify(this.state.room));
+    // AsyncStorage.setItem('currentRoom', JSON.stringify(this.state.room))
+    // .then(() => {
+    //   this.setState({mounted: false});
+    // });
     // AsyncStorage.setItem('chats', JSON.stringify(this.state.messages));
   }
 
   setRoom(room) {
-    console.log(room);
-    AsyncStorage.getItem('user').then((user) => {
+    AsyncStorage.getItem('user')
+    .then((user) => {
       this.setState({user: JSON.parse(user)});
-    }).then(() => {
-      if (room) {
-        app.user.getRoomInfo(room).then((room) => {
-          console.log(room);
-          this.setState({room: room});
-        }).then(() => {
-          app.user.getRoomUsers(room).then((users) => {
-            this.setState({users: users});
-          });
-        })
-      }
+    })
+    .then(() => {
+      AsyncStorage.setItem('currentRoom', JSON.stringify(this.state.room))
+      .then(() => {
+        this.setState({mounted: false});
+      });
+    })
+    .then(() => {
+      app.user.getRoomUsers(room._id).then((users) => {
+        this.setState({users: users, room: room});
+      });
     });
   }
 
@@ -108,6 +128,7 @@ export default class Room extends Component {
         <Bubble {...props}/>
       );
     }
+    
     if (props.position == 'left') {
       return (
         <View>
@@ -164,7 +185,7 @@ export default class Room extends Component {
               messages={this.state.messages}
               renderBubble={this.renderBubble}
               onSend={this.onSend.bind(this)}
-              bottomOffset={60}
+              bottomOffset={80}
               user={{
                 _id: this.state.user._id,
                 name: this.state.user.username,
@@ -183,10 +204,15 @@ export default class Room extends Component {
         </Tab>
         <Tab heading={<TabHeading><Icon name="ios-people"/><Text> Users</Text></TabHeading>}>
           <List
+            enableEmptySections={true}
             dataArray={this.state.users}
             renderRow={this.renderRow.bind(this)}/>
         </Tab>
         <Tab heading={<TabHeading><Icon name="ios-list"/><Text> Playlists</Text></TabHeading>}>
+
+          <Text>Queue stuff</Text>
+        </Tab>
+        <Tab heading={<TabHeading><Icon name="ios-albums"/><Text> Queue</Text></TabHeading>}>
           <Text>Queue stuff</Text>
         </Tab>
       </Tabs>

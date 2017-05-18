@@ -4,13 +4,14 @@ import {
   Container,
   Footer,
   FooterTab,
+  Spinner,
   Button,
   Icon,
   Text
 } from 'native-base';
 import {AsyncStorage, View} from 'react-native';
 import {Actions} from 'react-native-router-flux';
-import YouTube from 'react-native-youtube'
+import YouTube from 'react-native-youtube';
 import app from './app';
 import Socket from './API/socket';
 
@@ -37,7 +38,13 @@ export default class Player extends Component {
         this.setState({song: song, playing: true});
       });
 
-      EventEmitter.on('room', (room) => {
+      EventEmitter.on('skipSong', (msg) => {
+        console.log(msg);
+        this.setState({song: null, playing: false});
+        // this.setState({song: song, playing: true});
+      });
+
+      EventEmitter.on('roomJoin', (room) => {
         socket.join(room._id);
         if (room.currentSong) {
           this.setState({playing: true, room: room});
@@ -50,7 +57,8 @@ export default class Player extends Component {
 
     this.state = {
       room: null,
-      song: null
+      song: null,
+      buffering: false,
     };
   }
 
@@ -79,11 +87,19 @@ export default class Player extends Component {
               origin={'https://www.youtube.com'}
 
               onChangeState={(e) => {
+                if (e.state == 'buffering') {
+                  this.setState({buffering: true});
+                } else if (e.state == 'ended') {
+                  this.setState({song: null});
+                } else {
+                  this.setState({buffering: false});
+                  this.refs.youtubePlayer.seekTo(song.startTime);
+                }
                 console.log(e);
-                this.refs.youtubePlayer.seekTo(song.startTime);
               }}
 
               onReady={(e) => {
+                console.log(e);
                 this.refs.youtubePlayer.seekTo(song.startTime);
                 this.setState({isReady: true})
               }}
@@ -122,18 +138,19 @@ export default class Player extends Component {
                   this.getSongTime(room);
                 }
               }}>
-                <Icon name={playing ? "ios-volume-up" : "ios-volume-off"}/>
+                {this.state.buffering ? 
+                  <Spinner color='black'/>
+                  // <Icon name=".ion-loading-c"/>
+                  :
+                  <Icon name={playing ? "ios-volume-up" : "ios-volume-off"}/>
+                }
               </Button>
             </FooterTab>
           </Footer>
         </View>
       );
     } else {
-      return (
-        <View style={styles.info}>
-          <Text>Join a room to start listening!</Text>
-        </View>
-      );
+      return null;
     }
   }
 }

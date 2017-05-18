@@ -24,19 +24,13 @@ export default class app extends Component {
     super(props);
     this.state = {
       song: null,
-      panelOpen: false,
     };
-    app.user.checkNew();
 
     // app.user.login('dubtrackmobile', 'insecure');
   }
 
-
-  componentDidMount() {
-    console.log(this.panel);
-  }
-
   componentWillMount() {
+    app.user.checkNew();  
     AsyncStorage.getItem('user').then((user) => {
       if (user) {
         EventEmitter.emit('connectUser', user._id);
@@ -44,55 +38,25 @@ export default class app extends Component {
     });
   }
 
-  togglePanel() {
-    if (this.state.panelOpen) {
-      this.panel.collapsePanel();
-    } else {
-      this.panel.reloadHeight(height - 54);
-    }
-  }
-
   render() {
     let that = this;
-    let panelOpen = this.state.panelOpen;
 
     return (
       <Container style={{marginTop: 22}}>
         <Nav/>
-        <Router hideNavBar={true}>
-          <Scene key="root">
-            <Scene key="lobby" togglePanel={this.togglePanel.bind(this)} renderBackButton={() => (null)}
+        <Router>
+          <Scene key="root" hideNavBar={true}>
+            <Scene key="lobby" renderBackButton={() => (null)}
                    component={Lobby} title="Lobby"/>
             <Scene key="messages" component={Messages} title="Messages"/>
+            <Scene key="room" component={Room} title="Room"/>
             <Scene key="pm" component={PM} title="pm"/>
-            <Scene key="auth" renderBackButton={() => (null)} component={Auth} title=""/>
+            <Scene key="auth" component={Auth} title=""/>
             <Scene key="profile" component={Profile} title="Profile"/>
           </Scene>
         </Router>
-        <View style={panelOpen ? styles.panelOpen : styles.panelClosed}>
-        <SlidingUpPanel
-          ref={(panel) => {
-            that.panel = panel;
-          }}
-          containerMaximumHeight={height - 76}
-          handlerHeight={80}
-          allowStayMiddle={false}
-          handlerDefaultView={<Player/>}>
-          <View style={{flexDirection: 'row'}}>
-            <Room/>
-          </View>
-        </SlidingUpPanel>
-        </View>
+        <Player/>
       </Container>
     );
   }
 }
-
-const styles = {
-  panelOpen: {
-    marginTop: 0,
-  },
-  panelClosed: {
-    marginTop: 80,
-  }
-};

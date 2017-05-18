@@ -30,10 +30,15 @@ export default class Room extends Component {
     this.state = {
       newMessages: 0,
       active: false,
+      room: null,
     };
 
     this.checkNewPms();
     this.user();
+
+    EventEmitter.on('roomJoin', (room) => {
+      this.setState({room: room});
+    })
 
     EventEmitter.on('auth', () => {
       this.user();
@@ -41,7 +46,7 @@ export default class Room extends Component {
 
     EventEmitter.on('pm', () => {
       this.checkNewPms();
-    })
+    });
   }
 
   user() {
@@ -56,12 +61,13 @@ export default class Room extends Component {
         this.setState({
           newMessages: count,
         })
-      })
+      });
   }
 
   //TODO: put a badge on messages with current new message count
   render() {
     let user = this.state.user;
+    let room = this.state.room;
     return (
       <Footer>
         <FooterTab>
@@ -72,13 +78,27 @@ export default class Room extends Component {
             <Text>Lobby</Text>
           </Button>
 
+          {room ?
+            <Button onPress={() => {
+              AsyncStorage.getItem('currentRoom').then((room) => {
+                  Actions.room({room: room});
+              });
+              // Actions.room();
+            }}>
+              <Icon name="ios-chatbubbles"/>
+              <Text>Chat</Text>
+            </Button>
+            :
+            null
+          }
+
           {user ?
             <Button badgeValue={this.state.newMessages} onPress={() => {
               this.setState({newMessages: 0});
               Actions.messages();
             }}>
               <Icon name="ios-mail"/>
-              <Text>Messages</Text>
+              <Text>PM</Text>
             </Button>
             :
             null

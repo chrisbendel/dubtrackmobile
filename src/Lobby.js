@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
 import EventEmitter from "react-native-eventemitter";
+import SGListView from 'react-native-sglistview';
 
 import {
   StyleSheet,
   Text,
   Dimensions,
+  ListView,
   RefreshControl,
   WebView
 } from 'react-native';
@@ -31,9 +33,11 @@ const uri = 'https://res.cloudinary.com/hhberclba/image/upload/c_fill,fl_lossy,f
 export default class Lobby extends Component {
   constructor(props) {
     super(props);
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1.uuid !== r2.uuid});
     this.query = '';
     this.state = {
-      dataSource: [],
+      // dataSource: [],
+      dataSource: ds.cloneWithRows([]),
       refreshing: false,
     };
   }
@@ -53,15 +57,20 @@ export default class Lobby extends Component {
     if (room) {
       app.user.filterRooms(room)
         .then(rooms => {
+          rooms.forEach((room) => {
+            if (!room.background) {
+              room.background = {secure_url: uri};
+            }
+          });
           this.setState({
-            dataSource: rooms,
+            // dataSource: rooms,
+            dataSource: this.state.dataSource.cloneWithRows(rooms),
             refreshing: false
           })
         });
     } else {
       app.user.listRooms()
         .then(rooms => {
-          console.log(rooms);
           rooms.forEach((room) => {
             if (!room.background) {
               room.background = {secure_url: uri};
@@ -69,9 +78,9 @@ export default class Lobby extends Component {
           });
           this.clearSearch();
           this.setState({
-            dataSource: rooms,
+            dataSource: this.state.dataSource.cloneWithRows(rooms),
             refreshing: false
-          })
+          });
         });
     }
   }
@@ -83,15 +92,14 @@ export default class Lobby extends Component {
 
   pressRow(rowData) {
     app.user.joinRoom(rowData._id);
-    EventEmitter.emit('room', rowData);
-    this.props.togglePanel();
-    // Actions.room({id: rowData._id, title: rowData.name});
+    EventEmitter.emit('roomJoin', rowData);
+    Actions.room({room: rowData, title: rowData.name});
   }
 
   renderRow(rowData) {
     return (
       <ListItem onPress={() => this.pressRow(rowData)}>
-        <Thumbnail size={80} source={{uri: rowData.background.secure_url}}/>
+        <Thumbnail size={70} source={{uri: rowData.background.secure_url}}/>
         <Body>
         <Text style={styles.rowTitle}>{rowData.name}</Text>
         <Text style={styles.rowInfo}>{rowData.activeUsers} current users</Text>
@@ -139,9 +147,17 @@ export default class Lobby extends Component {
               onRefresh={this._onRefresh.bind(this)}
             />
           }>
-          <List
-            initialListSize={25}
-            dataArray={this.state.dataSource}
+          <SGListView
+            pageSize={10}
+            initialListSize={50}
+            enableEmptySections={true}
+            removeClippedSubviews={false}
+            scrollRenderAheadDistance={1}
+            premptiveLoading={5}
+            onEndReachedThreshold={1}
+            stickyHeaderIndices={[]}
+            // dataArray={this.state.dataSource}
+            dataSource={this.state.dataSource}
             renderRow={this.renderRow.bind(this)}
           />
         </Content>

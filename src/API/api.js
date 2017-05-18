@@ -9,8 +9,7 @@ const base = 'https://api.dubtrack.fm/';
 export default class api {
   constructor() {
 
-    this.room = null;
-    this.loggedIn = false;
+    this.currentRoom = null;
   }
 
   /******************/
