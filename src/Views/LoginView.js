@@ -68,13 +68,14 @@ export default class Login extends Component {
     );
   }
 }
-const {height: screenHeight} = Dimensions.get('window');
+const {height, width} = Dimensions.get('window');
 const styles = {
   Body: {
     flex: 1,
-    height: screenHeight,
+    marginTop: height/4,
+    // height: screenHeight,
     justifyContent: 'center',
-    // alignItems: 'center',
+    alignItems: 'center',
   },
 
   Form: {

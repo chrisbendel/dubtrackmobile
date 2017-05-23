@@ -83,7 +83,6 @@ export default class Room extends Component {
               AsyncStorage.getItem('currentRoom').then((room) => {
                   Actions.room({room: room});
               });
-              // Actions.room();
             }}>
               <Icon name="ios-chatbubbles"/>
               <Text>Chat</Text>

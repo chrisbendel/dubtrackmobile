@@ -24,8 +24,8 @@
     "react-native-router-flux": "^3.38.0",
     "react-native-sglistview": "^0.4.3",
     "react-native-simple-store": "^1.1.0",
-    "react-native-sliding-up-panel": "^1.1.12",
     "react-native-socketio": "^0.3.0",
+    "react-native-soundcloud": "^1.0.2",
     "react-native-tabs": "^1.0.9",
     "react-native-vector-icons": "^4.0.0",
     "react-native-youtube": "^0.8.1"

@@ -10,10 +10,14 @@ import {
   Text
 } from 'native-base';
 import {AsyncStorage, View} from 'react-native';
+import Soundcloud from 'react-native-soundcloud';
 import {Actions} from 'react-native-router-flux';
 import YouTube from 'react-native-youtube';
 import app from './app';
 import Socket from './API/socket';
+
+//Public API key ripped from the website, can use this for now til i get a response from SC
+const SC = new Soundcloud('F8q33BQPCtQHy1sLdye9DriPDNIECjcs')
 
 export default class Player extends Component {
   constructor(props) {
@@ -23,7 +27,11 @@ export default class Player extends Component {
 
     AsyncStorage.getItem('user').then((user) => {
       user = JSON.parse(user);
-      socket = new Socket(user._id);
+      if (user) {
+        socket = new Socket(user._id);
+      } else {
+        socket = new Socket();
+      }
 
       EventEmitter.on('connectUser', (id) => {
         socket.connectUser(id);

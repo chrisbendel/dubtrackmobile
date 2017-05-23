@@ -4,13 +4,12 @@ import {AsyncStorage} from 'react-native';
 export default class Socket {
 
   constructor(userid = null) {
-    this.user = null;
     this.sock = null;
 
     this.create(userid);
   }
 
-  create(user) {
+  create(userid) {
     return fetch('https://api.dubtrack.fm/auth/token')
       .then(res => res.json())
       .then(json => {
@@ -26,10 +25,9 @@ export default class Socket {
         this.sock.on('error', (e) => {
           console.log(e);
         });
-        this.sock.on('user', (user) => {
-          console.log(JSON.parse(user));
-        });
-        this.sock.send(JSON.stringify({action: 10, channel: 'user:' + user}));
+        if (userid) {
+          this.sock.send(JSON.stringify({action: 10, channel: 'user:' + userid}));
+        }
         this.sock.on('message', (msg) => {
           msg = JSON.parse(msg);
           // console.log(msg);
@@ -64,6 +62,7 @@ export default class Socket {
   }
 
   connectUser(id) {
+    console.log('connecting user');
     this.sock.send(JSON.stringify({action: 10, channel: 'user:' + id}));
   }
 

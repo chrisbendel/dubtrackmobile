@@ -30,9 +30,11 @@ export default class app extends Component {
   }
 
   componentWillMount() {
-    app.user.checkNew();  
     AsyncStorage.getItem('user').then((user) => {
+      user = JSON.parse(user);
       if (user) {
+        user = JSON.parse(user);
+        app.user.checkNew();
         EventEmitter.emit('connectUser', user._id);
       }
     });
